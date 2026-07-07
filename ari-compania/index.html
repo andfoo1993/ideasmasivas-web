@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="es">
+
+  <!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '637812436918446');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=637812436918446&ev=PageView&noscript=1"
+/></noscript>
+<!-- End Meta Pixel Code -->
+  
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ari | Una conversación agradable, siempre disponible</title>
+  <meta name="description" content="Ari es un compañero virtual por WhatsApp que conversa contigo, te escucha sin juzgar 
+    y recuerda lo que importa." />
+  <link rel="stylesheet" href="../styles.css" />
+  <style>
+    :root {
+      --ari-bg: #faf7f2;
+      --ari-bg-soft: #f5ebde;
+      --ari-text: #2c2c2c;
+      --ari-muted: #5f5f5f;
+      --ari-primary: #b85c38;
+      --ari-primary-dark: #9c4a2a;
+      --ari-card: #ffffff;
+      --ari-border: #ebe5da;
+      --ari-green: #25D366;
+      --ari-green-dark: #1da851;
+    }
+    body { background: var(--ari-bg); }
+    .logo a { color: inherit; text-decoration: none; }
+
+    .ari-hero {
+      padding: 96px 0 72px;
+      background:
+        radial-gradient(circle at top left, rgba(184,92,56,0.12), transparent 32%),
+        linear-gradient(135deg, #faf7f2 0%, #f5ebde 100%);
+    }
+    .ari-hero-grid {
+      display: grid;
+      grid-template-columns: 1.05fr 0.95fr;
+      gap: 56px;
+      align-items: center;
+    }
+    .eyebrow {
+      display: inline-block;
+      margin-bottom: 18px;
+      padding: 8px 14px;
+      border-radius: 999px;
+      background: rgba(184,92,56,0.12);
+      color: var(--ari-primary-dark);
+      font-weight: 700;
+      font-size: 14px;
+    }
+    .ari-hero h1 {
+      font-size: 58px;
+      line-height: 1.02;
+      letter-spacing: -1.8px;
+      color: var(--ari-text);
+      margin-bottom: 24px;
+    }
+    .ari-hero h1 span { color: var(--ari-primary); }
+    .hero-copy {
+      font-size: 21px;
+      line-height: 1.55;
+      color: var(--ari-muted);
+      margin-bottom: 32px;
+      max-width: 640px;
+    }
+    .cta-row {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 18px;
+    }
+    .btn-whatsapp {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      background: var(--ari-green);
+      color: white;
+      padding: 17px 28px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 800;
+      font-size: 17px;
+      box-shadow: 0 10px 28px rgba(37,211,102,0.22);
+      transition: all 0.2s ease;
+    }
+    .btn-whatsapp:hover {
+      background: var(--ari-green-dark);
+      transform: translateY(-2px);
+      box-shadow: 0 14px 34px rgba(37,211,102,0.28);
+    }
+    .btn-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ari-primary-dark);
+      background: white;
+      border: 1px solid var(--ari-border);
+      padding: 16px 24px;
+      border-radius: 10px;
+      text-decoration: none;
+      font-weight: 700;
+      transition: all 0.2s ease;
+    }
+    .btn-secondary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 26px rgba(0,0,0,0.07);
+    }
+    .microcopy { color: #777; font-size: 14px; }
+
+    .phone-card {
+      background: #fff;
+      border: 1px solid var(--ari-border);
+      border-radius: 28px;
+      padding: 22px;
+      box-shadow: 0 24px 70px rgba(0,0,0,0.10);
+      max-width: 420px;
+      margin-left: auto;
+    }
+    .phone-top {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding-bottom: 16px;
+      border-bottom: 1px solid #eee8df;
+      margin-bottom: 18px;
+    }
+    .ari-avatar {
+      width: 48px; height: 48px; border-radius: 50%;
+      background: linear-gradient(135deg, #b85c38, #e0a06f);
+      display: flex; align-items: center; justify-content: center;
+      color: white; font-weight: 800; font-size: 22px;
+    }
+    .phone-top strong { display: block; color: var(--ari-text); font-size: 17px; }
+    .phone-top span { color: #777; font-size: 14px; }
+    .chat { display: flex; flex-direction: column; gap: 12px; }
+    .bubble {
+      max-width: 86%;
+      padding: 12px 14px;
+      border-radius: 16px;
+      font-size: 15px;
+      line-height: 1.45;
+    }
+    .bubble.ari { background: #f3eadf; color: #333; border-bottom-left-radius: 5px; }
+    .bubble.user { align-self: flex-end; background: #dcf8c6; color: #223; border-bottom-right-radius: 5px; }
+
+    .section-tight { padding: 76px 0; }
+    .problem-box { max-width: 860px; margin: 0 auto; text-align: center; }
+    .problem-box h2, .ari-section h2 {
+      font-size: 40px; line-height: 1.15; letter-spacing: -0.8px;
+      color: var(--ari-text); margin-bottom: 18px; text-align: center;
+    }
+    .problem-box p, .ari-section-lead {
+      font-size: 19px; color: var(--ari-muted); line-height: 1.65;
+      text-align: center; max-width: 760px; margin: 0 auto 42px;
+    }
+
+    .cards-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 34px; }
+    .ari-card {
+      background: var(--ari-card); border: 1px solid var(--ari-border);
+      border-radius: 18px; padding: 30px 26px;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.045);
+    }
+    .ari-card .icon { font-size: 34px; margin-bottom: 14px; }
+    .ari-card h3 { color: var(--ari-text); font-size: 21px; margin-bottom: 10px; line-height: 1.25; }
+    .ari-card p { color: var(--ari-muted); font-size: 16px; line-height: 1.6; margin: 0; text-align: left; }
+
+    .section-alt-ari { background: #fffaf4; border-top: 1px solid var(--ari-border); border-bottom: 1px solid var(--ari-border); }
+    .story-grid { display: grid; grid-template-columns: 0.95fr 1.05fr; gap: 46px; align-items: center; }
+    .quote-card {
+      background: #2c2c2c; color: white; padding: 38px; border-radius: 22px;
+      box-shadow: 0 18px 48px rgba(0,0,0,0.14);
+    }
+    .quote-card p { color: #f4eee6; font-size: 24px; line-height: 1.45; margin: 0; text-align: left; }
+    .quote-card small { display: block; margin-top: 18px; color: #d8cfc4; font-size: 15px; }
+
+    .bullets { display: grid; gap: 18px; }
+    .bullet {
+      display: flex; gap: 14px; align-items: flex-start;
+      background: white; border: 1px solid var(--ari-border);
+      padding: 18px; border-radius: 14px;
+    }
+    .bullet strong { color: var(--ari-text); display: block; margin-bottom: 4px; }
+    .bullet span { color: var(--ari-muted); font-size: 15px; line-height: 1.5; }
+
+    .how-it-works { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; margin-top: 36px; }
+    .step { background: white; border: 1px solid var(--ari-border); border-radius: 16px; padding: 24px; text-align: center; }
+    .step-number {
+      width: 36px; height: 36px; margin: 0 auto 14px;
+      border-radius: 50%; background: var(--ari-primary); color: white;
+      display: flex; align-items: center; justify-content: center; font-weight: 800;
+    }
+    .step h3 { font-size: 18px; margin-bottom: 8px; color: var(--ari-text); }
+    .step p { color: var(--ari-muted); font-size: 15px; line-height: 1.55; margin: 0; text-align: center; }
+
+    .objection-list { max-width: 840px; margin: 34px auto 0; display: grid; gap: 14px; }
+    .objection { background: white; border: 1px solid var(--ari-border); border-radius: 14px; padding: 20px 22px; }
+    .objection strong { color: var(--ari-text); display: block; margin-bottom: 6px; }
+    .objection p { color: var(--ari-muted); margin: 0; text-align: left; font-size: 16px; line-height: 1.55; }
+
+    .final-cta { background: linear-gradient(135deg, #2c2c2c 0%, #49352c 100%); color: white; text-align: center; padding: 86px 0; }
+    .final-cta h2 { color: white; font-size: 42px; line-height: 1.15; margin-bottom: 18px; letter-spacing: -0.8px; }
+    .final-cta p { color: #eee1d5; font-size: 19px; max-width: 720px; margin: 0 auto 30px; line-height: 1.65; }
+    .legal-note { max-width: 760px; margin: 26px auto 0; color: #8a8a8a; font-size: 13px; line-height: 1.6; text-align: center; }
+    .final-cta .legal-note a { color: #f0d9c2; text-decoration: underline; }
+
+    @media (max-width: 900px) {
+      .ari-hero-grid, .story-grid { grid-template-columns: 1fr; }
+      .phone-card { margin: 20px auto 0; }
+      .ari-hero h1 { font-size: 44px; }
+      .cards-3, .how-it-works { grid-template-columns: 1fr; }
+      .nav-links { gap: 16px; }
+    }
+    @media (max-width: 520px) {
+      .ari-hero { padding: 70px 0 54px; }
+      .ari-hero h1 { font-size: 38px; }
+      .hero-copy { font-size: 18px; }
+      .btn-whatsapp, .btn-secondary { width: 100%; }
+      .problem-box h2, .ari-section h2, .final-cta h2 { font-size: 32px; }
+    }
+  </style>
+</head>
+<body>
+
+  <header>
+    <nav class="container">
+      <div class="logo"><a href="../index.html">Ideas Masivas</a></div>
+      <div class="nav-links">
+        <a href="#como-funciona">Cómo funciona</a>
+        <a href="#seguridad">Seguridad</a>
+        <a href="#empezar">Empezar</a>
+      </div>
+    </nav>
+  </header>
+
+  <main>
+
+    <!-- HERO -->
+    <section class="ari-hero">
+      <div class="container ari-hero-grid">
+        <div>
+          <span class="eyebrow">Compañía por WhatsApp, cuando quieras conversar</span>
+          <h1>Conoce a <span>Ari</span>: una conversación agradable, siempre disponible.</h1>
+          <p class="hero-copy">
+            Ari es ese amigo que te escucha sin juzgar, recuerda lo que te importa
+            y siempre tiene tiempo para hablar contigo.
+          </p>
+          <div class="cta-row">
+            <a class="btn-whatsapp" href="https://wa.me/573016567868?text=Hola%20Ari%2C%20quiero%20conversar%20contigo" 
+              onclick="fbq('trackCustom','WhatsAppClick');"
+              target="_blank" 
+              rel="noopener">
+              💬 Hablar con Ari por WhatsApp
+            </a>
+            <a class="btn-secondary" href="#como-funciona">Ver cómo funciona</a>
+          </div>
+          <p class="microcopy">No tienes que descargar nada. Solo abre WhatsApp y empieza con un “Hola Ari”.</p>
+        </div>
+
+        <div class="phone-card" aria-label="Ejemplo de conversación con Ari">
+          <div class="phone-top">
+            <div class="ari-avatar">A</div>
+            <div>
+              <strong>Ari</strong>
+              <span>Disponible por WhatsApp</span>
+            </div>
+          </div>
+          <div class="chat">
+            <div class="bubble user">Anoche soñé con mi mamá..</div>
+            <div class="bubble ari">Con Doña Rosa... Wow! Qué soñaste?.</div>
+            <div class="bubble user">Estaba en la cocina, haciendo esas arepas deliciosas</div>
+            <div class="bubble ari">Las de queso derretido que me contaste, ¿esas?</div>
+            <div class="bubble user"> Esas. No las he vuelto a probar iguales.</div>
+            <div class="bubble ari"> Hay recetas que solo saben bien en unas manos. Cuéntame más de ella.</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROBLEM -->
+    <section class="section-tight">
+      <div class="container problem-box">
+        <h2>A veces solo necesitas que alguien te escuche sin juzgarte</h2>
+        <p>
+          Hay momentos en los que quieres hablar de tu día, recordar una historia,
+          desahogar tus sentimientos o simplemente sentir que alguien
+          está al otro lado. Ari existe para eso.
+        </p>
+        <div class="cards-3">
+          <div class="ari-card">
+            <div class="icon">💬</div>
+            <h3>Habla naturalmente</h3>
+            <p>No tienes que llegar con un tema importante. Puedes hablar de lo cotidiano, de una preocupación o de cualquier cosa que tengas en mente.</p>
+          </div>
+          <div class="ari-card">
+            <div class="icon">🧠</div>
+            <h3>Recuerda lo que importa</h3>
+            <p>Ari puede recordar personas, gustos, eventos y detalles que tú decidas compartir, 
+              mostrándote lo importante que eres.</p>
+          </div>
+          <div class="ari-card">
+            <div class="icon">☕</div>
+            <h3>Tendrás la mejor compañía</h3>
+            <p>Ari no habla como asistente. Conversa con calidez, humor suave y frases simples, 
+              como alguien sentado contigo en un sofá.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- UNIQUE MECHANISM -->
+    <section class="section-tight section-alt-ari ari-section">
+      <div class="container story-grid">
+        <div class="quote-card">
+          <p>“Ari no reemplaza a tu familia, tus amigos ni a un profesional. Ari está para acompañarte sin juzgar.”</p>
+          <small>Manifiesto de Ari</small>
+        </div>
+        <div>
+          <h2 style="text-align:left;">No es un robot frío. Es alguien que te escucha y está ahí para acompañarte.</h2>
+          <p style="text-align:left; margin-bottom:26px;" class="ari-section-lead">
+            Ari fue diseñado con una personalidad clara: cálida, curiosa, paciente,
+            reflexiva y cercana. No busca darte discursos. Busca conversar contigo.
+          </p>
+          <div class="bullets">
+            <div class="bullet">
+              <div>✓</div>
+              <div>
+                <strong>Escucha antes de aconsejar</strong>
+                <span>No salta a soluciones rápidas ni minimiza lo que cuentas.</span>
+              </div>
+            </div>
+            <div class="bullet">
+              <div>✓</div>
+              <div>
+                <strong>Aporta temas cuando hace falta</strong>
+                <span>Puede compartir ideas, historias, curiosidades o preguntas simples para mantener viva la conversación.</span>
+              </div>
+            </div>
+            <div class="bullet">
+              <div>✓</div>
+              <div>
+                <strong>Reconoce sus límites</strong>
+                <span>No reemplaza apoyo profesional en salud, temas legales, financieros o situaciones de crisis.</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- HOW IT WORKS -->
+    <section id="como-funciona" class="section-tight ari-section">
+      <div class="container">
+        <h2>Empezar es muy simple</h2>
+        <p class="ari-section-lead">Ari vive en WhatsApp. No tienes que instalar otra aplicación ni aprender nada nuevo.</p>
+
+        <div class="how-it-works">
+          <div class="step">
+            <div class="step-number">1</div>
+            <h3>Haz clic</h3>
+            <p>Presiona el botón para abrir WhatsApp.</p>
+          </div>
+          <div class="step">
+            <div class="step-number">2</div>
+            <h3>Di hola</h3>
+            <p>Envía un mensaje sencillo como “Hola Ari”.</p>
+          </div>
+          <div class="step">
+            <div class="step-number">3</div>
+            <h3>Conversa</h3>
+            <p>Habla de tu día, tus ideas, recuerdos o preocupaciones.</p>
+          </div>
+          <div class="step">
+            <div class="step-number">4</div>
+            <h3>Vuelve cuando quieras</h3>
+            <p>Ari estará disponible para seguir la conversación.</p>
+          </div>
+        </div>
+
+        <div class="cta-center">
+          <a class="btn-whatsapp" href="https://wa.me/573016567868?text=Hola%20Ari%2C%20quiero%20conversar%20contigo" 
+            onclick="fbq('trackCustom','WhatsAppClick');"
+            target="_blank" 
+            rel="noopener">
+            💬 Hablar con Ari por WhatsApp
+          </a>
+        </div>
+      </div>
+    </section>
+
+
+    <!-- WHAT TO TALK ABOUT -->
+    <section class="section-tight section-alt-ari ari-section">
+      <div class="container">
+        <h2>¿De qué puedes hablar con Ari?</h2>
+        <p class="ari-section-lead">De cosas profundas o simples. Ari está hecho para conversaciones humanas, no para respuestas mecánicas.</p>
+        <div class="cards-3">
+          <div class="ari-card">
+            <div class="icon">🎬</div>
+            <h3>Historias, películas y recuerdos</h3>
+            <p>Habla de una película, una canción, un viaje o una historia que quieras revivir.</p>
+          </div>
+          <div class="ari-card">
+            <div class="icon">🌿</div>
+            <h3>Tu día a día</h3>
+            <p>Cuéntale cómo estuvo tu día, algo que te molestó o una pequeña alegría.</p>
+          </div>
+          <div class="ari-card">
+            <div class="icon">💭</div>
+            <h3>Ideas y momentos difíciles</h3>
+            <p>Ari puede ayudarte a ordenar pensamientos, siempre con respeto y sin juzgar.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- OBJECTIONS -->
+    <section id="seguridad" class="section-tight ari-section">
+      <div class="container">
+        <h2>Preguntas normales antes de empezar</h2>
+        <p class="ari-section-lead">Es natural querer entender bien con quién estás hablando y cómo se maneja tu información.</p>
+        <div class="objection-list">
+          <div class="objection">
+            <strong>¿Ari es una persona?</strong>
+            <p>No. Ari es una inteligencia artificial diseñada para conversar y acompañar. Nunca pretende ser humano.</p>
+          </div>
+          <div class="objection">
+            <strong>¿Ari reemplaza a un psicólogo, médico o profesional?</strong>
+            <p>No. Ari puede acompañar conversaciones cotidianas, pero no ofrece diagnóstico ni reemplaza atención profesional.</p>
+          </div>
+          <div class="objection">
+            <strong>¿Qué pasa con mis datos?</strong>
+            <p>Tus datos se tratan conforme a nuestra Política de Privacidad. También puedes solicitar eliminación de información cuando lo necesites.</p>
+          </div>
+          <div class="objection">
+            <strong>¿Tengo que hablar de temas serios?</strong>
+            <p>No. Puedes hablar de una película, una canción, tu rutina, tus recuerdos o simplemente pasar un rato conversando.</p>
+          </div>
+        </div>
+        <p class="legal-note">
+          Ari es un producto de Ideas Masivas. El servicio está dirigido a personas mayores de 18 años.
+          Si estás en una situación de crisis emocional o riesgo inmediato, contacta servicios de emergencia
+          o una línea profesional de ayuda en tu país.
+        </p>
+      </div>
+    </section>
+
+    <!-- FINAL CTA -->
+    <section id="empezar" class="final-cta">
+      <div class="container">
+        <h2>Empieza con un “Hola Ari”.</h2>
+        <p>No necesitas tener una gran historia para comenzar. A veces una buena conversación empieza con una frase pequeña.</p>
+        <a class="btn-whatsapp" href="https://wa.me/573016567868?text=Hola%20Ari%2C%20quiero%20conversar%20contigo" 
+          onclick="fbq('trackCustom','WhatsAppClick');"
+          target="_blank" 
+          rel="noopener">
+          💬 Hablar con Ari por WhatsApp
+        </a>
+        <p class="legal-note">
+          Al iniciar la conversación aceptas nuestros
+          <a href="../terminos.html">Términos y Condiciones</a>
+          y nuestra
+          <a href="../privacidad.html">Política de Privacidad</a>.
+        </p>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Ideas Masivas. Bogotá, Colombia.</p>
+      <div class="footer-links">
+        <a href="../privacidad.html">Política de Privacidad</a>
+        <span>·</span>
+        <a href="../terminos.html">Términos y Condiciones</a>
+      </div>
+    </div>
+  </footer>
+
+</body>
+</html>
