@@ -45,6 +45,14 @@ header nav {
   letter-spacing: -0.5px;
 }
 
+.ari-avatar-img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
 .logo a {
   color: inherit;
   text-decoration: none;
