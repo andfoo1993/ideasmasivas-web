@@ -49,6 +49,7 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif
 .progress .num { color:#b85c38; font-weight:700; }
 .fin { text-align:center; padding:40px 20px; background:#fff; border-radius:16px; }
 .fin h2 { color:#b85c38; margin-bottom:12px; }
+.fin p { color:#6b6b6b; }
 .fin button { margin-top:20px; background:#b85c38; color:#fff; border:none; padding:14px 28px; border-radius:30px; cursor:pointer; }
 </style>
 </head>
@@ -70,7 +71,7 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif
   </div>
 
   <div id="app">
-    <div class="saludo">¡Hola, <b id="nombreUser"></b>! Estas son tus frases para repasar 💪</div>
+    <div class="saludo">¡Hola, <b id="nombreUser"></b>! Estas son tus frases para repasar hoy 💪</div>
     <div class="card-container">
       <div class="card" id="card" onclick="flip()">
         <div class="card-face card-front">
@@ -105,6 +106,7 @@ let mazo=[], idx=0, correctas=0, audioActual=null;
 let TELEFONO="";
 
 function unidadNum(u){ const [a,b]=u.split("."); return parseInt(a)*100+parseInt(b); }
+function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} }
 
 async function login(){
   const btn=document.getElementById('btnLogin');
@@ -124,7 +126,7 @@ async function login(){
     if(!data.existe){
       err.style.display='block'; btn.disabled=false; btn.textContent="Entrar a practicar"; return;
     }
-    // Frases hasta su progreso
+    // Frases hasta el progreso del alumno
     const uActual=unidadNum(data.current_unit||'1.1');
     const lActual=parseInt(data.current_lesson)||1;
     let disponibles=TODAS_FRASES.filter(f=>{
@@ -135,44 +137,45 @@ async function login(){
     });
     if(disponibles.length===0){ disponibles=TODAS_FRASES.filter(f=>f.u==='1.1'&&f.l===1); }
 
-    // Mapa de repaso: frase_en -> {nivel, proximo}
+    // Mapa de repaso
     const repasoMap={};
     (data.repaso||[]).forEach(r=>{ repasoMap[r.frase_en]={nivel:r.nivel_dominio, proximo:r.proximo_repaso}; });
 
     const ahora=new Date();
-    // Priorizar: frases vencidas o nuevas primero; dominadas (nivel alto y no vencidas) al final
-    const pendientes=[], dominadas=[];
+    // SOLO frases nuevas o vencidas (las dominadas futuras NO se muestran)
+    const pendientes=[];
     disponibles.forEach(f=>{
       const r=repasoMap[f.en];
-      if(!r){ pendientes.push(f); } // nueva, nunca repasada
-      else if(new Date(r.proximo) <= ahora){ pendientes.push(f); } // toca repasar
-      else { dominadas.push(f); } // aún dominada, no toca
+      if(!r){ pendientes.push(f); }                       // nueva
+      else if(new Date(r.proximo) <= ahora){ pendientes.push(f); } // vencida (toca repasar)
+      // si es futura → NO se agrega
     });
-    // mezclar cada grupo
     shuffle(pendientes);
-    mazo=[...pendientes];
-    if(mazo.length===0) mazo=disponibles;
+    mazo=pendientes;
 
     idx=0; correctas=0;
     document.getElementById('nombreUser').textContent=data.nombre;
     document.getElementById('login').style.display='none';
     document.getElementById('app').style.display='block';
-    render();
+
+    if(mazo.length===0){
+      mostrarAlDia();
+    } else {
+      render();
+    }
   }catch(e){
     err.textContent="Hubo un problema. Intenta de nuevo."; err.style.display='block';
     btn.disabled=false; btn.textContent="Entrar a practicar";
   }
 }
 
-function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} }
-
-function render(){
-  if(mazo.length===0){
+function mostrarAlDia(){
   document.getElementById('app').innerHTML=
     '<div class="fin"><h2>¡Estás al día! 🎉</h2>'+
-    '<p>Ya repasaste todo lo que tocaba hoy. Vuelve mañana para seguir reforzando. 💪</p></div>';
-return;
+    '<p>Ya repasaste todo lo que tocaba por ahora. Sigue tomando tus clases con Ari y vuelve pronto para reforzar. 💪</p></div>';
 }
+
+function render(){
   if(idx>=mazo.length){ finish(); return; }
   const c=mazo[idx];
   document.getElementById('card').classList.remove('flipped');
@@ -190,7 +193,6 @@ function playAudio(e){ e.stopPropagation(); const c=mazo[idx];
 async function answer(ok){
   const c=mazo[idx];
   if(ok) correctas++; else mazo.push(mazo[idx]);
-  // Guardar en el backend (sin bloquear la UI)
   fetch(GUARDAR_URL,{
     method:'POST', headers:{'Content-Type':'text/plain'},
     body:JSON.stringify({indicativo:"", numero:TELEFONO, frase_en:c.en, recordo:ok})
@@ -200,8 +202,8 @@ async function answer(ok){
 
 function finish(){
   document.getElementById('app').innerHTML=
-    '<div class="fin"><h2>¡Terminaste! 🎉</h2><p>Recordaste <b>'+correctas+'</b> frases. ¡Cada repaso cuenta y Ari lo recuerda!</p>'+
-    '<button onclick="location.reload()">Practicar de nuevo 🔁</button></div>';
+    '<div class="fin"><h2>¡Terminaste! 🎉</h2><p>Recordaste <b>'+correctas+'</b> frases. Ari recuerda tu progreso: las que dominas volverán más adelante. 💪</p>'+
+    '<button onclick="location.reload()">Volver a empezar 🔁</button></div>';
 }
 </script>
 </body>
