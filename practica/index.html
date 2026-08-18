@@ -149,8 +149,8 @@ async function login(){
       else { dominadas.push(f); } // aún dominada, no toca
     });
     // mezclar cada grupo
-    shuffle(pendientes); shuffle(dominadas);
-    mazo=[...pendientes, ...dominadas];
+    shuffle(pendientes);
+    mazo=[...pendientes];
     if(mazo.length===0) mazo=disponibles;
 
     idx=0; correctas=0;
@@ -167,6 +167,12 @@ async function login(){
 function shuffle(a){ for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];} }
 
 function render(){
+  if(mazo.length===0){
+  document.getElementById('app').innerHTML=
+    '<div class="fin"><h2>¡Estás al día! 🎉</h2>'+
+    '<p>Ya repasaste todo lo que tocaba hoy. Vuelve mañana para seguir reforzando. 💪</p></div>';
+return;
+}
   if(idx>=mazo.length){ finish(); return; }
   const c=mazo[idx];
   document.getElementById('card').classList.remove('flipped');
