@@ -192,7 +192,15 @@ function playAudio(e){ e.stopPropagation(); const c=mazo[idx];
 
 async function answer(ok){
   const c=mazo[idx];
-  if(ok) correctas++; else mazo.push(mazo[idx]);
+  if(ok){
+    correctas++;
+  } else {
+    // "Aún no": vuelve una vez más en esta sesión (si no ha vuelto ya)
+    if(!c._repetida){
+      c._repetida = true;
+      mazo.push(c);  // vuelve una vez al final
+    }
+  }
   fetch(GUARDAR_URL,{
     method:'POST', headers:{'Content-Type':'text/plain'},
     body:JSON.stringify({indicativo:"", numero:TELEFONO, frase_en:c.en, recordo:ok})
