@@ -116,7 +116,7 @@ const HISTORIA = {
   id: "h01",
   titulo: "A Saturday Morning",
   nivel: "Nivel A1 · 12 frases",
-  audio: "https://hjvecmvzokqsdrdkzucr.supabase.co/storage/v1/object/public/Stories/S01-01.mp3",
+  audio: "https://hjvecmvzokqsdrdkzucr.supabase.co/storage/v1/object/sign/Stories/S01-01.mp3?token=eyJraWQiOiJlZmFmODMyMy0xMTJhLTRjYjgtODVmMS0wNzc0OWMyYjA4MTQiLCJhbGciOiJIUzI1NiJ9.eyJ1cmwiOiJTdG9yaWVzL1MwMS0wMS5tcDMiLCJzY29wZSI6ImRvd25sb2FkIiwiaWF0IjoxNzkxNDY0OTk1LCJleHAiOjE3OTIzMjg5OTV9.qDWLF5rmxIyf3AHtS5Qhzcu5_Dekhm4fsj5YXVbZ-Hk",
   pausa: 1,      // segundos de pausa entre frases en el audio
   tiempos: [],   // pega aquí los tiempos exactos cuando los ajustes, ej: [0, 3.2, 7.1, ...]
   frases: [
