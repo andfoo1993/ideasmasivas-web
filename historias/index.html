@@ -11,7 +11,10 @@ body { font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif
   padding:16px; display:flex; flex-direction:column; align-items:center; }
 .wrap { width:100%; max-width:560px; }
 h1 { color:#b85c38; font-size:1.5rem; text-align:center; margin:6px 0 2px; }
-.sub { text-align:center; color:#6b6b6b; font-size:0.9rem; margin-bottom:14px; }
+.sub { text-align:center; color:#6b6b6b; font-size:0.9rem; margin-bottom:12px; }
+
+.selector { width:100%; padding:12px 14px; margin-bottom:12px; border:2px solid #e0d5c5;
+  border-radius:12px; background:#fff; font-size:1rem; color:#2c2c2c; cursor:pointer; }
 
 .modos { display:flex; gap:6px; margin-bottom:12px; }
 .modo { flex:1; padding:10px 6px; border:2px solid #e0d5c5; background:#fff; border-radius:12px;
@@ -43,16 +46,20 @@ h1 { color:#b85c38; font-size:1.5rem; text-align:center; margin:6px 0 2px; }
 .controles { display:flex; gap:8px; margin-top:12px; }
 .btn { flex:1; padding:14px; border:none; border-radius:14px; font-size:1rem; font-weight:600; cursor:pointer; }
 .btn-play { background:#b85c38; color:#fff; flex:2; }
+.btn-play:disabled { opacity:0.5; }
 .btn-sec { background:#f0e6d8; color:#8a6d4f; }
 .barra { height:6px; background:#e0d5c5; border-radius:3px; margin-top:12px; overflow:hidden; cursor:pointer; }
 .barra div { height:100%; width:0; background:#b85c38; }
 .ayuda { font-size:0.8rem; color:#6b6b6b; text-align:center; margin-top:10px; }
+.aviso { display:none; font-size:0.85rem; color:#c0392b; text-align:center; margin-top:8px; }
 </style>
 </head>
 <body>
 <div class="wrap">
   <h1 id="titulo"></h1>
   <div class="sub" id="nivel"></div>
+
+  <select class="selector" id="selector"></select>
 
   <div class="modos">
     <button class="modo" data-modo="1">1 · Audio<br>+ Texto + Traducción</button>
@@ -76,79 +83,214 @@ h1 { color:#b85c38; font-size:1.5rem; text-align:center; margin:6px 0 2px; }
     <button class="btn btn-play" id="btnPlay">▶ Reproducir</button>
     <button class="btn btn-sec" id="btnRevelar" style="display:none">👁 Ver</button>
   </div>
+  <div class="aviso" id="aviso">El audio de esta historia todavía no está disponible.</div>
   <div class="ayuda">Toca una frase para escucharla de nuevo.</div>
 </div>
 
 <audio id="audio" preload="metadata"></audio>
 
 <script>
-// ===================== DATOS DE LA HISTORIA =====================
-const HISTORIA = {
-  id: "S01",
-  titulo: "A Saturday Morning",
-  nivel: "Nivel A1 · 12 frases",
-  audio: "https://hjvecmvzokqsdrdkzucr.supabase.co/storage/v1/object/public/Stories/S01-01.mp3",
-  pausa: 1,      // segundos de pausa entre frases en el audio
-  tiempos: [],   // opcional: segundos exactos de inicio de cada frase, ej: [0, 3.2, 7.1, ...]
-  frases: [
-    ["This is Leo, and this is Ana.", "Este es Leo, y esta es Ana."],
-    ["They live in a small apartment in Bogotá.", "Viven en un apartamento pequeño en Bogotá."],
-    ["Today is Saturday, so they don't work.", "Hoy es sábado, así que no trabajan."],
-    ["Leo wakes up at eight o'clock.", "Leo se despierta a las ocho."],
-    ["He goes to the kitchen and makes coffee.", "Va a la cocina y prepara café."],
-    ["Ana makes eggs and toast.", "Ana prepara huevos y pan tostado."],
-    ["\"Thank you, Leo. The coffee is very good!\" Ana says.", "\"Gracias, Leo. ¡El café está muy rico!\", dice Ana."],
-    ["After breakfast, they walk to the park.", "Después del desayuno, caminan al parque."],
-    ["The sun is out, but it is a little cold.", "Hace sol, pero hace un poco de frío."],
-    ["Ana sees a small brown dog.", "Ana ve un perro pequeño y café."],
-    ["\"I want a dog!\" she says.", "\"¡Quiero un perro!\", dice ella."],
-    ["Leo laughs. \"Maybe next year.\"", "Leo se ríe. \"Tal vez el próximo año.\""]
-  ]
-};
-// ================================================================
+// =====================================================================
+//  HISTORIAS
+//  Para agregar una nueva: copia un bloque { ... }, pégalo al final
+//  (antes del ]), y cambia id, titulo, nivel y frases.
+//  El audio se busca solo como: Stories/<id>-01.mp3  (ej: S07-01.mp3)
+// =====================================================================
+const HISTORIAS = [
+  {
+    id: "S01",
+    titulo: "A Saturday Morning",
+    nivel: "A1 · Vida diaria",
+    frases: [
+      ["This is Leo, and this is Ana.", "Este es Leo, y esta es Ana."],
+      ["They live in a small apartment in Bogotá.", "Viven en un apartamento pequeño en Bogotá."],
+      ["Today is Saturday, so they don't work.", "Hoy es sábado, así que no trabajan."],
+      ["Leo wakes up at eight o'clock.", "Leo se despierta a las ocho."],
+      ["He goes to the kitchen and makes coffee.", "Va a la cocina y prepara café."],
+      ["Ana makes eggs and toast.", "Ana prepara huevos y pan tostado."],
+      ["\"Thank you, Leo. The coffee is very good!\" Ana says.", "\"Gracias, Leo. ¡El café está muy rico!\", dice Ana."],
+      ["After breakfast, they walk to the park.", "Después del desayuno, caminan al parque."],
+      ["The sun is out, but it is a little cold.", "Hace sol, pero hace un poco de frío."],
+      ["Ana sees a small brown dog.", "Ana ve un perro pequeño y café."],
+      ["\"I want a dog!\" she says.", "\"¡Quiero un perro!\", dice ella."],
+      ["Leo laughs. \"Maybe next year.\"", "Leo se ríe. \"Tal vez el próximo año.\""]
+    ]
+  },
+  {
+    id: "S02",
+    titulo: "You're on Mute",
+    nivel: "A1 · Trabajo",
+    frases: [
+      ["Ana starts work at nine o'clock.", "Ana empieza a trabajar a las nueve."],
+      ["Today she has a video call with her team.", "Hoy tiene una videollamada con su equipo."],
+      ["She opens her laptop and joins the call.", "Abre su portátil y entra a la llamada."],
+      ["\"Good morning, everyone!\" she says.", "\"¡Buenos días a todos!\", dice."],
+      ["Nobody answers.", "Nadie responde."],
+      ["Mark, her boss, writes in the chat.", "Mark, su jefe, escribe en el chat."],
+      ["\"Ana, you're on mute.\"", "\"Ana, estás en silencio.\""],
+      ["Ana laughs and turns on her microphone.", "Ana se ríe y activa su micrófono."],
+      ["\"Sorry! Can you hear me now?\"", "\"¡Perdón! ¿Me escuchan ahora?\""],
+      ["\"Yes, we can hear you,\" Mark says.", "\"Sí, te escuchamos\", dice Mark."],
+      ["Then Ana shares her screen and shows the report.", "Luego Ana comparte su pantalla y muestra el informe."],
+      ["\"Great job, Ana,\" Mark says with a smile.", "\"Buen trabajo, Ana\", dice Mark con una sonrisa."]
+    ]
+  },
+  {
+    id: "S03",
+    titulo: "The New Coworker",
+    nivel: "A1 · Trabajo",
+    frases: [
+      ["On Monday, a new person joins the team.", "El lunes, una persona nueva llega al equipo."],
+      ["His name is Tom, and he is from Canada.", "Se llama Tom y es de Canadá."],
+      ["\"Hi, I'm Tom. Nice to meet you,\" he says.", "\"Hola, soy Tom. Mucho gusto\", dice."],
+      ["\"Nice to meet you too. I'm Ana, from marketing.\"", "\"Mucho gusto también. Soy Ana, de marketing.\""],
+      ["Tom works in sales.", "Tom trabaja en ventas."],
+      ["He works from home, in Toronto.", "Trabaja desde casa, en Toronto."],
+      ["\"Is it cold in Toronto?\" Ana asks.", "\"¿Hace frío en Toronto?\", pregunta Ana."],
+      ["\"Oh yes, very cold!\" Tom says.", "\"¡Ay, sí, mucho frío!\", dice Tom."],
+      ["\"Here in Bogotá, it is a little cold in the morning.\"", "\"Aquí en Bogotá hace un poco de frío en la mañana.\""],
+      ["Tom likes coffee, and Ana likes coffee too.", "A Tom le gusta el café, y a Ana también."],
+      ["\"I can send you some Colombian coffee!\" Ana says.", "\"¡Puedo enviarte café colombiano!\", dice Ana."],
+      ["Tom smiles. \"That's the best welcome!\"", "Tom sonríe. \"¡Es la mejor bienvenida!\""]
+    ]
+  },
+  {
+    id: "S04",
+    titulo: "Coffee Break",
+    nivel: "A1 · Trabajo",
+    frases: [
+      ["At eleven, Ana takes a short break.", "A las once, Ana toma un descanso corto."],
+      ["She calls Sara, her friend from the Mexico office.", "Llama a Sara, su amiga de la oficina de México."],
+      ["\"Hi, Sara! How's it going?\"", "\"¡Hola, Sara! ¿Cómo va todo?\""],
+      ["\"Pretty good, thanks. And you?\"", "\"Bastante bien, gracias. ¿Y tú?\""],
+      ["\"I'm tired. I have three meetings today.\"", "\"Estoy cansada. Tengo tres reuniones hoy.\""],
+      ["\"Three? Oh no!\" Sara says.", "\"¿Tres? ¡Ay, no!\", dice Sara."],
+      ["\"How was your weekend?\" Ana asks.", "\"¿Qué tal tu fin de semana?\", pregunta Ana."],
+      ["\"Great! I went to the beach with my family.\"", "\"¡Genial! Fui a la playa con mi familia.\""],
+      ["\"Lucky you! I stayed at home and watched movies.\"", "\"¡Qué suerte! Yo me quedé en casa viendo películas.\""],
+      ["Then Ana looks at the clock.", "Luego Ana mira el reloj."],
+      ["\"Oh, sorry, I have to go. My next meeting starts now!\"", "\"Uy, perdón, me tengo que ir. ¡Mi próxima reunión empieza ya!\""],
+      ["\"No problem. Talk soon!\" Sara says.", "\"No hay problema. ¡Hablamos pronto!\", dice Sara."]
+    ]
+  },
+  {
+    id: "S05",
+    titulo: "A Time That Works",
+    nivel: "A1 · Trabajo",
+    frases: [
+      ["Mark wants a meeting with Ana and Tom.", "Mark quiere una reunión con Ana y Tom."],
+      ["\"Does Thursday work for you?\" he asks.", "\"¿Les sirve el jueves?\", pregunta."],
+      ["\"Sorry, I'm busy on Thursday morning,\" Ana says.", "\"Lo siento, estoy ocupada el jueves en la mañana\", dice Ana."],
+      ["\"But I'm free after lunch.\"", "\"Pero estoy libre después del almuerzo.\""],
+      ["Tom checks his calendar.", "Tom revisa su calendario."],
+      ["\"Thursday afternoon is OK for me too.\"", "\"El jueves en la tarde también me sirve.\""],
+      ["\"How about three o'clock?\" Mark asks.", "\"¿Qué tal a las tres?\", pregunta Mark."],
+      ["\"Works for me!\" Ana says.", "\"¡Me sirve!\", dice Ana."],
+      ["\"That works,\" Tom says.", "\"Me parece bien\", dice Tom."],
+      ["\"Perfect. I'll send the invitation,\" Mark says.", "\"Perfecto. Envío la invitación\", dice Mark."],
+      ["A minute later, the invitation is in their email.", "Un minuto después, la invitación está en su correo."],
+      ["Ana accepts it and writes, \"See you on Thursday!\"", "Ana la acepta y escribe: \"¡Nos vemos el jueves!\""]
+    ]
+  },
+  {
+    id: "S06",
+    titulo: "You're Breaking Up",
+    nivel: "A1 · Trabajo",
+    frases: [
+      ["On Friday, Ana has a call with a client in Miami.", "El viernes, Ana tiene una llamada con un cliente en Miami."],
+      ["The client's name is Mr. Brown.", "El cliente se llama señor Brown."],
+      ["\"Hello, Mr. Brown. Thank you for your time.\"", "\"Hola, señor Brown. Gracias por su tiempo.\""],
+      ["Mr. Brown says something, but Ana doesn't understand.", "El señor Brown dice algo, pero Ana no entiende."],
+      ["\"Sorry, I didn't catch that. Could you repeat that?\"", "\"Perdón, no entendí. ¿Podría repetir?\""],
+      ["\"Of course. The budget is ten thousand dollars.\"", "\"Claro. El presupuesto es de diez mil dólares.\""],
+      ["Then the video stops.", "Luego el video se detiene."],
+      ["\"Mr. Brown? You're breaking up.\"", "\"¿Señor Brown? Se le corta la señal.\""],
+      ["Ana waits. One minute, two minutes.", "Ana espera. Un minuto, dos minutos."],
+      ["Finally, Mr. Brown is back.", "Por fin, el señor Brown vuelve."],
+      ["\"Sorry, Ana. My internet is very slow today.\"", "\"Perdón, Ana. Mi internet está muy lento hoy.\""],
+      ["Ana laughs. \"No problem. Let's continue.\"", "Ana se ríe. \"No hay problema. Continuemos.\""]
+    ]
+  }
+];
+
+const URL_AUDIOS = "https://hjvecmvzokqsdrdkzucr.supabase.co/storage/v1/object/public/Stories/";
+const PAUSA = 1; // segundos aproximados de silencio entre frases en el audio
+// =====================================================================
 
 const audio = document.getElementById('audio');
 const lista = document.getElementById('lista');
 const prompter = document.getElementById('prompter');
 const btnPlay = document.getElementById('btnPlay');
+const selector = document.getElementById('selector');
+const aviso = document.getElementById('aviso');
 
+let historia = null;
 let tiempos = [];
 let activa = -1;
-let finFrase = null;   // para reproducir una sola frase
+let finFrase = null;
 let modo = parseInt(localStorage.getItem('hist_modo')) || 1;
 
-// ---------- Montaje ----------
-document.getElementById('titulo').textContent = '📖 ' + HISTORIA.titulo;
-document.getElementById('nivel').textContent = HISTORIA.nivel;
-audio.src = HISTORIA.audio;
-
-HISTORIA.frases.forEach(([en, es], i) => {
-  const d = document.createElement('div');
-  d.className = 'linea';
-  d.innerHTML = '<div class="en"></div><div class="es"></div>';
-  d.querySelector('.en').textContent = en;
-  d.querySelector('.es').textContent = es;
-  d.onclick = () => reproducirFrase(i);
-  lista.appendChild(d);
+// ---------- Selector ----------
+HISTORIAS.forEach((h, i) => {
+  const o = document.createElement('option');
+  o.value = i;
+  o.textContent = `${i + 1}. ${h.titulo} (${h.nivel})`;
+  selector.appendChild(o);
 });
+selector.onchange = () => cargarHistoria(parseInt(selector.value));
 
-document.querySelectorAll('.modo').forEach(b => b.onclick = () => ponerModo(parseInt(b.dataset.modo)));
+function cargarHistoria(i) {
+  historia = HISTORIAS[i] || HISTORIAS[0];
+  localStorage.setItem('hist_actual', i);
+  selector.value = i;
 
-// ---------- Tiempos ----------
+  audio.pause();
+  tiempos = []; activa = -1; finFrase = null;
+  aviso.style.display = 'none';
+  btnPlay.disabled = false;
+  btnPlay.textContent = '▶ Reproducir';
+  document.getElementById('progreso').style.width = '0%';
+  prompter.classList.remove('revelado');
+  document.getElementById('btnRevelar').textContent = '👁 Ver';
+
+  document.getElementById('titulo').textContent = '📖 ' + historia.titulo;
+  document.getElementById('nivel').textContent = historia.nivel + ' · ' + historia.frases.length + ' frases';
+
+  lista.innerHTML = '';
+  historia.frases.forEach(([en, es], k) => {
+    const d = document.createElement('div');
+    d.className = 'linea';
+    d.innerHTML = '<div class="en"></div><div class="es"></div>';
+    d.querySelector('.en').textContent = en;
+    d.querySelector('.es').textContent = es;
+    d.onclick = () => reproducirFrase(k);
+    lista.appendChild(d);
+  });
+  centrar(0);
+
+  audio.src = URL_AUDIOS + historia.id + '-01.mp3';
+  audio.load();
+}
+
+// ---------- Tiempos (estimados según el largo de cada frase) ----------
 function calcularTiempos() {
-  if (HISTORIA.tiempos.length === HISTORIA.frases.length) return HISTORIA.tiempos;
-  // Estimación: reparte la duración según el largo de cada frase, descontando las pausas
-  const n = HISTORIA.frases.length;
-  const habla = Math.max(audio.duration - HISTORIA.pausa * (n - 1), 1);
-  const chars = HISTORIA.frases.map(f => f[0].length);
+  if (historia.tiempos && historia.tiempos.length === historia.frases.length) return historia.tiempos;
+  const n = historia.frases.length;
+  const habla = Math.max(audio.duration - PAUSA * (n - 1), 1);
+  const chars = historia.frases.map(f => f[0].length);
   const total = chars.reduce((a, b) => a + b, 0);
   const t = []; let acc = 0;
-  chars.forEach(c => { t.push(+acc.toFixed(2)); acc += habla * c / total + HISTORIA.pausa; });
+  chars.forEach(c => { t.push(+acc.toFixed(2)); acc += habla * c / total + PAUSA; });
   return t;
 }
 audio.addEventListener('loadedmetadata', () => { tiempos = calcularTiempos(); centrar(0); });
+audio.addEventListener('error', () => {
+  aviso.style.display = 'block';
+  btnPlay.disabled = true;
+});
 
 // ---------- Modo ----------
+document.querySelectorAll('.modo').forEach(b => b.onclick = () => ponerModo(parseInt(b.dataset.modo)));
 function ponerModo(m) {
   modo = m; localStorage.setItem('hist_modo', m);
   document.querySelectorAll('.modo').forEach(b => b.classList.toggle('activo', +b.dataset.modo === m));
@@ -189,7 +331,7 @@ audio.addEventListener('timeupdate', () => {
 function reproducirFrase(i) {
   if (!tiempos.length) return;
   audio.currentTime = tiempos[i];
-  finFrase = i + 1 < tiempos.length ? tiempos[i + 1] - HISTORIA.pausa * 0.6 : null;
+  finFrase = i + 1 < tiempos.length ? tiempos[i + 1] - PAUSA * 0.6 : null;
   audio.play();
 }
 btnPlay.onclick = () => {
@@ -200,7 +342,7 @@ btnPlay.onclick = () => {
   } else audio.pause();
 };
 audio.addEventListener('play', () => btnPlay.textContent = '⏸ Pausa');
-audio.addEventListener('pause', () => btnPlay.textContent = '▶ Reproducir');
+audio.addEventListener('pause', () => { if (!audio.ended) btnPlay.textContent = '▶ Reproducir'; });
 audio.addEventListener('ended', () => btnPlay.textContent = '↺ Escuchar otra vez');
 document.getElementById('btnAtras').onclick = () => {
   if (!tiempos.length) return;
@@ -209,6 +351,7 @@ document.getElementById('btnAtras').onclick = () => {
   audio.currentTime = tiempos[destino];
 };
 document.getElementById('barra').onclick = e => {
+  if (!audio.duration) return;
   const r = e.currentTarget.getBoundingClientRect();
   audio.currentTime = (e.clientX - r.left) / r.width * audio.duration;
 };
@@ -220,6 +363,7 @@ document.getElementById('btnRevelar').onclick = e => {
 
 // ---------- Inicio ----------
 ponerModo(modo);
+cargarHistoria(parseInt(localStorage.getItem('hist_actual')) || 0);
 </script>
 </body>
 </html>
