@@ -594,7 +594,7 @@ async function subir(clave,file){
   const ext=blob.type==="image/jpeg"?"jpg":((file.name.split(".").pop()||"jpg").toLowerCase());
   const ruta=`${CODIGO}/${clave}-${Date.now()}.${ext}`;
   const r=await fetch(`${SB.url}/storage/v1/object/${SB.bucket}/${ruta}`,{
-    method:"POST",headers:{apikey:SB.anonKey,Authorization:"Bearer "+SB.anonKey,"Content-Type":blob.type||"image/jpeg"},body:blob});
+    method:"POST",headers:{apikey:SB.anonKey,"Content-Type":blob.type||"image/jpeg"},body:blob});
   if(!r.ok) throw new Error(`(${r.status}) ${await r.text()}`);
   return ruta;
 }
@@ -631,7 +631,7 @@ async function guardarPedido(estado){
   if(!sbListo()) return {ok:false,msg:"Supabase todavía no está configurado (falta url o anonKey en CONFIG)."};
   try{
     const r=await fetch(`${SB.url}/rest/v1/${SB.tabla}`,{method:"POST",
-      headers:{apikey:SB.anonKey,Authorization:"Bearer "+SB.anonKey,"Content-Type":"application/json",Prefer:"return=minimal"},
+      headers:{apikey:SB.anonKey,"Content-Type":"application/json",Prefer:"return=minimal"},
       body:JSON.stringify(datosPedido(estado))});
     if(!r.ok) return {ok:false,msg:`(${r.status}) ${await r.text()}`};
     return {ok:true};
