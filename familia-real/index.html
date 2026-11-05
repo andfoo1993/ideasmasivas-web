@@ -12,21 +12,21 @@
 /* ===== FUENTES (Google Fonts, gratis y con uso comercial) =====
    Nombre, fecha y números: Lily Script One.  Demás textos: Dancing Script. */
 :root{
-  --marca:#c9879b; --marca-osc:#9c5a6f; --crema:#fbf6f2; --texto:#4a3b40; --acento:#e8b4c3;
+  --marca:#8e14a6; --marca-osc:#6d0b80; --turquesa:#00c3dc; --amarillo:#fdcb2b; --crema:#f7fbfc; --texto:#3d3346; --acento:#e8b4c3;
   --f-titulo:'Lily Script One',cursive;
   --f-texto:'Dancing Script',cursive;
 }
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'Nunito',sans-serif;background:var(--crema);color:var(--texto)}
-header{text-align:center;padding:28px 16px 10px}
-header h1{font-family:'Dancing Script',cursive;font-size:2.4rem;color:var(--marca-osc)}
+header{text-align:center;padding:24px 16px 10px}
+header h1{font-family:'Dancing Script',cursive;font-size:2.4rem;color:var(--marca)}
 .logo{display:block;max-width:220px;max-height:110px;width:auto;height:auto;margin:0 auto}
-header p{max-width:560px;margin:6px auto 0}
+header p{max-width:560px;margin:8px auto 0}
 .wrap{max-width:1250px;margin:0 auto;padding:16px;display:grid;grid-template-columns:1.25fr 1fr;gap:28px;align-items:start}
 @media(max-width:900px){.wrap{grid-template-columns:1fr}}
 .preview-col{position:sticky;top:10px;z-index:5}
 @media(max-width:900px){.preview-col{top:0;background:var(--crema);padding-bottom:8px}}
-.escena{padding:18px 14px 26px;background:radial-gradient(ellipse at 50% 40%,#fff 0%,#f3ece6 75%);border-radius:14px}
+.escena{padding:18px 14px 26px;background:radial-gradient(ellipse at 50% 40%,#fff 0%,#e8f6f8 75%);border-radius:14px}
 
 /* ===== MARCO (foto real) ===== */
 .marco{position:relative;width:100%;aspect-ratio:1.23;filter:drop-shadow(0 16px 14px rgba(0,0,0,.26)) drop-shadow(0 2px 2px rgba(0,0,0,.2))}
@@ -83,26 +83,23 @@ header p{max-width:560px;margin:6px auto 0}
 .rec{position:absolute;z-index:6;display:flex;align-items:center;justify-content:center;transform:translate(-50%,-50%)}
 .rec img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(.2cqw .3cqw .3cqw rgba(0,0,0,.3))}
 .rec .ph{width:100%;height:100%;border-radius:4px;font-size:1.8cqw;display:flex;align-items:center;justify-content:center;text-align:center;color:#555;box-shadow:0 1px 3px rgba(0,0,0,.2)}
-.precio-flot{margin-top:12px;text-align:center}
-.precio-flot b{font-size:1.4rem;color:var(--marca-osc)}
-.nota-prev{font-size:.8rem;text-align:center;color:#8a7a7f;margin-top:4px}
 
 /* ===== PASOS ===== */
 .paso{background:#fff;border-radius:16px;padding:20px;margin-bottom:16px;box-shadow:0 3px 12px rgba(0,0,0,.05)}
 .paso h2{font-size:1.15rem;margin-bottom:4px;display:flex;align-items:center;gap:10px}
-.num{background:var(--marca);color:#fff;width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
-.paso > p{font-size:.88rem;color:#8a7a7f;margin-bottom:14px;line-height:1.45}
+.num{background:var(--turquesa);color:#fff;width:28px;height:28px;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:.9rem;flex-shrink:0}
+.paso > p{font-size:.88rem;color:#7a7084;margin-bottom:14px;line-height:1.45}
 .galeria{display:grid;grid-template-columns:repeat(auto-fill,minmax(100px,1fr));gap:10px}
 .item{border:2px solid #eee;border-radius:12px;padding:8px 6px;text-align:center;cursor:pointer;transition:.2s;background:#fff}
 .item:hover{transform:translateY(-2px)}
-.item.sel{border-color:var(--marca);box-shadow:0 0 0 3px rgba(201,135,155,.25)}
+.item.sel{border-color:var(--marca);box-shadow:0 0 0 3px rgba(142,20,166,.18)}
 .item .mini{height:80px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:2.2rem;margin-bottom:6px;overflow:hidden;background-size:cover;background-position:center}
 .item .mini img{height:100%;width:100%;object-fit:contain}
 .item span{font-size:.8rem;font-weight:600}
 .colores{display:flex;flex-wrap:wrap;gap:12px}
 .color{width:44px;height:44px;border-radius:50%;cursor:pointer;border:3px solid #fff;box-shadow:0 0 0 2px #ddd;transition:.2s}
 .color.sel{box-shadow:0 0 0 3px var(--marca-osc);transform:scale(1.08)}
-.box-solido{display:none;margin-top:14px;padding:14px;border-radius:12px;background:#fdf9fa}
+.box-solido{display:none;margin-top:14px;padding:14px;border-radius:12px;background:#f5f9fa}
 .box-solido.on{display:block}
 .box-solido h3{font-size:.9rem;margin-bottom:10px}
 .otro-color{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:.88rem;font-weight:600}
@@ -110,16 +107,16 @@ header p{max-width:560px;margin:6px auto 0}
 .aviso-oscuro{font-size:.8rem;color:#b5651d;margin-top:8px;display:none}
 .opciones{display:flex;gap:10px;flex-wrap:wrap}
 .op{flex:1;min-width:110px;border:2px solid #eee;border-radius:12px;padding:12px;cursor:pointer;text-align:center;position:relative}
-.op.sel{border-color:var(--marca);background:#fdf5f7}
-.op b{display:block}.op small{color:#8a7a7f}
-.op .badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--marca);color:#fff;font-size:.7rem;font-weight:800;padding:2px 10px;border-radius:20px;white-space:nowrap}
+.op.sel{border-color:var(--marca);background:#f8eefa}
+.op b{display:block}.op small{color:#7a7084}
+.op .badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--amarillo);color:#3d3346;font-size:.7rem;font-weight:800;padding:2px 10px;border-radius:20px;white-space:nowrap}
 .op .precio{font-size:1.1rem;font-weight:800;color:var(--marca-osc);margin-top:4px}
 .muestra{display:inline-block;width:22px;height:22px;border-radius:5px;vertical-align:middle;margin-bottom:4px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 @media(max-width:480px){.grid{grid-template-columns:1fr}}
 label{font-size:.82rem;font-weight:600;display:block;margin-bottom:3px}
-input,select{width:100%;padding:10px 12px;border:1.5px solid #e5dcdf;border-radius:10px;font-family:inherit;font-size:.95rem}
-input:focus,select:focus{outline:none;border-color:var(--marca)}
+input,select{width:100%;padding:10px 12px;border:1.5px solid #d9e3e6;border-radius:10px;font-family:inherit;font-size:.95rem}
+input:focus,select:focus{outline:none;border-color:var(--turquesa)}
 .full{grid-column:1/-1}
 .check{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid #eee;border-radius:12px;margin-bottom:8px;cursor:pointer;font-weight:600;font-size:.92rem}
 .check input{width:20px;height:20px;accent-color:var(--marca)}
@@ -127,12 +124,12 @@ input:focus,select:focus{outline:none;border-color:var(--marca)}
 .sub .op{padding:8px;min-width:0;font-size:.85rem}
 .sub .op img{display:block;height:44px;width:100%;object-fit:contain;margin-bottom:4px}
 /* subida de fotos */
-.upload{display:flex;align-items:center;gap:12px;border:2px dashed #e0cfd5;border-radius:12px;padding:10px;cursor:pointer;font-size:.9rem;background:#fdfafb;margin:0}
+.upload{display:flex;align-items:center;gap:12px;border:2px dashed #b9dfe5;border-radius:12px;padding:10px;cursor:pointer;font-size:.9rem;background:#f7fcfd;margin:0}
 .upload input{display:none}
-.upload .thumb{width:68px;height:68px;border-radius:10px;background:#f3eef0 center/cover;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.7rem;overflow:hidden}
+.upload .thumb{width:68px;height:68px;border-radius:10px;background:#eef5f7 center/cover;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.7rem;overflow:hidden}
 .upload .thumb img{width:100%;height:100%;object-fit:cover;opacity:.75}
 .upload .txt b{display:block;font-size:.92rem}
-.upload .estado{font-size:.8rem;color:#8a7a7f;font-weight:600}
+.upload .estado{font-size:.8rem;color:#7a7084;font-weight:600}
 .upload.subiendo{border-color:#e0b75a;background:#fffaf0}
 .upload.ok{border-style:solid;border-color:#7bbf8e;background:#f2faf4}
 .upload.ok .estado{color:#2e8b57}
@@ -140,28 +137,25 @@ input:focus,select:focus{outline:none;border-color:var(--marca)}
 .upload.error .estado{color:#c0392b}
 .foto3d{margin-top:12px}
 .ver-guia{display:inline-block;font-size:.85rem;color:var(--marca-osc);font-weight:700;margin:6px 0 0 4px}
-.info{background:#fdf5f7;border-radius:12px;padding:12px 14px;font-size:.88rem;margin-top:12px;line-height:1.45}
+.info{background:#eaf8fa;border-radius:12px;padding:12px 14px;font-size:.88rem;margin-top:12px;line-height:1.45}
 .total-pedido{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #eee;margin-top:14px;padding-top:14px;font-size:1.05rem;font-weight:700}
 .total-pedido b{font-size:1.45rem;color:var(--marca-osc)}
 .btn{display:block;width:100%;padding:15px;border:none;border-radius:12px;font-size:1.05rem;font-weight:800;cursor:pointer;margin-top:12px;font-family:inherit;text-decoration:none;text-align:center}
 .btn[disabled]{opacity:.6;cursor:wait}
-.btn-pago{background:#009ee3;color:#fff}.btn-wa{background:#25d366;color:#fff}.btn-ok{background:var(--marca);color:#fff}
-.btn-link{background:none;color:#8a7a7f;font-weight:600;font-size:.9rem;padding:10px}
+.btn-pago{background:#009ee3;color:#fff;line-height:1.25}
+.btn-pago small{display:block;font-size:.82rem;font-weight:600;opacity:.95;margin-top:2px}.btn-wa{background:#25d366;color:#fff}.btn-ok{background:var(--marca);color:#fff}
+.btn-link{background:none;color:#7a7084;font-weight:600;font-size:.9rem;padding:10px}
 .err{color:#c0392b;font-size:.85rem;margin-top:8px;display:none}
 .otro{font-size:.85rem;margin-top:12px}.otro a{color:var(--marca-osc);font-weight:700}
-/* --- PRUEBA (borrar cuando todo funcione) --- */
-.prueba{margin-top:22px;border:2px dashed #e0b75a;border-radius:12px;padding:12px;background:#fffaf0}
-.prueba .btn{background:#e0b75a;color:#4a3b40;margin-top:6px}
-.prueba pre{white-space:pre-wrap;word-break:break-all;font-size:.8rem;margin-top:10px;line-height:1.45}
 /* ventanas emergentes */
-.modal{position:fixed;inset:0;background:rgba(40,25,30,.55);display:none;align-items:center;justify-content:center;z-index:100;padding:16px}
+.modal{position:fixed;inset:0;background:rgba(40,20,50,.55);display:none;align-items:center;justify-content:center;z-index:100;padding:16px}
 .modal.on{display:flex}
 .modal-box{background:#fff;border-radius:16px;max-width:520px;width:100%;max-height:90vh;overflow:auto;padding:22px;position:relative}
 .modal-box h3{font-size:1.15rem;padding-right:30px}
 .modal-box > p{font-size:.95rem;line-height:1.5;margin-top:8px;color:#5e4c52}
-.cerrar{position:absolute;top:12px;right:14px;border:none;background:none;font-size:1.6rem;cursor:pointer;color:#8a7a7f}
+.cerrar{position:absolute;top:12px;right:14px;border:none;background:none;font-size:1.6rem;cursor:pointer;color:#7a7084}
 .comparar{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
-.ej-img{aspect-ratio:3/4;border-radius:10px;background:#f3eef0;overflow:hidden;display:flex;align-items:center;justify-content:center;color:#a8999e;font-size:.8rem;text-align:center;padding:6px}
+.ej-img{aspect-ratio:3/4;border-radius:10px;background:#eef5f7;overflow:hidden;display:flex;align-items:center;justify-content:center;color:#a8999e;font-size:.8rem;text-align:center;padding:6px}
 .ej-img img{width:100%;height:100%;object-fit:cover}
 figcaption{text-align:center;font-weight:800;margin-top:4px;font-size:.9rem}
 .si{color:#2e8b57}.no{color:#c0392b}
@@ -171,8 +165,7 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
 </head>
 <body>
 <header>
-  <!-- Logo: sube tu archivo a img/logo/logo.png (si no existe, se muestra el nombre) -->
-  <img class="logo" src="img/logo/logo.png" alt="Familia Real" onerror="this.outerHTML='<h1>Familia Real</h1>'">
+  <div id="logoBox"><h1>Familia Real</h1></div>
   <p>Diseña el recuerdo más hermoso de la etapa más preciosa de tu bebé y recíbelo en tu casa en 8 días hábiles.</p>
 </header>
 
@@ -265,16 +258,8 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
         <div class="full"><label>Ciudad</label><input id="ciudad" placeholder="Ej: Medellín"></div>
       </div>
       <div class="total-pedido">Total <b id="totalPedido">$0</b></div>
-      <a class="btn btn-pago" id="btnPagar">Pagar</a>
+      <a class="btn btn-pago" id="btnPagar">Pagar<small>Paga hasta en 3 cuotas, sin intereses</small></a>
       <div class="err" id="err"></div>
-
-      <!-- ===== PRUEBA: borra este bloque cuando confirmes que Supabase funciona ===== -->
-      <div class="prueba">
-        <b>Solo para pruebas</b>
-        <button class="btn" id="btnPrueba">Subir información</button>
-        <pre id="resPrueba"></pre>
-      </div>
-      <!-- ===== FIN PRUEBA ===== -->
     </div>
   </div>
 </div>
@@ -311,11 +296,14 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
    CONFIGURACIÓN — edita solo esta sección.
    ========================================================= */
 
-/* Sube este número cada vez que reemplaces una imagen en GitHub (7 → 8 → 9...) */
-const VERSION_IMG = "7";
+/* Sube este número cada vez que reemplaces una imagen en GitHub (8 → 9 → 10...) */
+const VERSION_IMG = "9";
 
 const CONFIG = {
   whatsapp: "573208620674",
+
+  /* Logo: la página prueba estos nombres en orden dentro de img/logo/ */
+  logo: ["img/logo/logo.png","img/logo/logo.jpg","img/logo/logo.jpeg","img/logo/logo.svg","img/logo/logo.webp","img/logo/Logo.png","img/logo.png"],
 
   /* Supabase. La url es SOLO la dirección del proyecto, sin nada después de ".co" */
   supabase: {
@@ -327,7 +315,7 @@ const CONFIG = {
 
   precios: { con3d:290000, sin3d:190000 },
   /* Un link de Mercado Pago por cada precio */
-  mercadoPago: { con3d:"https://mpago.li/2sAjXfB", sin3d:"https://mpago.la/XXXX" },
+  mercadoPago: { con3d:"https://mpago.li/179R8yb", sin3d:"https://mpago.li/1aGWZEW" },
 
   /* Ventana de salida en computador: segundos mínimos en la página antes de que pueda aparecer */
   salidaSegundos: 20,
@@ -412,6 +400,15 @@ function imgOr(src,fb){
   if(!src) return fb;
   return `<img src="${ver(src)}" alt="" onerror="this.outerHTML=this.dataset.fb" data-fb='${fb.replace(/'/g,"&#39;")}'>`;
 }
+
+/* --- logo: prueba varios nombres hasta encontrar el archivo --- */
+(function cargarLogo(i=0){
+  if(i>=CONFIG.logo.length){console.warn("No se encontró el logo en:",CONFIG.logo);return;}
+  const im=new Image();
+  im.onload=()=>{$("logoBox").innerHTML="";im.className="logo";im.alt="Familia Real";$("logoBox").appendChild(im);};
+  im.onerror=()=>cargarLogo(i+1);
+  im.src=ver(CONFIG.logo[i]);
+})();
 
 /* --- marco --- */
 function mezcla(hex,f){const n=parseInt(hex.slice(1),16);let r=n>>16,g=n>>8&255,b=n&255;
@@ -575,19 +572,17 @@ function actualizar(){
     :`Mi mamá es <span class="relieve">${ma}</span> &nbsp; Mi papá es <span class="relieve">${pa}</span>`;
   ajustar($("pPapas"),3.9,38,2.8);
   $("totalPedido").textContent=fmt(total());
-  $("btnPagar").textContent=`Pagar ${fmt(total())}`;
+  $("btnPagar").innerHTML=`Pagar ${fmt(total())}<small>Paga hasta en 3 cuotas, sin intereses</small>`;
 }
 
 /* ===== CONEXIÓN CON SUPABASE ===== */
 const SB=CONFIG.supabase;
-/* limpia la url por si se pegó con /rest/v1/ u otra cosa al final */
 SB.url=SB.url.trim().replace(/\/+$/,"").replace(/\/(rest|storage)\/v1.*$/,"");
 const sbListo=()=>SB.url && !SB.url.includes("XXXX") && !SB.anonKey.includes("XXXX");
-/* las llaves nuevas (sb_publishable_...) van solo en "apikey"; las antiguas (eyJ...) también en Authorization */
 const sbHeaders=extra=>Object.assign({apikey:SB.anonKey}, SB.anonKey.startsWith("eyJ")?{Authorization:"Bearer "+SB.anonKey}:{}, extra);
 
-const fotos={};   /* bebe | mano | pie  →  {estado:"subiendo|ok|error|local", ruta, promesa, error} */
-async function reducir(file){   /* las fotos del celular pesan mucho: se reducen a 2400 px sin perder detalle útil */
+const fotos={};   /* bebe | mano | pie | diseno  →  {estado, ruta, promesa, error} */
+async function reducir(file){
   try{
     const bmp=await createImageBitmap(file), max=2400, k=Math.min(1,max/Math.max(bmp.width,bmp.height));
     const c=document.createElement("canvas");c.width=Math.round(bmp.width*k);c.height=Math.round(bmp.height*k);
@@ -595,14 +590,16 @@ async function reducir(file){   /* las fotos del celular pesan mucho: se reducen
     return await new Promise(r=>c.toBlob(b=>r(b||file),"image/jpeg",.92));
   }catch(e){return file;}
 }
+async function subirBlob(blob,nombre,tipo){
+  const ruta=`${CODIGO}/${nombre}`;
+  const r=await fetch(`${SB.url}/storage/v1/object/${SB.bucket}/${ruta}`,{method:"POST",headers:sbHeaders({"Content-Type":tipo}),body:blob});
+  if(!r.ok) throw new Error(`(${r.status}) ${await r.text()}`);
+  return ruta;
+}
 async function subir(clave,file){
   const blob=await reducir(file);
   const ext=blob.type==="image/jpeg"?"jpg":((file.name.split(".").pop()||"jpg").toLowerCase());
-  const ruta=`${CODIGO}/${clave}-${Date.now()}.${ext}`;
-  const r=await fetch(`${SB.url}/storage/v1/object/${SB.bucket}/${ruta}`,{
-    method:"POST",headers:sbHeaders({"Content-Type":blob.type||"image/jpeg"}),body:blob});
-  if(!r.ok) throw new Error(`(${r.status}) ${await r.text()}`);
-  return ruta;
+  return subirBlob(blob,`${clave}-${Date.now()}.${ext}`,blob.type||"image/jpeg");
 }
 function prepararUpload(clave){
   const box=$("up-"+clave), inp=box.querySelector("input"), est=box.querySelector(".estado"), th=box.querySelector(".thumb");
@@ -621,21 +618,49 @@ function prepararUpload(clave){
   };
 }
 
-/* ===== PANTALLAZO DEL DISEÑO: se toma la vista previa y se sube como diseno.png ===== */
+/* ===== PANTALLAZO DEL DISEÑO =====
+   Para que el pantallazo salga con las fuentes correctas, se descargan las fuentes de Google
+   y se meten dentro de la imagen (si no, el navegador usa una fuente de reemplazo). */
+let fuentesCSS=null;
+async function aDataURL(url){
+  const b=await (await fetch(url)).blob();
+  return await new Promise(r=>{const fr=new FileReader();fr.onload=()=>r(fr.result);fr.readAsDataURL(b);});
+}
+async function cargarFuentes(){
+  if(fuentesCSS!==null) return fuentesCSS;
+  try{
+    const href=document.querySelector('link[href*="fonts.googleapis.com"]').href;
+    let css=await (await fetch(href)).text();
+    /* solo las fuentes del cuadro y solo el alfabeto latino, para que pese poco */
+    const bloques=css.split("@font-face").slice(1).map(b=>"@font-face"+b)
+      .filter(b=>/Lily Script One|Dancing Script/.test(b) && (/U\+0000-00FF/.test(b)||!/unicode-range/.test(b)));
+    const out=[];
+    for(const b of bloques){
+      const m=b.match(/url\((https:[^)]+)\)/); if(!m) continue;
+      out.push(b.replace(m[1], await aDataURL(m[1])));
+    }
+    fuentesCSS=out.join("\n");
+  }catch(e){console.warn("No se pudieron preparar las fuentes:",e);fuentesCSS="";}
+  return fuentesCSS;
+}
 async function subirDiseno(){
   if(!sbListo()||!window.htmlToImage) return null;
   try{
+    await document.fonts.ready;
     const nodo=$("marco");
-    const blob=await htmlToImage.toBlob(nodo,{pixelRatio:Math.max(2,1600/nodo.offsetWidth),cacheBust:false,
-      backgroundColor:null,filter:n=>!(n.tagName==="LINK")});
+    const blob=await htmlToImage.toBlob(nodo,{
+      pixelRatio:Math.max(2,1600/nodo.offsetWidth),
+      fontEmbedCSS:await cargarFuentes(),
+      skipFonts:false
+    });
     if(!blob) return null;
-    const ruta=`${CODIGO}/diseno-${Date.now()}.png`;
-    const r=await fetch(`${SB.url}/storage/v1/object/${SB.bucket}/${ruta}`,{method:"POST",headers:sbHeaders({"Content-Type":"image/png"}),body:blob});
-    if(!r.ok) throw new Error(`(${r.status}) ${await r.text()}`);
+    const ruta=await subirBlob(blob,`diseno-${Date.now()}.png`,"image/png");
     fotos.diseno={estado:"ok",ruta};
     return ruta;
   }catch(e){console.error("No se pudo tomar el pantallazo:",e);fotos.diseno={estado:"error",error:e.message||String(e)};return null;}
 }
+/* se preparan las fuentes en segundo plano apenas carga la página */
+setTimeout(cargarFuentes,1500);
 
 /* ===== GUARDAR EL PEDIDO (todo esto te llega a ti, no se muestra a la clienta) ===== */
 function datosPedido(estado){
@@ -671,12 +696,12 @@ async function listo(){
   if(pend.length){error("Esperando a que terminen de subir las fotos…");await Promise.all(pend.map(f=>f.promesa));return listo();}
   error("");return true;
 }
-function ocupado(btn,txt){btn.dataset.t=btn.dataset.t||btn.textContent;btn.textContent=txt||btn.dataset.t;btn.toggleAttribute("disabled",!!txt);}
+function ocupado(btn,txt){if(txt){btn.dataset.t=btn.innerHTML;btn.textContent=txt;}else if(btn.dataset.t){btn.innerHTML=btn.dataset.t;}btn.toggleAttribute("disabled",!!txt);}
 
 let pagando=false;
 $("btnPagar").onclick=async e=>{
   e.preventDefault(); const b=$("btnPagar"); if(b.hasAttribute("disabled")) return;
-  ocupado(b,"Guardando tu pedido…");
+  ocupado(b,"Revisando tu pedido…");
   if(!(await listo())){ocupado(b);actualizar();return;}
   ocupado(b,"Preparando tu diseño…");
   await subirDiseno();
@@ -687,20 +712,6 @@ $("btnPagar").onclick=async e=>{
   location.href=CONFIG.mercadoPago[st.con3d?"con3d":"sin3d"];
 };
 
-/* ===== PRUEBA: sube lo que haya y muestra el resultado (borrar cuando todo funcione) ===== */
-$("btnPrueba").onclick=async ()=>{
-  const out=$("resPrueba"), b=$("btnPrueba");
-  if(!sbListo()){out.textContent="❌ Supabase no está configurado.\nPega la url y la anonKey en CONFIG.supabase.";return;}
-  ocupado(b,"Subiendo…"); out.textContent="Esperando a que terminen las fotos…";
-  await Promise.all(Object.values(fotos).filter(f=>f.estado==="subiendo").map(f=>f.promesa));
-  const lineas=["Conectando a: "+SB.url,"Código del pedido: "+CODIGO,""];
-  ["bebe","mano","pie"].forEach(k=>{const f=fotos[k];
-    lineas.push(`Foto ${k}: `+(!f?"— no elegida":f.estado==="ok"?"✅ subida → "+f.ruta:"❌ error "+(f.error||"")));});
-  lineas.push("Pantallazo: "+((await subirDiseno())?"✅ subido → "+fotos.diseno.ruta:"❌ "+(fotos.diseno&&fotos.diseno.error||"no disponible")));
-  const g=await guardarPedido("prueba");
-  lineas.push("",g.ok?"✅ Pedido guardado en la tabla '"+SB.tabla+"'":"❌ Pedido NO guardado: "+g.msg);
-  out.textContent=lineas.join("\n"); ocupado(b);
-};
 
 /* ===== VENTANA AL INTENTAR SALIR (con opción de WhatsApp) ===== */
 const urlWA=t=>`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(t)}`;
@@ -716,7 +727,7 @@ const inicio=Date.now();
 const salidaAbierta=()=>$("modalSalida").classList.contains("on");
 function mostrarSalida(){
   if(pagando||salidaAbierta()) return false;
-  if(Date.now()-ultimaSalida<4000) return false;   /* evita que salga dos veces seguidas */
+  if(Date.now()-ultimaSalida<4000) return false;
   $("modalSalida").classList.add("on"); return true;
 }
 function cerrarSalida(){ $("modalSalida").classList.remove("on"); ultimaSalida=Date.now(); }
@@ -730,8 +741,7 @@ document.addEventListener("mouseout",e=>{
   if(ultY!==null && ultY<120 && Date.now()-ultT<250) mostrarSalida();
 });
 
-/* CELULAR: botón "atrás". Se arma después del primer toque (los navegadores lo exigen)
-   y se vuelve a armar cada vez, así la ventana sale todas las veces. */
+/* CELULAR: botón "atrás". Se arma después del primer toque y sale todas las veces. */
 let trampaLista=false, saliendo=false;
 function armarAtras(){
   interactuo=true;
