@@ -112,8 +112,9 @@ input:focus,select:focus{outline:none;border-color:var(--marca)}
 .full{grid-column:1/-1}
 .check{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid #eee;border-radius:12px;margin-bottom:8px;cursor:pointer;font-weight:600;font-size:.92rem}
 .check input{width:20px;height:20px;accent-color:var(--marca)}
-.sub{display:flex;gap:8px;margin:-2px 0 10px 30px}
+.sub{display:flex;gap:8px;margin:-2px 0 10px 30px;flex-wrap:wrap}
 .sub .op{padding:8px;min-width:90px;font-size:.85rem}
+.sub .op img{display:block;height:34px;width:100%;object-fit:contain;margin-bottom:4px}
 .upload{border:2px dashed #e0cfd5;border-radius:12px;padding:14px;text-align:center;cursor:pointer;font-size:.88rem;background:#fdfafb;display:block}
 .upload.ok{border-color:#7bbf8e;background:#f2faf4}
 .upload input{display:none}
@@ -231,8 +232,8 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
    ========================================================= */
 
 /* Sube este número cada vez que reemplaces una imagen en GitHub
-   (3 → 4 → 5...), para que los navegadores no muestren la versión vieja. */
-const VERSION_IMG = "3";
+   (4 → 5 → 6...), para que los navegadores no muestren la versión vieja. */
+const VERSION_IMG = "4";
 
 const CONFIG = {
   whatsapp: "57XXXXXXXXXX",
@@ -288,10 +289,17 @@ const CONFIG = {
   ],
   mano: "img/3d/mano.png",
   pie:  "img/3d/pie.png",
+
+  /* Recuerdos. x, y = posición inicial; w, h = tamaño. Todo en % del área interior.
+     Cada tipo de prueba tiene su propio tamaño: ajusta w y h si alguna se ve
+     muy grande o muy pequeña frente al cuadro real. */
   recuerdos: [
-    {id:"prueba", nombre:"Prueba de embarazo", w:24, h:10, x:42, y:88,
-     variantes:[ {id:"sangre", nombre:"Examen de sangre", img:"img/recuerdos/prueba-sangre.png", ph:"#f3f3f3"},
-                 {id:"casera", nombre:"Prueba casera",    img:"img/recuerdos/prueba-casera.png", ph:"#e9f1f8"} ]},
+    {id:"prueba", nombre:"Prueba de embarazo", x:42, y:88,
+     variantes:[
+       {id:"cuadrada",  nombre:"Cuadrada",  img:"img/recuerdos/prueba-cuadrada.png",  w:18, h:8,  ph:"#f3f3f3"},
+       {id:"larga",     nombre:"Larga",     img:"img/recuerdos/prueba-larga.png",     w:26, h:6,  ph:"#e9f1f8"},
+       {id:"clearblue", nombre:"Clearblue", img:"img/recuerdos/prueba-clearblue.png", w:34, h:9,  ph:"#dfe9f7"}
+     ]},
     {id:"cordon",  nombre:"Pinza del cordón umbilical", w:9,  h:7, x:63, y:89, img:"img/recuerdos/cordon.png",  ph:"#fafafa"},
     {id:"manilla", nombre:"Manilla del hospital",       w:22, h:6, x:81, y:89, img:"img/recuerdos/manilla.png", ph:"#e3eefb"}
   ]
@@ -366,7 +374,7 @@ function pintarColoresFondo(){
   $("avisoOscuro").style.display=lum<150?"block":"none";
 }
 $("colorLibre").addEventListener("input",e=>{
-  st.fondoColor={nombre:"Personalizado "+e.target.value.toUpperCase(),hex:e.target.value};
+  st.fondoColor={nombre:"Personalizado",hex:e.target.value};
   pintarColoresFondo();actualizar();
 });
 function opciones(cont,items,key,render,after){
@@ -401,7 +409,8 @@ function pintarListaRec(){
     if(on&&r.variantes){
       const sub=document.createElement("div");sub.className="sub";
       r.variantes.forEach(v=>{const o=document.createElement("div");
-        o.className="op"+(st.rec[r.id].variante===v?" sel":"");o.textContent=v.nombre;
+        o.className="op"+(st.rec[r.id].variante===v?" sel":"");
+        o.innerHTML=`<img src="${ver(v.img)}" alt="" onerror="this.remove()">${v.nombre}`;
         o.onclick=()=>{st.rec[r.id].variante=v;pintarListaRec();pintarRecuerdos();actualizar();};sub.appendChild(o);});
       c.appendChild(sub);
     }
@@ -411,10 +420,12 @@ function pintarRecuerdos(){
   const cont=$("recuerdos");cont.innerHTML="";
   CONFIG.recuerdos.forEach(r=>{
     const s=st.rec[r.id]; if(!s) return;
-    const src=s.variante||r;
+    const src=s.variante||r, w=src.w||r.w, h=src.h||r.h;
     const el=document.createElement("div");el.className="rec";
-    Object.assign(el.style,{width:r.w+"%",height:r.h+"%",left:s.x+"%",top:s.y+"%",transform:"translate(-50%,-50%)"});
-    el.innerHTML=imgOr(src.img,`<div class="ph" style="background:${src.ph}">${s.variante?s.variante.nombre:r.nombre}</div>`);
+    /* que no se salga del cuadro si la variante es más grande */
+    s.x=Math.min(100-w/2,Math.max(w/2,s.x)); s.y=Math.min(100-h/2,Math.max(h/2,s.y));
+    Object.assign(el.style,{width:w+"%",height:h+"%",left:s.x+"%",top:s.y+"%",transform:"translate(-50%,-50%)"});
+    el.innerHTML=imgOr(src.img,`<div class="ph" style="background:${src.ph}">${s.variante?"Prueba "+s.variante.nombre:r.nombre}</div>`);
     arrastrable(el,s);cont.appendChild(el);
   });
   $("ayudaDrag").style.display=Object.keys(st.rec).length?"block":"none";
