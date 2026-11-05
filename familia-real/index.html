@@ -7,6 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Familia Real · Diseña el cuadro de tu bebé</title>
 <link href="https://fonts.googleapis.com/css2?family=Lily+Script+One&family=Dancing+Script:wght@400;500;600;700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js"></script>
 <style>
 /* ===== FUENTES (Google Fonts, gratis y con uso comercial) =====
    Nombre, fecha y números: Lily Script One.  Demás textos: Dancing Script. */
@@ -19,6 +20,7 @@
 body{font-family:'Nunito',sans-serif;background:var(--crema);color:var(--texto)}
 header{text-align:center;padding:28px 16px 10px}
 header h1{font-family:'Dancing Script',cursive;font-size:2.4rem;color:var(--marca-osc)}
+.logo{display:block;max-width:220px;max-height:110px;width:auto;height:auto;margin:0 auto}
 header p{max-width:560px;margin:6px auto 0}
 .wrap{max-width:1250px;margin:0 auto;padding:16px;display:grid;grid-template-columns:1.25fr 1fr;gap:28px;align-items:start}
 @media(max-width:900px){.wrap{grid-template-columns:1fr}}
@@ -169,8 +171,9 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
 </head>
 <body>
 <header>
-  <h1>Familia Real</h1>
-  <p>Diseña el recuerdo de tu bebé. Sus manitos y piecitos en 3D, hechos a partir de una foto, desde cualquier lugar de Colombia.</p>
+  <!-- Logo: sube tu archivo a img/logo/logo.png (si no existe, se muestra el nombre) -->
+  <img class="logo" src="img/logo/logo.png" alt="Familia Real" onerror="this.outerHTML='<h1>Familia Real</h1>'">
+  <p>Diseña el recuerdo más hermoso de la etapa más preciosa de tu bebé y recíbelo en tu casa en 8 días hábiles.</p>
 </header>
 
 <div class="wrap">
@@ -205,8 +208,6 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
       </div>
     </div>
     </div>
-    <div class="precio-flot">Total: <b id="totalFlot">$0</b></div>
-    <div class="nota-prev">Vista previa de referencia. Antes de producir te enviamos el diseño final por WhatsApp para tu aprobación.</div>
   </div>
 
   <div>
@@ -301,6 +302,7 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
     <p>Escríbenos y te ayudamos a terminar el cuadro de tu bebé. Tu diseño nos llega en el mensaje, así no tienes que empezar de nuevo.</p>
     <a class="btn btn-wa" id="btnWaSalida">Escribir por WhatsApp</a>
     <button class="btn btn-link" id="seguirSalida">Seguir diseñando</button>
+    <a href="#" id="salirSalida" style="display:none;font-size:.8rem;color:#b0a3a8">Salir de la página</a>
   </div>
 </div>
 
@@ -313,7 +315,7 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
 const VERSION_IMG = "7";
 
 const CONFIG = {
-  whatsapp: "57XXXXXXXXXX",
+  whatsapp: "573208620674",
 
   /* Supabase. La url es SOLO la dirección del proyecto, sin nada después de ".co" */
   supabase: {
@@ -325,7 +327,7 @@ const CONFIG = {
 
   precios: { con3d:290000, sin3d:190000 },
   /* Un link de Mercado Pago por cada precio */
-  mercadoPago: { con3d:"https://mpago.la/XXXX", sin3d:"https://mpago.la/XXXX" },
+  mercadoPago: { con3d:"https://mpago.li/2sAjXfB", sin3d:"https://mpago.la/XXXX" },
 
   /* Ventana de salida en computador: segundos mínimos en la página antes de que pueda aparecer */
   salidaSegundos: 20,
@@ -572,7 +574,6 @@ function actualizar(){
     :modo==="papitos"?`Mis papitos son <span class="relieve">${ma} y ${pa}</span>`
     :`Mi mamá es <span class="relieve">${ma}</span> &nbsp; Mi papá es <span class="relieve">${pa}</span>`;
   ajustar($("pPapas"),3.9,38,2.8);
-  $("totalFlot").textContent=fmt(total());
   $("totalPedido").textContent=fmt(total());
   $("btnPagar").textContent=`Pagar ${fmt(total())}`;
 }
@@ -620,6 +621,22 @@ function prepararUpload(clave){
   };
 }
 
+/* ===== PANTALLAZO DEL DISEÑO: se toma la vista previa y se sube como diseno.png ===== */
+async function subirDiseno(){
+  if(!sbListo()||!window.htmlToImage) return null;
+  try{
+    const nodo=$("marco");
+    const blob=await htmlToImage.toBlob(nodo,{pixelRatio:Math.max(2,1600/nodo.offsetWidth),cacheBust:false,
+      backgroundColor:null,filter:n=>!(n.tagName==="LINK")});
+    if(!blob) return null;
+    const ruta=`${CODIGO}/diseno-${Date.now()}.png`;
+    const r=await fetch(`${SB.url}/storage/v1/object/${SB.bucket}/${ruta}`,{method:"POST",headers:sbHeaders({"Content-Type":"image/png"}),body:blob});
+    if(!r.ok) throw new Error(`(${r.status}) ${await r.text()}`);
+    fotos.diseno={estado:"ok",ruta};
+    return ruta;
+  }catch(e){console.error("No se pudo tomar el pantallazo:",e);fotos.diseno={estado:"error",error:e.message||String(e)};return null;}
+}
+
 /* ===== GUARDAR EL PEDIDO (todo esto te llega a ti, no se muestra a la clienta) ===== */
 function datosPedido(estado){
   return {
@@ -629,7 +646,7 @@ function datosPedido(estado){
             hora:v("hora"), lugar:v("lugar"), peso:v("peso"), talla:v("talla"), rh:v("rh"),
             papas:$("pPapas").textContent, personaje:st.animal.nombre, fondo:textoFondo(),
             color_letras:st.color.id, marco:st.marco.nombre, recuerdos:textoRec() },
-    fotos:Object.fromEntries(Object.entries(fotos).filter(([k,f])=>f.ruta&&(k==="bebe"||st.con3d)).map(([k,f])=>[k,f.ruta]))
+    fotos:Object.fromEntries(Object.entries(fotos).filter(([k,f])=>f.ruta&&(k==="bebe"||k==="diseno"||st.con3d)).map(([k,f])=>[k,f.ruta]))
   };
 }
 async function guardarPedido(estado){
@@ -661,6 +678,9 @@ $("btnPagar").onclick=async e=>{
   e.preventDefault(); const b=$("btnPagar"); if(b.hasAttribute("disabled")) return;
   ocupado(b,"Guardando tu pedido…");
   if(!(await listo())){ocupado(b);actualizar();return;}
+  ocupado(b,"Preparando tu diseño…");
+  await subirDiseno();
+  ocupado(b,"Guardando tu pedido…");
   const g=await guardarPedido("pago iniciado");
   if(!g.ok && sbListo()){ocupado(b);actualizar();error("No pudimos guardar tu pedido. Revisa tu conexión e inténtalo de nuevo.");console.error(g.msg);return;}
   pagando=true;
@@ -676,6 +696,7 @@ $("btnPrueba").onclick=async ()=>{
   const lineas=["Conectando a: "+SB.url,"Código del pedido: "+CODIGO,""];
   ["bebe","mano","pie"].forEach(k=>{const f=fotos[k];
     lineas.push(`Foto ${k}: `+(!f?"— no elegida":f.estado==="ok"?"✅ subida → "+f.ruta:"❌ error "+(f.error||"")));});
+  lineas.push("Pantallazo: "+((await subirDiseno())?"✅ subido → "+fotos.diseno.ruta:"❌ "+(fotos.diseno&&fotos.diseno.error||"no disponible")));
   const g=await guardarPedido("prueba");
   lineas.push("",g.ok?"✅ Pedido guardado en la tabla '"+SB.tabla+"'":"❌ Pedido NO guardado: "+g.msg);
   out.textContent=lineas.join("\n"); ocupado(b);
@@ -690,28 +711,28 @@ function mensajeWA(){
 • Personaje: ${st.animal.nombre} | Fondo: ${textoFondo()}
 • Manito y piecito 3D: ${st.con3d?"Sí":"No"}`;
 }
-let salidaMostrada=false, interactuo=false;
+let interactuo=false, ultimaSalida=0;
 const inicio=Date.now();
+const salidaAbierta=()=>$("modalSalida").classList.contains("on");
 function mostrarSalida(){
-  if(salidaMostrada||pagando) return false;
-  salidaMostrada=true; $("modalSalida").classList.add("on"); return true;
+  if(pagando||salidaAbierta()) return false;
+  if(Date.now()-ultimaSalida<4000) return false;   /* evita que salga dos veces seguidas */
+  $("modalSalida").classList.add("on"); return true;
 }
-const cerrarSalida=()=>$("modalSalida").classList.remove("on");
+function cerrarSalida(){ $("modalSalida").classList.remove("on"); ultimaSalida=Date.now(); }
 
-/* COMPUTADOR: solo si ya empezó a diseñar, lleva un rato en la página y el mouse
-   sale rápido por la parte de arriba (hacia las pestañas / la X). */
+/* COMPUTADOR: si ya empezó a diseñar, lleva un rato en la página y el mouse sale rápido por arriba */
 let ultY=null, ultT=0;
 document.addEventListener("mousemove",e=>{ultY=e.clientY;ultT=Date.now();});
 document.addEventListener("mouseout",e=>{
   if(e.relatedTarget||e.clientY>0) return;
   if(!interactuo || Date.now()-inicio<CONFIG.salidaSegundos*1000) return;
-  const rapido = ultY!==null && ultY<120 && Date.now()-ultT<250;
-  if(rapido) mostrarSalida();
+  if(ultY!==null && ultY<120 && Date.now()-ultT<250) mostrarSalida();
 });
 
-/* CELULAR: botón "atrás". Los navegadores ignoran esto si se activa antes de que la
-   persona toque la página, por eso se arma después de su primer toque o escritura. */
-let trampaLista=false;
+/* CELULAR: botón "atrás". Se arma después del primer toque (los navegadores lo exigen)
+   y se vuelve a armar cada vez, así la ventana sale todas las veces. */
+let trampaLista=false, saliendo=false;
 function armarAtras(){
   interactuo=true;
   if(trampaLista) return; trampaLista=true;
@@ -719,13 +740,18 @@ function armarAtras(){
 }
 ["pointerdown","keydown","input"].forEach(ev=>document.addEventListener(ev,armarAtras,{passive:true}));
 addEventListener("popstate",()=>{
-  if(mostrarSalida()) history.pushState({fr:1},"",location.href);  /* se queda en la página y muestra la ventana */
-  else history.back();                                             /* la segunda vez sí sale */
+  if(saliendo||pagando) return;
+  history.pushState({fr:1},"",location.href);
+  $("modalSalida").classList.add("on");
+  $("salirSalida").style.display="inline-block";
 });
+$("salirSalida").onclick=e=>{e.preventDefault();saliendo=true;history.go(-2);};
 
 $("cerrarSalida").onclick=cerrarSalida; $("seguirSalida").onclick=cerrarSalida;
 $("modalSalida").onclick=e=>{if(e.target===$("modalSalida"))cerrarSalida();};
-$("btnWaSalida").onclick=e=>{e.preventDefault();guardarPedido("consulta whatsapp");window.open(urlWA(mensajeWA()),"_blank");cerrarSalida();};
+$("btnWaSalida").onclick=async e=>{e.preventDefault();const w=window.open("about:blank","_blank");
+  await subirDiseno(); guardarPedido("consulta whatsapp");
+  if(w) w.location.href=urlWA(mensajeWA()); else location.href=urlWA(mensajeWA()); cerrarSalida();};
 $("linkOtro").onclick=e=>{e.preventDefault();window.open(urlWA("¡Hola! Quiero un cuadro con un personaje especial 💕"),"_blank");};
 
 /* --- guía de fotos --- */
