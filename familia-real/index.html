@@ -43,8 +43,7 @@ header p{max-width:560px;margin:6px auto 0}
   background:linear-gradient(115deg,rgba(255,255,255,0) 0 16%,rgba(255,255,255,.10) 23%,rgba(255,255,255,.03) 30%,rgba(255,255,255,0) 37% 62%,rgba(255,255,255,.06) 66%,rgba(255,255,255,0) 72%)}
 
 /* ===== DISEÑO DEL CUADRO =====
-   Todas las medidas en % del área interior; las letras en "cqw" (= 1% del ancho del cuadro),
-   así todo crece y se achica junto con el cuadro en celular y computador. */
+   Posiciones y tamaños en % del área interior. Letras en "cqw" (1 cqw = 1% del ancho del cuadro). */
 .capa-fondo{position:absolute;inset:0;background-size:cover;background-position:center}
 .deco{position:absolute;color:var(--acento);opacity:.5;font-size:3cqw}
 /* columna izquierda: mano + foto */
@@ -53,36 +52,35 @@ header p{max-width:560px;margin:6px auto 0}
 /* columna derecha: animal + pie */
 .personaje{position:absolute;right:3%;top:2%;width:20%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:13cqw;z-index:3}
 .personaje img{width:100%;height:100%;object-fit:contain}
-.pie{position:absolute;z-index:4;right:1%;top:41%;width:20%;height:33%;display:flex;align-items:center;justify-content:center}
+.pie{position:absolute;z-index:4;right:1%;top:35%;width:20%;height:32%;display:flex;align-items:center;justify-content:center}
 .mano img,.pie img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(3px 4px 4px rgba(0,0,0,.35))}
 .ph3d{width:85%;height:90%;background:radial-gradient(circle at 35% 30%,#f4f4f4,#aaa 55%,#777);border-radius:40% 40% 30% 30%;box-shadow:3px 4px 6px rgba(0,0,0,.35)}
-/* columna central: textos (top en % del alto del cuadro) */
+.sin3d .mano,.sin3d .pie{display:none}
+/* columna central: textos */
 .t{position:absolute;left:24%;right:24%;text-align:center;line-height:1;z-index:3;font-family:var(--f-texto);color:#555;white-space:nowrap}
 .relieve{font-family:var(--f-titulo);color:var(--acento);text-shadow:.12cqw .12cqw 0 rgba(0,0,0,.45),.25cqw .25cqw .2cqw rgba(0,0,0,.15)}
 .t-nombre{top:3%;font-size:8cqw}
-.t-apellido{top:13.2%;font-size:3.6cqw}
-.t-dia{top:18.6%;font-size:3.2cqw;color:#666}
-.t-fecha{top:23%;font-size:5cqw}
-.t-lugar{top:30.5%;font-size:3cqw}
-/* datos: cada uno ubicado por separado */
+.t-apellido{top:13.2%;font-size:4.2cqw}
+.t-dia{top:19%;font-size:3.7cqw;color:#666}
+.t-fecha{top:23.5%;font-size:5cqw}
+.t-lugar{top:31%;font-size:3.5cqw}
+/* datos */
 .dato{position:absolute;z-index:3;display:flex;align-items:flex-end;gap:1cqw;white-space:nowrap}
 .d-hora{left:28%;top:38%}
 .d-talla{left:60%;top:38%}
 .d-peso{left:28%;top:53%}
 .d-rh{left:60%;top:53%}
 .dato .ico{width:5.2cqw;height:5.2cqw;color:var(--acento);flex-shrink:0;filter:drop-shadow(.12cqw .12cqw 0 rgba(0,0,0,.4)) drop-shadow(.25cqw .25cqw .2cqw rgba(0,0,0,.15))}
-.dato small{display:block;font-size:2.6cqw;color:#666;font-family:var(--f-texto);line-height:1.1}
+.dato small{display:block;font-size:3cqw;color:#666;font-family:var(--f-texto);line-height:1.1}
 .dato b{font-size:4.6cqw;font-weight:400;line-height:1}
-.dato .u{display:inline;font-size:2.4cqw;margin-left:.4cqw}
-.t-papas{top:73%;left:26%;right:20%;font-size:3.4cqw;white-space:normal;line-height:1.2}
-.t-papas span{font-size:4cqw}
-/* recuerdos */
-.rec{position:absolute;z-index:6;cursor:grab;touch-action:none;user-select:none;display:flex;align-items:center;justify-content:center}
-.rec:active{cursor:grabbing}
-.rec img{width:100%;height:100%;object-fit:contain;pointer-events:none;filter:drop-shadow(.2cqw .3cqw .3cqw rgba(0,0,0,.3))}
+.dato .u{display:inline;font-size:2.8cqw;margin-left:.4cqw}
+/* papás: llega casi hasta el borde derecho (el pie termina antes) */
+.t-papas{top:71%;left:26%;right:3%;font-size:3.9cqw;white-space:normal;line-height:1.2}
+.t-papas span{font-size:1.05em}
+/* recuerdos: se reparten solos en la franja de abajo */
+.rec{position:absolute;z-index:6;display:flex;align-items:center;justify-content:center;transform:translate(-50%,-50%)}
+.rec img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(.2cqw .3cqw .3cqw rgba(0,0,0,.3))}
 .rec .ph{width:100%;height:100%;border-radius:4px;font-size:1.8cqw;display:flex;align-items:center;justify-content:center;text-align:center;color:#555;box-shadow:0 1px 3px rgba(0,0,0,.2)}
-.rec.mov{outline:1.5px dashed var(--marca-osc);outline-offset:2px}
-.ayuda-drag{font-size:.85rem;text-align:center;color:var(--marca-osc);margin-top:8px;display:none}
 .precio-flot{margin-top:12px;text-align:center}
 .precio-flot b{font-size:1.4rem;color:var(--marca-osc)}
 .nota-prev{font-size:.8rem;text-align:center;color:#8a7a7f;margin-top:4px}
@@ -109,9 +107,11 @@ header p{max-width:560px;margin:6px auto 0}
 .otro-color input[type=color]{width:52px;height:40px;padding:2px;border-radius:10px;cursor:pointer}
 .aviso-oscuro{font-size:.8rem;color:#b5651d;margin-top:8px;display:none}
 .opciones{display:flex;gap:10px;flex-wrap:wrap}
-.op{flex:1;min-width:110px;border:2px solid #eee;border-radius:12px;padding:12px;cursor:pointer;text-align:center}
+.op{flex:1;min-width:110px;border:2px solid #eee;border-radius:12px;padding:12px;cursor:pointer;text-align:center;position:relative}
 .op.sel{border-color:var(--marca);background:#fdf5f7}
 .op b{display:block}.op small{color:#8a7a7f}
+.op .badge{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:var(--marca);color:#fff;font-size:.7rem;font-weight:800;padding:2px 10px;border-radius:20px;white-space:nowrap}
+.op .precio{font-size:1.1rem;font-weight:800;color:var(--marca-osc);margin-top:4px}
 .muestra{display:inline-block;width:22px;height:22px;border-radius:5px;vertical-align:middle;margin-bottom:4px;box-shadow:inset 0 0 0 1px rgba(0,0,0,.15)}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 @media(max-width:480px){.grid{grid-template-columns:1fr}}
@@ -124,16 +124,40 @@ input:focus,select:focus{outline:none;border-color:var(--marca)}
 .sub{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:-2px 0 10px 30px}
 .sub .op{padding:8px;min-width:0;font-size:.85rem}
 .sub .op img{display:block;height:44px;width:100%;object-fit:contain;margin-bottom:4px}
-.upload{border:2px dashed #e0cfd5;border-radius:12px;padding:14px;text-align:center;cursor:pointer;font-size:.88rem;background:#fdfafb;display:block}
-.upload.ok{border-color:#7bbf8e;background:#f2faf4}
+/* subida de fotos */
+.upload{display:flex;align-items:center;gap:12px;border:2px dashed #e0cfd5;border-radius:12px;padding:10px;cursor:pointer;font-size:.9rem;background:#fdfafb;margin:0}
 .upload input{display:none}
+.upload .thumb{width:68px;height:68px;border-radius:10px;background:#f3eef0 center/cover;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:1.7rem;overflow:hidden}
+.upload .thumb img{width:100%;height:100%;object-fit:cover;opacity:.75}
+.upload .txt b{display:block;font-size:.92rem}
+.upload .estado{font-size:.8rem;color:#8a7a7f;font-weight:600}
+.upload.subiendo{border-color:#e0b75a;background:#fffaf0}
+.upload.ok{border-style:solid;border-color:#7bbf8e;background:#f2faf4}
+.upload.ok .estado{color:#2e8b57}
+.upload.error{border-color:#d9534f;background:#fdf1f1}
+.upload.error .estado{color:#c0392b}
+.foto3d{margin-top:12px}
+.ver-guia{display:inline-block;font-size:.85rem;color:var(--marca-osc);font-weight:700;margin:6px 0 0 4px}
 .info{background:#fdf5f7;border-radius:12px;padding:12px 14px;font-size:.88rem;margin-top:12px;line-height:1.45}
 .resumen{font-size:.92rem;line-height:1.7}
 .resumen .total{font-size:1.3rem;font-weight:800;color:var(--marca-osc);border-top:1px solid #eee;margin-top:8px;padding-top:8px}
 .btn{display:block;width:100%;padding:15px;border:none;border-radius:12px;font-size:1.05rem;font-weight:800;cursor:pointer;margin-top:12px;font-family:inherit;text-decoration:none;text-align:center}
-.btn-pago{background:#009ee3;color:#fff}.btn-wa{background:#25d366;color:#fff}
+.btn[disabled]{opacity:.6;cursor:wait}
+.btn-pago{background:#009ee3;color:#fff}.btn-wa{background:#25d366;color:#fff}.btn-ok{background:var(--marca);color:#fff}
 .err{color:#c0392b;font-size:.85rem;margin-top:8px;display:none}
 .otro{font-size:.85rem;margin-top:12px}.otro a{color:var(--marca-osc);font-weight:700}
+/* ventana de guía */
+.modal{position:fixed;inset:0;background:rgba(40,25,30,.55);display:none;align-items:center;justify-content:center;z-index:100;padding:16px}
+.modal.on{display:flex}
+.modal-box{background:#fff;border-radius:16px;max-width:520px;width:100%;max-height:90vh;overflow:auto;padding:22px;position:relative}
+.modal-box h3{font-size:1.15rem;padding-right:30px}
+.cerrar{position:absolute;top:12px;right:14px;border:none;background:none;font-size:1.6rem;cursor:pointer;color:#8a7a7f}
+.comparar{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:14px 0}
+.ej-img{aspect-ratio:3/4;border-radius:10px;background:#f3eef0;overflow:hidden;display:flex;align-items:center;justify-content:center;color:#a8999e;font-size:.8rem;text-align:center;padding:6px}
+.ej-img img{width:100%;height:100%;object-fit:cover}
+figcaption{text-align:center;font-weight:800;margin-top:4px;font-size:.9rem}
+.si{color:#2e8b57}.no{color:#c0392b}
+.tips{padding-left:20px;font-size:.9rem;line-height:1.55}
 footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
 </style>
 </head>
@@ -175,27 +199,12 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
       </div>
     </div>
     </div>
-    <div class="ayuda-drag" id="ayudaDrag">👆 Arrastra los recuerdos para ubicarlos donde quieras</div>
     <div class="precio-flot">Total: <b id="totalFlot">$0</b></div>
     <div class="nota-prev">Vista previa de referencia. Antes de producir te enviamos el diseño final por WhatsApp para tu aprobación.</div>
   </div>
 
   <div>
-    <div class="paso"><h2><span class="num">1</span> Elige el personaje</h2><p>El amiguito que acompañará a tu bebé.</p>
-      <div class="galeria" id="animales"></div>
-      <div class="otro">¿Sueñas con otro personaje? <a href="#" id="linkOtro">Escríbenos por WhatsApp</a>.</div></div>
-    <div class="paso"><h2><span class="num">2</span> Elige el fondo</h2><p>Con diseño o de un solo color.</p>
-      <div class="galeria" id="fondos"></div>
-      <div class="box-solido" id="boxSolido">
-        <h3>Elige el color del fondo</h3>
-        <div class="colores" id="coloresFondo"></div>
-        <label class="otro-color">Otro color: <input type="color" id="colorLibre" value="#f9e1e8"></label>
-        <div class="aviso-oscuro" id="avisoOscuro">Este color es oscuro: los textos pueden leerse con dificultad. Te recomendamos un tono claro.</div>
-      </div></div>
-    <div class="paso"><h2><span class="num">3</span> Color de las letras</h2><p>Las letras van en relieve con este color.</p><div class="colores" id="colores"></div></div>
-    <div class="paso"><h2><span class="num">4</span> Tamaño y marco</h2><p>&nbsp;</p>
-      <div class="opciones" id="tamanos"></div><div style="height:12px"></div><div class="opciones" id="marcos"></div></div>
-    <div class="paso"><h2><span class="num">5</span> Los datos de tu bebé</h2><p>Escribe y mira cómo aparece en el cuadro.</p>
+    <div class="paso"><h2><span class="num">1</span> Los datos de tu bebé</h2><p>Escribe y mira cómo aparece en el cuadro.</p>
       <div class="grid">
         <div><label>Nombre</label><input id="nombre" placeholder="Ej: Guadalupe" maxlength="22"></div>
         <div><label>Apellidos</label><input id="apellido" placeholder="Ej: García Guzmán" maxlength="30"></div>
@@ -209,27 +218,64 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
         <div><label>Nombre de mamá</label><input id="mama" maxlength="16"></div>
         <div id="boxPapa"><label>Nombre de papá</label><input id="papa" maxlength="16"></div>
       </div></div>
-    <div class="paso"><h2><span class="num">6</span> Tus recuerdos</h2><p>Marca lo que vas a poner. Tú misma los pegas en casa: incluimos el pegante y una guía.</p><div id="listaRec"></div></div>
-    <div class="paso"><h2><span class="num">7</span> Fotos</h2><p>Con buena luz y de cerca. También sirven fotos antiguas si se ven nítidas.</p>
-      <div class="grid">
-        <label class="upload" id="upBebe">📷 Foto del bebé<br><small>para el cuadro</small><input type="file" accept="image/*" id="fBebe"></label>
-        <label class="upload" id="upMano">✋ Foto de la manito<br><small>para el 3D</small><input type="file" accept="image/*" id="fMano"></label>
-        <label class="upload full" id="upPie">🦶 Foto del piecito<br><small>de lado y de planta si puedes</small><input type="file" accept="image/*" id="fPie"></label>
+    <div class="paso"><h2><span class="num">2</span> Elige el personaje</h2><p>El amiguito que acompañará a tu bebé.</p>
+      <div class="galeria" id="animales"></div>
+      <div class="otro">¿Sueñas con otro personaje? <a href="#" id="linkOtro">Escríbenos por WhatsApp</a>.</div></div>
+    <div class="paso"><h2><span class="num">3</span> Elige el fondo</h2><p>Con diseño o de un solo color.</p>
+      <div class="galeria" id="fondos"></div>
+      <div class="box-solido" id="boxSolido">
+        <h3>Elige el color del fondo</h3>
+        <div class="colores" id="coloresFondo"></div>
+        <label class="otro-color">Otro color: <input type="color" id="colorLibre" value="#f9e1e8"></label>
+        <div class="aviso-oscuro" id="avisoOscuro">Este color es oscuro: los textos pueden leerse con dificultad. Te recomendamos un tono claro.</div>
       </div></div>
-    <div class="paso"><h2><span class="num">8</span> Tu pedido</h2>
+    <div class="paso"><h2><span class="num">4</span> Color de las letras</h2><p>Las letras e iconos van en relieve con este color.</p><div class="colores" id="colores"></div></div>
+    <div class="paso"><h2><span class="num">5</span> Elige el marco</h2><p>&nbsp;</p><div class="opciones" id="marcos"></div></div>
+    <div class="paso"><h2><span class="num">6</span> Tus recuerdos</h2><p>Marca lo que vas a poner. Tú misma los pegas en casa: incluimos el pegante y una guía.</p><div id="listaRec"></div></div>
+    <div class="paso"><h2><span class="num">7</span> Manito y piecito en 3D</h2><p>Reproducimos en relieve la manito y el piecito de tu bebé a partir de una foto.</p>
+      <div class="opciones" id="op3d"></div></div>
+    <div class="paso"><h2><span class="num">8</span> Fotos</h2><p>Se guardan de forma segura y solo las usamos para hacer tu cuadro.</p>
+      <label class="upload" id="up-bebe"><div class="thumb">📷</div><div class="txt"><b>Foto de tu bebé</b><span class="estado">Toca para subir la foto</span></div><input type="file" accept="image/*"></label>
+      <div id="fotos3d">
+        <div class="foto3d">
+          <label class="upload" id="up-mano"><div class="thumb" id="thMano">✋</div><div class="txt"><b>Palma de la manito</b><span class="estado">Toca para subir la foto</span></div><input type="file" accept="image/*"></label>
+          <a href="#" class="ver-guia" data-guia="mano">📸 Ver cómo tomar esta foto</a>
+        </div>
+        <div class="foto3d">
+          <label class="upload" id="up-pie"><div class="thumb" id="thPie">🦶</div><div class="txt"><b>Planta del piecito</b><span class="estado">Toca para subir la foto</span></div><input type="file" accept="image/*"></label>
+          <a href="#" class="ver-guia" data-guia="pie">📸 Ver cómo tomar esta foto</a>
+        </div>
+        <div class="info">También sirven fotos antiguas, si se ven nítidas.</div>
+      </div></div>
+    <div class="paso"><h2><span class="num">9</span> Tu pedido</h2>
       <div class="grid" style="margin:10px 0">
         <div><label>Tu nombre</label><input id="cliente"></div>
-        <div><label>Ciudad de envío</label><input id="ciudad" placeholder="Ej: Medellín"></div>
+        <div><label>Tu celular</label><input id="celular" type="tel" inputmode="tel" placeholder="Ej: 300 123 4567"></div>
+        <div class="full"><label>Ciudad de envío</label><input id="ciudad" placeholder="Ej: Medellín"></div>
       </div>
       <div class="resumen" id="resumen"></div>
       <div class="opciones" id="pagos" style="margin-top:12px"></div>
       <a class="btn btn-pago" id="btnPagar">Pagar con Mercado Pago</a>
-      <a class="btn btn-wa" id="btnWa">Enviar mi diseño por WhatsApp</a>
+      <a class="btn btn-wa" id="btnWa">Prefiero hablar por WhatsApp</a>
       <div class="err" id="err"></div>
-      <div class="info">Después de pagar, envíanos las fotos por WhatsApp (las subidas aquí solo se usan para la vista previa).</div></div>
+    </div>
   </div>
 </div>
 <footer>Familia Real · Recuerdos que se quedan para siempre</footer>
+
+<!-- Ventana con la guía para tomar las fotos -->
+<div class="modal" id="modal">
+  <div class="modal-box">
+    <button class="cerrar" id="cerrarModal" aria-label="Cerrar">×</button>
+    <h3 id="mTitulo"></h3>
+    <div class="comparar">
+      <figure><div class="ej-img" id="mBien"></div><figcaption class="si">✓ Así sí</figcaption></figure>
+      <figure><div class="ej-img" id="mMal"></div><figcaption class="no">✗ Así no</figcaption></figure>
+    </div>
+    <ul class="tips" id="mTips"></ul>
+    <button class="btn btn-ok" id="okModal">Entendido</button>
+  </div>
+</div>
 
 <script>
 /* =========================================================
@@ -238,15 +284,28 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
    Si un archivo no existe, la página muestra un provisional y no se rompe.
    ========================================================= */
 
-/* Sube este número cada vez que reemplaces una imagen en GitHub
-   (5 → 6 → 7...), para que los navegadores no muestren la versión vieja. */
-const VERSION_IMG = "6";
+/* Sube este número cada vez que reemplaces una imagen en GitHub (7 → 8 → 9...) */
+const VERSION_IMG = "7";
 
 const CONFIG = {
   whatsapp: "57XXXXXXXXXX",
-  mercadoPago: { pequeno_total:"https://mpago.la/XXXX", grande_total:"https://mpago.la/XXXX",
-                 pequeno_reserva:"https://mpago.la/XXXX", grande_reserva:"https://mpago.la/XXXX" },
+
+  /* Supabase: donde se guardan las fotos y los pedidos.
+     url y anonKey están en Supabase → Project Settings → API. */
+  supabase: {
+    url:     "https://XXXX.supabase.co",
+    anonKey: "XXXX",
+    bucket:  "pedidos-fotos",
+    tabla:   "pedidos"
+  },
+
+  precios: { con3d:290000, sin3d:190000 },
   reservaPct: 0.5,
+  /* Un link de Mercado Pago por cada combinación */
+  mercadoPago: {
+    con3d_total:"https://mpago.la/XXXX", con3d_reserva:"https://mpago.la/XXXX",
+    sin3d_total:"https://mpago.la/XXXX", sin3d_reserva:"https://mpago.la/XXXX"
+  },
 
   marcos: [
     {id:"madera", nombre:"Madera natural", base:"#dcc09a", pared:"#ece6dc", img:"img/marcos/madera.png", geo:{aspecto:1.2336, l:5.21, t:6.07, r:5.21, b:5.93}},
@@ -254,10 +313,6 @@ const CONFIG = {
   ],
   paredInterna: 2.3,
 
-  tamanos: [
-    {id:"pequeno", nombre:"Pequeño", detalle:"Mano + pie", precio:290000},
-    {id:"grande",  nombre:"Grande",  detalle:"2 manos + 2 pies", precio:390000}
-  ],
   animales: [
     {id:"elefanta-flores", nombre:"Elefantita Flores", img:"img/animales/elefanta-flores.png", emoji:"🐘", color:"rosa"},
     {id:"elefante-luna",   nombre:"Elefante Luna",     img:"img/animales/elefante-luna.png",   emoji:"🌙", color:"azul"},
@@ -285,18 +340,37 @@ const CONFIG = {
   mano: "img/3d/mano.png",
   pie:  "img/3d/pie.png",
 
-  /* Recuerdos: x, y = posición inicial del centro; w, h = tamaño. Todo en % del área interior.
-     Ajusta w y h si alguno se ve muy grande o muy pequeño frente al cuadro real. */
+  /* RECUERDOS: se reparten solos en la franja de abajo, en este orden.
+     w, h = tamaño MÁXIMO de cada uno (% del cuadro). Si no caben, se achican solos. */
+  franjaRecuerdos: { izq:4, der:4, centroY:89, altoMax:17 },
   recuerdos: [
-    {id:"prueba", nombre:"Prueba de embarazo", x:24, y:89,
+    {id:"prueba", nombre:"Prueba de embarazo",
      variantes:[
        {id:"cuadrada",  nombre:"Cuadrada",  img:"img/recuerdos/prueba-cuadrada.png",  w:22, h:12, ph:"#f3f3f3"},
        {id:"larga",     nombre:"Larga",     img:"img/recuerdos/prueba-larga.png",     w:30, h:10, ph:"#e9f1f8"},
        {id:"clearblue", nombre:"Clearblue", img:"img/recuerdos/prueba-clearblue.png", w:36, h:13, ph:"#dfe9f7"}
      ]},
-    {id:"cordon",  nombre:"Pinza del cordón umbilical", w:14, h:12, x:52, y:89, img:"img/recuerdos/cordon.png",  ph:"#fafafa"},
-    {id:"manilla", nombre:"Manilla del hospital",       w:34, h:12, x:79, y:89, img:"img/recuerdos/manilla.png", ph:"#e3eefb"}
-  ]
+    {id:"cordon",  nombre:"Pinza del cordón umbilical", w:14, h:12, img:"img/recuerdos/cordon.png",  ph:"#fafafa"},
+    {id:"manilla", nombre:"Manilla del bebé",            w:34, h:12, img:"img/recuerdos/manilla.png", ph:"#e3eefb"}
+  ],
+
+  /* GUÍA para tomar las fotos del 3D. Sube tus ejemplos a img/guia/ con estos nombres. */
+  guia: {
+    mano: { titulo:"Cómo tomar la foto de la manito",
+            bien:"img/guia/mano-bien.jpg", mal:"img/guia/mano-mal.jpg",
+            tips:[ "Toma la foto por la <b>palma</b>, no por los nudillos.",
+                   "Que se vean todos los deditos, lo más abiertos posible.",
+                   "Celular de frente a la mano, a unos 20–30 cm, sin inclinarlo.",
+                   "Con luz natural de día y sin flash.",
+                   "Que salga nítida y completa, sin cortar los dedos." ] },
+    pie:  { titulo:"Cómo tomar la foto del piecito",
+            bien:"img/guia/pie-bien.jpg", mal:"img/guia/pie-mal.jpg",
+            tips:[ "Toma la foto por la <b>planta</b> del pie.",
+                   "Que se vean el talón y todos los deditos.",
+                   "Celular de frente a la planta, a unos 20–30 cm, sin inclinarlo.",
+                   "Con luz natural de día y sin flash.",
+                   "Que salga nítida, sin sombras fuertes encima." ] }
+  }
 };
 
 /* ========================================================= */
@@ -304,7 +378,8 @@ const $=id=>document.getElementById(id);
 const fmt=n=>"$"+n.toLocaleString("es-CO");
 const MESES=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 const DIAS=["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
-const st={animal:CONFIG.animales[0],fondo:CONFIG.fondos[0],fondoColor:CONFIG.coloresFondo[1],color:null,tamano:CONFIG.tamanos[0],marco:CONFIG.marcos[0],pago:"total",rec:{}};
+const st={animal:CONFIG.animales[0],fondo:CONFIG.fondos[0],fondoColor:CONFIG.coloresFondo[1],color:null,marco:CONFIG.marcos[0],con3d:true,pago:"total",rec:{}};
+const CODIGO="FR-"+Date.now().toString(36).slice(-5).toUpperCase()+Math.random().toString(36).slice(2,4).toUpperCase();
 const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const ver=src=>src?src+(src.includes("?")?"&":"?")+"v="+VERSION_IMG:src;
 function imgOr(src,fb){
@@ -336,7 +411,7 @@ function pintarMarco(){
   f.src=ver(m.img);
 }
 
-/* --- galerías --- */
+/* --- galerías y opciones --- */
 function galeria(cont,items,key,mini){
   cont.innerHTML="";
   items.forEach(it=>{
@@ -390,7 +465,19 @@ function pintarFondo(){
 }
 const textoFondo=()=>st.fondo.solido?`Un solo color (${st.fondoColor.nombre} ${st.fondoColor.hex.toUpperCase()})`:st.fondo.nombre;
 
-/* --- recuerdos arrastrables --- */
+/* --- 3D opcional --- */
+function pintar3D(){
+  const c=$("op3d");c.innerHTML="";
+  [{v:true, t:"Con manito y piecito en 3D", s:"El recuerdo completo", badge:"Recomendado", p:CONFIG.precios.con3d},
+   {v:false,t:"Sin 3D",                     s:"Solo el diseño del cuadro",                 p:CONFIG.precios.sin3d}]
+  .forEach(o=>{const d=document.createElement("div");d.className="op"+(st.con3d===o.v?" sel":"");
+    d.innerHTML=`${o.badge?`<span class="badge">${o.badge}</span>`:""}<b>${o.t}</b><small>${o.s}</small><div class="precio">${fmt(o.p)}</div>`;
+    d.onclick=()=>{st.con3d=o.v;pintar3D();actualizar();};c.appendChild(d);});
+  $("fotos3d").style.display=st.con3d?"":"none";
+  $("lienzo").classList.toggle("sin3d",!st.con3d);
+}
+
+/* --- recuerdos: se reparten solos --- */
 function pintarListaRec(){
   const c=$("listaRec");c.innerHTML="";
   CONFIG.recuerdos.forEach(r=>{
@@ -398,44 +485,32 @@ function pintarListaRec(){
     const lab=document.createElement("label");lab.className="check";
     lab.innerHTML=`<input type="checkbox" ${on?"checked":""}> ${r.nombre}`;
     lab.querySelector("input").onchange=e=>{
-      if(e.target.checked) st.rec[r.id]={x:r.x,y:r.y,variante:r.variantes?r.variantes[0]:null};
+      if(e.target.checked) st.rec[r.id]={variante:r.variantes?r.variantes[0]:null};
       else delete st.rec[r.id];
-      pintarListaRec();pintarRecuerdos();actualizar();};
+      pintarListaRec();actualizar();};
     c.appendChild(lab);
     if(on&&r.variantes){
       const sub=document.createElement("div");sub.className="sub";
       r.variantes.forEach(v=>{const o=document.createElement("div");
         o.className="op"+(st.rec[r.id].variante===v?" sel":"");
         o.innerHTML=`<img src="${ver(v.img)}" alt="" onerror="this.remove()">${v.nombre}`;
-        o.onclick=()=>{st.rec[r.id].variante=v;pintarListaRec();pintarRecuerdos();actualizar();};sub.appendChild(o);});
+        o.onclick=()=>{st.rec[r.id].variante=v;pintarListaRec();actualizar();};sub.appendChild(o);});
       c.appendChild(sub);
     }
   });
 }
 function pintarRecuerdos(){
   const cont=$("recuerdos");cont.innerHTML="";
-  CONFIG.recuerdos.forEach(r=>{
-    const s=st.rec[r.id]; if(!s) return;
-    const src=s.variante||r, w=src.w||r.w, h=src.h||r.h;
-    s.x=Math.min(100-w/2,Math.max(w/2,s.x)); s.y=Math.min(100-h/2,Math.max(h/2,s.y));
+  const activos=CONFIG.recuerdos.filter(r=>st.rec[r.id]);
+  if(!activos.length) return;
+  const F=CONFIG.franjaRecuerdos, espacio=(100-F.izq-F.der)/activos.length;
+  activos.forEach((r,i)=>{
+    const s=st.rec[r.id], src=s.variante||r;
+    const w=Math.min(src.w||r.w, espacio-2), h=Math.min(src.h||r.h, F.altoMax);
     const el=document.createElement("div");el.className="rec";
-    Object.assign(el.style,{width:w+"%",height:h+"%",left:s.x+"%",top:s.y+"%",transform:"translate(-50%,-50%)"});
+    Object.assign(el.style,{width:w+"%",height:h+"%",left:(F.izq+espacio*(i+.5))+"%",top:F.centroY+"%"});
     el.innerHTML=imgOr(src.img,`<div class="ph" style="background:${src.ph}">${s.variante?"Prueba "+s.variante.nombre:r.nombre}</div>`);
-    arrastrable(el,s);cont.appendChild(el);
-  });
-  $("ayudaDrag").style.display=Object.keys(st.rec).length?"block":"none";
-}
-function arrastrable(el,s){
-  el.addEventListener("pointerdown",e=>{
-    e.preventDefault();el.setPointerCapture(e.pointerId);el.classList.add("mov");
-    const box=$("lienzo").getBoundingClientRect();
-    const mover=ev=>{
-      const hw=el.offsetWidth/2/box.width*100, hh=el.offsetHeight/2/box.height*100;
-      s.x=Math.min(100-hw,Math.max(hw,(ev.clientX-box.left)/box.width*100));
-      s.y=Math.min(100-hh,Math.max(hh,(ev.clientY-box.top)/box.height*100));
-      el.style.left=s.x+"%";el.style.top=s.y+"%";};
-    const fin=()=>{el.classList.remove("mov");el.removeEventListener("pointermove",mover);el.removeEventListener("pointerup",fin);};
-    el.addEventListener("pointermove",mover);el.addEventListener("pointerup",fin);
+    cont.appendChild(el);
   });
 }
 
@@ -445,24 +520,26 @@ function ajustar(el,base,largo,min){
   el.style.fontSize=f+"cqw";
 }
 
-/* --- actualización general --- */
-function total(){return st.tamano.precio;}
+/* --- precios --- */
+function total(){return st.con3d?CONFIG.precios.con3d:CONFIG.precios.sin3d;}
 function aPagar(){return st.pago==="reserva"?Math.round(total()*CONFIG.reservaPct/1000)*1000:total();}
 function textoRec(){const l=CONFIG.recuerdos.filter(r=>st.rec[r.id]).map(r=>st.rec[r.id].variante?`${r.nombre} (${st.rec[r.id].variante.nombre})`:r.nombre);return l.length?l.join(", "):"Ninguno";}
+
+/* --- actualización general --- */
 let animalPintado=null;
 function actualizar(){
   document.documentElement.style.setProperty("--acento",st.color.hex);
-  pintarFondo();
+  pintarFondo();pintarRecuerdos();
   if(animalPintado!==st.animal){$("personaje").innerHTML=imgOr(st.animal.img,st.animal.emoji);animalPintado=st.animal;}
   const v=id=>$(id).value.trim();
   $("pNombre").textContent=v("nombre")||"Tu bebé";            ajustar($("pNombre"),8,13,5);
-  $("pApellido").textContent=v("apellido")||"Apellidos";      ajustar($("pApellido"),3.6,24,2.6);
+  $("pApellido").textContent=v("apellido")||"Apellidos";      ajustar($("pApellido"),4.2,21,2.8);
   if(v("fecha")){const[a,m,d]=v("fecha").split("-").map(Number);const dt=new Date(a,m-1,d);
     $("pDia").textContent="Nací el "+DIAS[dt.getDay()];$("pFecha").textContent=`${d} de ${MESES[m-1]} de ${a}`;}
   else{$("pDia").textContent="Nací el ...";$("pFecha").textContent="dd de mes de aaaa";}
   ajustar($("pFecha"),5,22,3.6);
   $("pLugar").textContent=v("lugar")?"En "+v("lugar").replace(/^en\s+/i,""):"En la clínica ...";
-  ajustar($("pLugar"),3,34,2.2);
+  ajustar($("pLugar"),3.5,29,2.4);
   if(v("hora")){let[h,mi]=v("hora").split(":").map(Number);$("pHora").textContent=`${h%12||12}:${String(mi).padStart(2,"0")}`;$("pAmPm").textContent=h>=12?"pm":"am";}
   else {$("pHora").textContent="--:--";$("pAmPm").textContent="";}
   const peso=v("peso").replace(/\D/g,"");
@@ -473,59 +550,147 @@ function actualizar(){
   $("pPapas").innerHTML=modo==="mama"?`Mi mamá es <span class="relieve">${ma}</span>`
     :modo==="papitos"?`Mis papitos son <span class="relieve">${ma} y ${pa}</span>`
     :`Mi mamá es <span class="relieve">${ma}</span> &nbsp; Mi papá es <span class="relieve">${pa}</span>`;
+  ajustar($("pPapas"),3.9,38,2.8);
   $("totalFlot").textContent=fmt(total());
   $("resumen").innerHTML=`Personaje: <b>${st.animal.nombre}</b> · Fondo: <b>${textoFondo()}</b> · Letras: <b>${st.color.id}</b><br>
-    Cuadro <b>${st.tamano.nombre}</b> (${st.tamano.detalle}) · Marco <b>${st.marco.nombre}</b><br>
+    Marco <b>${st.marco.nombre}</b> · Manito y piecito 3D: <b>${st.con3d?"Sí":"No"}</b><br>
     Recuerdos: <b>${textoRec()}</b>${Object.keys(st.rec).length?" (incluye pegante y guía)":""}
     <div class="total">Total: ${fmt(total())}</div>
     ${st.pago==="reserva"?`<div>Pagas hoy: <b>${fmt(aPagar())}</b> · Saldo antes del envío: ${fmt(total()-aPagar())}</div>`:""}`;
   $("btnPagar").textContent=`Pagar ${fmt(aPagar())} con Mercado Pago`;
 }
+
+/* ===== SUBIDA DE FOTOS A SUPABASE ===== */
+const SB=CONFIG.supabase;
+const sbListo=()=>SB.url && !SB.url.includes("XXXX") && !SB.anonKey.includes("XXXX");
+const fotos={};   /* bebe | mano | pie  →  {estado:"subiendo|ok|error|local", ruta, promesa} */
+async function reducir(file){   /* fotos del celular pesan mucho: se reducen a 2400 px sin perder detalle útil */
+  try{
+    const bmp=await createImageBitmap(file), max=2400, k=Math.min(1,max/Math.max(bmp.width,bmp.height));
+    const c=document.createElement("canvas");c.width=Math.round(bmp.width*k);c.height=Math.round(bmp.height*k);
+    c.getContext("2d").drawImage(bmp,0,0,c.width,c.height);
+    return await new Promise(r=>c.toBlob(b=>r(b||file),"image/jpeg",.92));
+  }catch(e){return file;}
+}
+async function subir(clave,file){
+  const blob=await reducir(file);
+  const ext=blob.type==="image/jpeg"?"jpg":((file.name.split(".").pop()||"jpg").toLowerCase());
+  const ruta=`${CODIGO}/${clave}-${Date.now()}.${ext}`;
+  const r=await fetch(`${SB.url}/storage/v1/object/${SB.bucket}/${ruta}`,{
+    method:"POST",headers:{apikey:SB.anonKey,Authorization:"Bearer "+SB.anonKey,"Content-Type":blob.type||"image/jpeg"},body:blob});
+  if(!r.ok) throw new Error(await r.text());
+  return ruta;
+}
+function prepararUpload(clave){
+  const box=$("up-"+clave), inp=box.querySelector("input"), est=box.querySelector(".estado"), th=box.querySelector(".thumb");
+  inp.onchange=e=>{
+    const f=e.target.files[0]; if(!f) return;
+    const url=URL.createObjectURL(f);
+    th.innerHTML="";th.style.backgroundImage=`url(${url})`;
+    if(clave==="bebe"){ $("pFoto").style.backgroundImage=`url(${url})`; $("pFoto").textContent=""; }
+    if(!sbListo()){ fotos[clave]={estado:"local"}; box.className="upload ok"; est.textContent="✓ Lista (cambiar)"; return; }
+    box.className="upload subiendo"; est.textContent="Subiendo…";
+    const p=subir(clave,f)
+      .then(ruta=>{fotos[clave]={estado:"ok",ruta};box.className="upload ok";est.textContent="✓ Guardada (toca para cambiarla)";})
+      .catch(err=>{console.error(err);fotos[clave]={estado:"error"};box.className="upload error";est.textContent="No se pudo subir. Toca para intentar de nuevo";});
+    fotos[clave]={estado:"subiendo",promesa:p};
+    inp.value="";
+  };
+}
+
+/* ===== GUARDAR EL PEDIDO ===== */
+function datosPedido(){
+  const v=id=>$(id).value.trim();
+  return {
+    codigo:CODIGO, cliente:v("cliente"), telefono:v("celular"), ciudad:v("ciudad"),
+    con_3d:st.con3d, total:total(), pago:st.pago==="reserva"?`Reserva ${aPagar()}`:"Total",
+    datos:{ nombre:v("nombre"), apellidos:v("apellido"), fecha:v("fecha"), dia:$("pDia").textContent,
+            hora:v("hora"), lugar:v("lugar"), peso:v("peso"), talla:v("talla"), rh:v("rh"),
+            papas:$("pPapas").textContent, personaje:st.animal.nombre, fondo:textoFondo(),
+            color_letras:st.color.id, marco:st.marco.nombre, recuerdos:textoRec() },
+    fotos:Object.fromEntries(Object.entries(fotos).filter(([k,f])=>f.ruta&&(k==="bebe"||st.con3d)).map(([k,f])=>[k,f.ruta]))
+  };
+}
+async function guardarPedido(estado){
+  if(!sbListo()) return true;
+  try{
+    const r=await fetch(`${SB.url}/rest/v1/${SB.tabla}`,{method:"POST",
+      headers:{apikey:SB.anonKey,Authorization:"Bearer "+SB.anonKey,"Content-Type":"application/json",Prefer:"return=minimal"},
+      body:JSON.stringify({...datosPedido(),estado})});
+    if(!r.ok) throw new Error(await r.text());
+    return true;
+  }catch(e){console.error(e);return false;}
+}
+function error(msg){$("err").style.display=msg?"block":"none";$("err").textContent=msg||"";}
+async function listo(){
+  const v=id=>$(id).value.trim();
+  const req=[["nombre","el nombre del bebé"],["fecha","la fecha de nacimiento"],["cliente","tu nombre"],["celular","tu celular"],["ciudad","la ciudad"]];
+  const falta=req.filter(([id])=>!v(id)).map(r=>r[1]);
+  const necesarias=st.con3d?[["bebe","la foto del bebé"],["mano","la foto de la manito"],["pie","la foto del piecito"]]:[["bebe","la foto del bebé"]];
+  necesarias.forEach(([k,t])=>{if(!fotos[k]||fotos[k].estado==="error")falta.push(t);});
+  if(falta.length){error("Falta: "+falta.join(", "));return false;}
+  const pend=necesarias.map(([k])=>fotos[k]).filter(f=>f.estado==="subiendo");
+  if(pend.length){error("Esperando a que terminen de subir las fotos…");await Promise.all(pend.map(f=>f.promesa));return listo();}
+  error("");return true;
+}
 function mensajeWA(){
   const v=id=>$(id).value.trim();
   return `¡Hola Familia Real! Quiero mi cuadro 💕
-• Personaje: ${st.animal.nombre} | Fondo: ${textoFondo()} | Letras: ${st.color.id}
-• Tamaño: ${st.tamano.nombre} | Marco: ${st.marco.nombre}
+• Código de pedido: ${CODIGO}
 • Bebé: ${v("nombre")} ${v("apellido")}
-• Nació: ${$("pDia").textContent.replace("Nací el ","")} ${$("pFecha").textContent} a las ${$("pHora").textContent}
-• Lugar: ${v("lugar")}
-• Peso: ${v("peso")} grs | Talla: ${v("talla")} cm | RH: ${v("rh")}
-• ${$("pPapas").textContent}
-• Recuerdos: ${textoRec()}
-• Cliente: ${v("cliente")} | Ciudad: ${v("ciudad")}
-• Pago: ${st.pago==="reserva"?"Reserva "+fmt(aPagar()):"Total "+fmt(total())}
-Te envío las fotos de la manito, el piecito y del bebé 👇`;
+• Personaje: ${st.animal.nombre} | Fondo: ${textoFondo()}
+• Manito y piecito 3D: ${st.con3d?"Sí":"No"} | Total: ${fmt(total())}
+• Cliente: ${v("cliente")} | Ciudad: ${v("ciudad")}`;
 }
-function validar(){
-  const req=[["nombre","el nombre del bebé"],["fecha","la fecha"],["cliente","tu nombre"],["ciudad","la ciudad"]];
-  const falta=req.filter(([id])=>!$(id).value.trim()).map(r=>r[1]);
-  $("err").style.display=falta.length?"block":"none";$("err").textContent=falta.length?"Falta: "+falta.join(", "):"";
-  return !falta.length;
+const urlWA=t=>`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(t)}`;
+function ocupado(btn,txt){btn.dataset.t=btn.dataset.t||btn.textContent;btn.textContent=txt||btn.dataset.t;btn.toggleAttribute("disabled",!!txt);}
+
+$("btnPagar").onclick=async e=>{
+  e.preventDefault(); const b=$("btnPagar"); if(b.hasAttribute("disabled")) return;
+  ocupado(b,"Guardando tu pedido…");
+  if(!(await listo())){ocupado(b);actualizar();return;}
+  if(!(await guardarPedido("pago iniciado"))){ocupado(b);actualizar();error("No pudimos guardar tu pedido. Revisa tu conexión e inténtalo de nuevo.");return;}
+  location.href=CONFIG.mercadoPago[`${st.con3d?"con3d":"sin3d"}_${st.pago}`];
+};
+$("btnWa").onclick=async e=>{
+  e.preventDefault();
+  const w=window.open("about:blank","_blank");   /* se abre de una vez para que el celular no la bloquee */
+  if(!(await listo())){w&&w.close();return;}
+  await guardarPedido("consulta whatsapp");
+  if(w) w.location.href=urlWA(mensajeWA()); else location.href=urlWA(mensajeWA());
+};
+$("linkOtro").onclick=e=>{e.preventDefault();window.open(urlWA("¡Hola! Quiero un cuadro con un personaje especial 💕"),"_blank");};
+
+/* --- guía de fotos --- */
+function abrirGuia(k){
+  const g=CONFIG.guia[k];
+  $("mTitulo").textContent=g.titulo;
+  $("mBien").innerHTML=imgOr(g.bien,"Foto de ejemplo<br>(bien)");
+  $("mMal").innerHTML=imgOr(g.mal,"Foto de ejemplo<br>(mal)");
+  $("mTips").innerHTML=g.tips.map(t=>`<li>${t}</li>`).join("");
+  $("modal").classList.add("on");
 }
-[["fBebe","upBebe",true],["fMano","upMano"],["fPie","upPie"]].forEach(([inp,box,esFoto])=>{
-  $(inp).onchange=e=>{const f=e.target.files[0];if(!f)return;$(box).classList.add("ok");
-    if(esFoto){const r=new FileReader();r.onload=ev=>{$("pFoto").style.backgroundImage=`url(${ev.target.result})`;$("pFoto").textContent="";};r.readAsDataURL(f);}};
-});
-document.querySelectorAll("input:not([type=file]):not([type=checkbox]):not([type=color]),select").forEach(el=>el.addEventListener("input",actualizar));
-const wa=t=>window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(t)}`,"_blank");
-$("btnWa").onclick=e=>{e.preventDefault();if(validar())wa(mensajeWA());};
-$("btnPagar").onclick=e=>{e.preventDefault();if(!validar())return;wa(mensajeWA());
-  setTimeout(()=>location.href=CONFIG.mercadoPago[`${st.tamano.id}_${st.pago}`],400);};
-$("linkOtro").onclick=e=>{e.preventDefault();wa("¡Hola! Quiero un cuadro con un personaje especial 💕");};
+const cerrarGuia=()=>$("modal").classList.remove("on");
+document.querySelectorAll(".ver-guia").forEach(a=>a.onclick=e=>{e.preventDefault();abrirGuia(a.dataset.guia);});
+$("cerrarModal").onclick=cerrarGuia;$("okModal").onclick=cerrarGuia;
+$("modal").onclick=e=>{if(e.target===$("modal"))cerrarGuia();};
 
 /* init */
 st.color=CONFIG.colores.find(c=>c.id===st.animal.color);
 $("pMano").innerHTML=imgOr(CONFIG.mano,'<div class="ph3d"></div>');
 $("pPie").innerHTML=imgOr(CONFIG.pie,'<div class="ph3d"></div>');
+$("thMano").innerHTML=imgOr(CONFIG.guia.mano.bien,"✋");
+$("thPie").innerHTML=imgOr(CONFIG.guia.pie.bien,"🦶");
+["bebe","mano","pie"].forEach(prepararUpload);
+document.querySelectorAll("input:not([type=file]):not([type=checkbox]):not([type=color]),select").forEach(el=>el.addEventListener("input",actualizar));
 galeria($("animales"),CONFIG.animales,"animal",miniAnimal);
 galeria($("fondos"),CONFIG.fondos,"fondo",miniFondo);
 pintarColores();pintarColoresFondo();
-opciones($("tamanos"),CONFIG.tamanos,"tamano",t=>`<b>${t.nombre}</b><small>${t.detalle}</small><br><b>${fmt(t.precio)}</b>`);
 opciones($("marcos"),CONFIG.marcos,"marco",m=>`<span class="muestra" style="background:${m.base}"></span><b>${m.nombre}</b>`,pintarMarco);
 const pagosOps=[{id:"total",n:"Pago total"},{id:"reserva",n:`Reservar con ${CONFIG.reservaPct*100}%`}];let pagoSel=pagosOps[0];
 (function pp(){$("pagos").innerHTML="";pagosOps.forEach(p=>{const d=document.createElement("div");d.className="op"+(pagoSel===p?" sel":"");
   d.innerHTML=`<b>${p.n}</b>`;d.onclick=()=>{pagoSel=p;st.pago=p.id;pp();actualizar();};$("pagos").appendChild(d);});})();
-pintarMarco();pintarListaRec();pintarRecuerdos();actualizar();
+pintarMarco();pintar3D();pintarListaRec();actualizar();
 </script>
 </body>
 </html>
