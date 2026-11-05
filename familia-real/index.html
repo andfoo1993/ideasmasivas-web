@@ -20,7 +20,7 @@ body{font-family:'Nunito',sans-serif;background:var(--crema);color:var(--texto)}
 header{text-align:center;padding:28px 16px 10px}
 header h1{font-family:'Dancing Script',cursive;font-size:2.4rem;color:var(--marca-osc)}
 header p{max-width:560px;margin:6px auto 0}
-.wrap{max-width:1150px;margin:0 auto;padding:16px;display:grid;grid-template-columns:1.1fr 1fr;gap:28px;align-items:start}
+.wrap{max-width:1250px;margin:0 auto;padding:16px;display:grid;grid-template-columns:1.25fr 1fr;gap:28px;align-items:start}
 @media(max-width:900px){.wrap{grid-template-columns:1fr}}
 .preview-col{position:sticky;top:10px;z-index:5}
 @media(max-width:900px){.preview-col{top:0;background:var(--crema);padding-bottom:8px}}
@@ -42,37 +42,43 @@ header p{max-width:560px;margin:6px auto 0}
 .vidrio{position:absolute;inset:0;z-index:16;pointer-events:none;
   background:linear-gradient(115deg,rgba(255,255,255,0) 0 16%,rgba(255,255,255,.10) 23%,rgba(255,255,255,.03) 30%,rgba(255,255,255,0) 37% 62%,rgba(255,255,255,.06) 66%,rgba(255,255,255,0) 72%)}
 
-/* ===== CONTENIDO DEL CUADRO ===== */
-.capa-fondo{position:absolute;inset:0;background-size:cover;background-position:center;transition:background-color .3s}
+/* ===== DISEÑO DEL CUADRO =====
+   Todas las medidas en % del área interior; las letras en "cqw" (= 1% del ancho del cuadro),
+   así todo crece y se achica junto con el cuadro en celular y computador. */
+.capa-fondo{position:absolute;inset:0;background-size:cover;background-position:center}
 .deco{position:absolute;color:var(--acento);opacity:.5;font-size:3cqw}
-.personaje{position:absolute;right:2%;top:2%;width:22%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:13cqw;z-index:3}
-.personaje img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 1px 1px rgba(0,0,0,.12))}
-.mano,.pie{position:absolute;z-index:4;display:flex;align-items:center;justify-content:center}
-.mano{left:4%;top:3%;width:13%;height:24%}
-.pie{right:5%;top:44%;width:12%;height:30%}
+/* columna izquierda: mano + foto */
+.mano{position:absolute;z-index:4;left:4%;top:3%;width:15%;height:28%;display:flex;align-items:center;justify-content:center}
+.foto{position:absolute;left:4%;top:35%;width:22%;height:45%;background:#eee center/cover;border:2px solid #fff;box-shadow:0 2px 6px rgba(0,0,0,.22);display:flex;align-items:center;justify-content:center;font-size:2cqw;color:#999;text-align:center;z-index:3}
+/* columna derecha: animal + pie */
+.personaje{position:absolute;right:2%;top:2%;width:22%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:14cqw;z-index:3}
+.personaje img{width:100%;height:100%;object-fit:contain}
+.pie{position:absolute;z-index:4;right:5%;top:44%;width:14%;height:36%;display:flex;align-items:center;justify-content:center}
 .mano img,.pie img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(3px 4px 4px rgba(0,0,0,.35))}
 .ph3d{width:85%;height:90%;background:radial-gradient(circle at 35% 30%,#f4f4f4,#aaa 55%,#777);border-radius:40% 40% 30% 30%;box-shadow:3px 4px 6px rgba(0,0,0,.35)}
-.foto{position:absolute;left:5%;top:33%;width:21%;height:42%;background:#eee center/cover;border:2px solid #fff;box-shadow:0 2px 5px rgba(0,0,0,.2);display:flex;align-items:center;justify-content:center;font-size:1.6cqw;color:#999;text-align:center;z-index:3}
-.t{position:absolute;left:0;right:0;text-align:center;line-height:1;z-index:3;font-family:var(--f-texto)}
-.relieve{font-family:var(--f-titulo);color:var(--acento);text-shadow:1px 1px 0 rgba(0,0,0,.45),2px 2px 1px rgba(0,0,0,.15)}
-.t-nombre{top:5%;font-size:6.2cqw}
-.t-apellido{top:14%;font-size:2.8cqw;color:#666}
-.t-dia{top:19.5%;font-size:2.4cqw;color:#777}
-.t-fecha{top:24%;font-size:4cqw}
-.t-lugar{top:31%;font-size:2.2cqw;color:#666}
-.datos{position:absolute;left:30%;right:20%;top:39%;display:grid;grid-template-columns:1fr 1fr;gap:3cqw 3cqw;z-index:3}
-.dato{display:flex;align-items:center;gap:1cqw}
-.dato .ico{font-size:3.6cqw;color:var(--acento);filter:drop-shadow(1px 1px 0 rgba(0,0,0,.35))}
-.dato small{display:block;font-size:1.8cqw;color:#888;font-family:var(--f-texto)}
-.dato b{font-size:3.4cqw;font-weight:400}
-.t-papas{top:72%;font-size:2.7cqw;color:#555;left:28%;right:5%}
-.t-papas span{font-size:3cqw}
+/* columna central: textos */
+.t{position:absolute;left:24%;right:24%;text-align:center;line-height:1.05;z-index:3;font-family:var(--f-texto);color:#555}
+.relieve{font-family:var(--f-titulo);color:var(--acento);text-shadow:.12cqw .12cqw 0 rgba(0,0,0,.45),.25cqw .25cqw .2cqw rgba(0,0,0,.15)}
+.t-nombre{top:3.5%;font-size:8.5cqw}
+.t-apellido{top:16%;font-size:3.8cqw}
+.t-dia{top:22.5%;font-size:3.2cqw;color:#666}
+.t-fecha{top:27.5%;font-size:5cqw}
+.t-lugar{top:35.5%;font-size:3cqw}
+.datos{position:absolute;left:29%;right:24%;top:44%;display:grid;grid-template-columns:1fr 1fr;row-gap:3.2cqw;column-gap:2cqw;z-index:3}
+.dato{display:flex;align-items:center;gap:1.2cqw}
+.dato .ico{font-size:4.6cqw;line-height:1;filter:drop-shadow(.1cqw .1cqw 0 rgba(0,0,0,.3))}
+.dato small{display:block;font-size:2.7cqw;color:#666;font-family:var(--f-texto);line-height:1}
+.dato b{font-size:4.6cqw;font-weight:400;line-height:1.1}
+.dato .u{display:inline;font-size:2.5cqw}
+.t-papas{top:69%;font-size:3.5cqw;left:27%;right:20%;line-height:1.25}
+.t-papas span{font-size:4cqw}
+/* recuerdos */
 .rec{position:absolute;z-index:6;cursor:grab;touch-action:none;user-select:none;display:flex;align-items:center;justify-content:center}
 .rec:active{cursor:grabbing}
-.rec img{width:100%;height:100%;object-fit:contain;pointer-events:none;filter:drop-shadow(1px 2px 2px rgba(0,0,0,.3))}
-.rec .ph{width:100%;height:100%;border-radius:4px;font-size:1.5cqw;display:flex;align-items:center;justify-content:center;text-align:center;color:#555;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.rec img{width:100%;height:100%;object-fit:contain;pointer-events:none;filter:drop-shadow(.2cqw .3cqw .3cqw rgba(0,0,0,.3))}
+.rec .ph{width:100%;height:100%;border-radius:4px;font-size:1.8cqw;display:flex;align-items:center;justify-content:center;text-align:center;color:#555;box-shadow:0 1px 3px rgba(0,0,0,.2)}
 .rec.mov{outline:1.5px dashed var(--marca-osc);outline-offset:2px}
-.ayuda-drag{font-size:.8rem;text-align:center;color:var(--marca-osc);margin-top:8px;display:none}
+.ayuda-drag{font-size:.85rem;text-align:center;color:var(--marca-osc);margin-top:8px;display:none}
 .precio-flot{margin-top:12px;text-align:center}
 .precio-flot b{font-size:1.4rem;color:var(--marca-osc)}
 .nota-prev{font-size:.8rem;text-align:center;color:#8a7a7f;margin-top:4px}
@@ -92,7 +98,6 @@ header p{max-width:560px;margin:6px auto 0}
 .colores{display:flex;flex-wrap:wrap;gap:12px}
 .color{width:44px;height:44px;border-radius:50%;cursor:pointer;border:3px solid #fff;box-shadow:0 0 0 2px #ddd;transition:.2s}
 .color.sel{box-shadow:0 0 0 3px var(--marca-osc);transform:scale(1.08)}
-/* fondo de un solo color */
 .box-solido{display:none;margin-top:14px;padding:14px;border-radius:12px;background:#fdf9fa}
 .box-solido.on{display:block}
 .box-solido h3{font-size:.9rem;margin-bottom:10px}
@@ -112,9 +117,9 @@ input:focus,select:focus{outline:none;border-color:var(--marca)}
 .full{grid-column:1/-1}
 .check{display:flex;align-items:center;gap:10px;padding:10px 12px;border:1.5px solid #eee;border-radius:12px;margin-bottom:8px;cursor:pointer;font-weight:600;font-size:.92rem}
 .check input{width:20px;height:20px;accent-color:var(--marca)}
-.sub{display:flex;gap:8px;margin:-2px 0 10px 30px;flex-wrap:wrap}
-.sub .op{padding:8px;min-width:90px;font-size:.85rem}
-.sub .op img{display:block;height:34px;width:100%;object-fit:contain;margin-bottom:4px}
+.sub{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:-2px 0 10px 30px}
+.sub .op{padding:8px;min-width:0;font-size:.85rem}
+.sub .op img{display:block;height:44px;width:100%;object-fit:contain;margin-bottom:4px}
 .upload{border:2px dashed #e0cfd5;border-radius:12px;padding:14px;text-align:center;cursor:pointer;font-size:.88rem;background:#fdfafb;display:block}
 .upload.ok{border-color:#7bbf8e;background:#f2faf4}
 .upload input{display:none}
@@ -155,9 +160,9 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
           <div class="foto" id="pFoto">foto de<br>tu bebé</div>
           <div class="datos">
             <div class="dato"><span class="ico">⏰</span><div><small>A las</small><b class="relieve" id="pHora">--:--</b></div></div>
-            <div class="dato"><span class="ico">📏</span><div><small>Medí</small><b class="relieve" id="pTalla">--</b> <small>cms</small></div></div>
-            <div class="dato"><span class="ico">⚖️</span><div><small>Pesé</small><b class="relieve" id="pPeso">----</b> <small>grs</small></div></div>
-            <div class="dato"><span class="ico">❤</span><div><small>RH</small><b class="relieve" id="pRh">--</b></div></div>
+            <div class="dato"><span class="ico">📏</span><div><small>Medí</small><b class="relieve" id="pTalla">--</b> <small class="u">cms</small></div></div>
+            <div class="dato"><span class="ico">⚖️</span><div><small>Pesé</small><b class="relieve" id="pPeso">----</b> <small class="u">grs</small></div></div>
+            <div class="dato"><span class="ico">❤️</span><div><small>RH</small><b class="relieve" id="pRh">--</b></div></div>
           </div>
           <div class="pie" id="pPie"></div>
           <div class="t t-papas" id="pPapas"></div>
@@ -185,7 +190,7 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
         <label class="otro-color">Otro color: <input type="color" id="colorLibre" value="#f9e1e8"></label>
         <div class="aviso-oscuro" id="avisoOscuro">Este color es oscuro: los textos pueden leerse con dificultad. Te recomendamos un tono claro.</div>
       </div></div>
-    <div class="paso"><h2><span class="num">3</span> Color de las letras</h2><p>Las letras e iconos van en relieve con este color.</p><div class="colores" id="colores"></div></div>
+    <div class="paso"><h2><span class="num">3</span> Color de las letras</h2><p>Las letras van en relieve con este color.</p><div class="colores" id="colores"></div></div>
     <div class="paso"><h2><span class="num">4</span> Tamaño y marco</h2><p>&nbsp;</p>
       <div class="opciones" id="tamanos"></div><div style="height:12px"></div><div class="opciones" id="marcos"></div></div>
     <div class="paso"><h2><span class="num">5</span> Los datos de tu bebé</h2><p>Escribe y mira cómo aparece en el cuadro.</p>
@@ -232,8 +237,8 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
    ========================================================= */
 
 /* Sube este número cada vez que reemplaces una imagen en GitHub
-   (4 → 5 → 6...), para que los navegadores no muestren la versión vieja. */
-const VERSION_IMG = "4";
+   (5 → 6 → 7...), para que los navegadores no muestren la versión vieja. */
+const VERSION_IMG = "5";
 
 const CONFIG = {
   whatsapp: "57XXXXXXXXXX",
@@ -241,13 +246,11 @@ const CONFIG = {
                  pequeno_reserva:"https://mpago.la/XXXX", grande_reserva:"https://mpago.la/XXXX" },
   reservaPct: 0.5,
 
-  /* Marcos: foto real con el centro transparente.
-     geo = proporción y bordes del área interior (%), medidos sobre la foto. */
   marcos: [
     {id:"madera", nombre:"Madera natural", base:"#dcc09a", pared:"#ece6dc", img:"img/marcos/madera.png", geo:{aspecto:1.2336, l:5.21, t:6.07, r:5.21, b:5.93}},
     {id:"blanco", nombre:"Blanco",         base:"#fafafa", pared:"#f6f6f5", img:"img/marcos/blanco.png", geo:{aspecto:1.2140, l:5.23, t:5.86, r:5.59, b:6.56}}
   ],
-  paredInterna: 2.3,   /* % visible de las paredes internas de la caja */
+  paredInterna: 2.3,
 
   tamanos: [
     {id:"pequeno", nombre:"Pequeño", detalle:"Mano + pie", precio:290000},
@@ -261,9 +264,6 @@ const CONFIG = {
     {id:"conejito",        nombre:"Conejito",          img:"img/animales/conejito.png",        emoji:"🐰", color:"lila"},
     {id:"leoncito",        nombre:"Leoncito",          img:"img/animales/leoncito.png",        emoji:"🦁", color:"dorado"}
   ],
-
-  /* Fondos con imagen. css = color que se ve mientras carga la imagen.
-     El último ("solido") es el fondo de un solo color: no lleva imagen. */
   fondos: [
     {id:"estrellas-azul", nombre:"Estrellas azul", img:"img/fondos/estrellas-azul.jpg", css:"#eef4fb", deco:"★"},
     {id:"estrellas-rosa", nombre:"Estrellas rosa", img:"img/fondos/estrellas-rosa.jpg", css:"#fbeff3", deco:"★"},
@@ -271,18 +271,11 @@ const CONFIG = {
     {id:"nubes-rosa",     nombre:"Nubes rosa",     img:"img/fondos/nubes-rosa.jpg",     css:"#fae8ee", deco:"☁"},
     {id:"solido",         nombre:"Un solo color",  solido:true}
   ],
-  /* Colores sugeridos para el fondo de un solo color (además del selector libre) */
   coloresFondo: [
-    {nombre:"Blanco",         hex:"#ffffff"},
-    {nombre:"Rosa pastel",    hex:"#f9e1e8"},
-    {nombre:"Azul pastel",    hex:"#dfeaf7"},
-    {nombre:"Lila",           hex:"#ece4f6"},
-    {nombre:"Menta",          hex:"#dff1e8"},
-    {nombre:"Amarillo suave", hex:"#fbf3d9"},
-    {nombre:"Durazno",        hex:"#fbe5d6"},
-    {nombre:"Gris perla",     hex:"#eeeeee"}
+    {nombre:"Blanco",hex:"#ffffff"},{nombre:"Rosa pastel",hex:"#f9e1e8"},{nombre:"Azul pastel",hex:"#dfeaf7"},
+    {nombre:"Lila",hex:"#ece4f6"},{nombre:"Menta",hex:"#dff1e8"},{nombre:"Amarillo suave",hex:"#fbf3d9"},
+    {nombre:"Durazno",hex:"#fbe5d6"},{nombre:"Gris perla",hex:"#eeeeee"}
   ],
-
   colores: [
     {id:"rosa",hex:"#e8a6bb"},{id:"azul",hex:"#1f4fa3"},{id:"lila",hex:"#a48bd1"},
     {id:"menta",hex:"#6fbfa0"},{id:"dorado",hex:"#c9a24a"},{id:"negro",hex:"#3a3a3a"}
@@ -290,18 +283,17 @@ const CONFIG = {
   mano: "img/3d/mano.png",
   pie:  "img/3d/pie.png",
 
-  /* Recuerdos. x, y = posición inicial; w, h = tamaño. Todo en % del área interior.
-     Cada tipo de prueba tiene su propio tamaño: ajusta w y h si alguna se ve
-     muy grande o muy pequeña frente al cuadro real. */
+  /* Recuerdos: x, y = posición inicial del centro; w, h = tamaño. Todo en % del área interior.
+     Ajusta w y h si alguno se ve muy grande o muy pequeño frente al cuadro real. */
   recuerdos: [
-    {id:"prueba", nombre:"Prueba de embarazo", x:42, y:88,
+    {id:"prueba", nombre:"Prueba de embarazo", x:42, y:90,
      variantes:[
-       {id:"cuadrada",  nombre:"Cuadrada",  img:"img/recuerdos/prueba-cuadrada.png",  w:18, h:8,  ph:"#f3f3f3"},
-       {id:"larga",     nombre:"Larga",     img:"img/recuerdos/prueba-larga.png",     w:26, h:6,  ph:"#e9f1f8"},
-       {id:"clearblue", nombre:"Clearblue", img:"img/recuerdos/prueba-clearblue.png", w:34, h:9,  ph:"#dfe9f7"}
+       {id:"cuadrada",  nombre:"Cuadrada",  img:"img/recuerdos/prueba-cuadrada.png",  w:20, h:11, ph:"#f3f3f3"},
+       {id:"larga",     nombre:"Larga",     img:"img/recuerdos/prueba-larga.png",     w:28, h:8,  ph:"#e9f1f8"},
+       {id:"clearblue", nombre:"Clearblue", img:"img/recuerdos/prueba-clearblue.png", w:34, h:12, ph:"#dfe9f7"}
      ]},
-    {id:"cordon",  nombre:"Pinza del cordón umbilical", w:9,  h:7, x:63, y:89, img:"img/recuerdos/cordon.png",  ph:"#fafafa"},
-    {id:"manilla", nombre:"Manilla del hospital",       w:22, h:6, x:81, y:89, img:"img/recuerdos/manilla.png", ph:"#e3eefb"}
+    {id:"cordon",  nombre:"Pinza del cordón umbilical", w:10, h:10, x:64, y:90, img:"img/recuerdos/cordon.png",  ph:"#fafafa"},
+    {id:"manilla", nombre:"Manilla del hospital",       w:24, h:9,  x:83, y:90, img:"img/recuerdos/manilla.png", ph:"#e3eefb"}
   ]
 };
 
@@ -383,12 +375,14 @@ function opciones(cont,items,key,render,after){
     d.innerHTML=render(it);d.onclick=()=>{st[key]=it;opciones(cont,items,key,render,after);after&&after();actualizar();};
     cont.appendChild(d);});
 }
+let fondoPintado=null;
 function pintarFondo(){
   const f=st.fondo, capa=$("capaFondo");
   $("boxSolido").classList.toggle("on",!!f.solido);
-  if(f.solido){ capa.style.background=st.fondoColor.hex; $("decos").innerHTML=""; return; }
+  if(f.solido){ capa.style.background=st.fondoColor.hex; $("decos").innerHTML=""; fondoPintado=null; return; }
+  if(fondoPintado===f) return; fondoPintado=f;
   capa.style.background=f.css;
-  const pos=[[30,12],[62,10],[45,36],[88,36],[28,80],[70,66],[52,94],[93,84],[15,94],[80,8]];
+  const pos=[[30,12],[62,10],[45,38],[88,36],[28,82],[70,66],[52,95],[93,84],[15,95],[80,8]];
   $("decos").innerHTML=pos.map(([x,y])=>`<span class="deco" style="left:${x}%;top:${y}%">${f.deco}</span>`).join("");
   const t=new Image();t.onload=()=>{if(st.fondo===f){capa.style.background=`url(${t.src}) center/cover`;$("decos").innerHTML="";}};t.src=ver(f.img);
 }
@@ -421,9 +415,8 @@ function pintarRecuerdos(){
   CONFIG.recuerdos.forEach(r=>{
     const s=st.rec[r.id]; if(!s) return;
     const src=s.variante||r, w=src.w||r.w, h=src.h||r.h;
-    const el=document.createElement("div");el.className="rec";
-    /* que no se salga del cuadro si la variante es más grande */
     s.x=Math.min(100-w/2,Math.max(w/2,s.x)); s.y=Math.min(100-h/2,Math.max(h/2,s.y));
+    const el=document.createElement("div");el.className="rec";
     Object.assign(el.style,{width:w+"%",height:h+"%",left:s.x+"%",top:s.y+"%",transform:"translate(-50%,-50%)"});
     el.innerHTML=imgOr(src.img,`<div class="ph" style="background:${src.ph}">${s.variante?"Prueba "+s.variante.nombre:r.nombre}</div>`);
     arrastrable(el,s);cont.appendChild(el);
@@ -444,6 +437,12 @@ function arrastrable(el,s){
   });
 }
 
+/* --- textos largos: se achican para no salirse de su espacio --- */
+function ajustar(el,base,largo,min){
+  const n=el.textContent.length, f=n>largo?Math.max(min,base*largo/n):base;
+  el.style.fontSize=f+"cqw";
+}
+
 /* --- actualización general --- */
 function total(){return st.tamano.precio;}
 function aPagar(){return st.pago==="reserva"?Math.round(total()*CONFIG.reservaPct/1000)*1000:total();}
@@ -454,13 +453,15 @@ function actualizar(){
   pintarFondo();
   if(animalPintado!==st.animal){$("personaje").innerHTML=imgOr(st.animal.img,st.animal.emoji);animalPintado=st.animal;}
   const v=id=>$(id).value.trim();
-  $("pNombre").textContent=v("nombre")||"Tu bebé";
-  $("pApellido").textContent=v("apellido")||"Apellidos";
+  $("pNombre").textContent=v("nombre")||"Tu bebé";            ajustar($("pNombre"),8.5,10,5);
+  $("pApellido").textContent=v("apellido")||"Apellidos";      ajustar($("pApellido"),3.8,22,2.8);
   if(v("fecha")){const[a,m,d]=v("fecha").split("-").map(Number);const dt=new Date(a,m-1,d);
     $("pDia").textContent="Nací el "+DIAS[dt.getDay()];$("pFecha").textContent=`${d} de ${MESES[m-1]} de ${a}`;}
   else{$("pDia").textContent="Nací el ...";$("pFecha").textContent="dd de mes de aaaa";}
+  ajustar($("pFecha"),5,20,3.8);
   $("pLugar").textContent=v("lugar")?"En "+v("lugar").replace(/^en\s+/i,""):"En la clínica ...";
-  if(v("hora")){let[h,mi]=v("hora").split(":").map(Number);$("pHora").textContent=`${h%12||12}:${String(mi).padStart(2,"0")} ${h>=12?"PM":"AM"}`;}
+  ajustar($("pLugar"),3,32,2.3);
+  if(v("hora")){let[h,mi]=v("hora").split(":").map(Number);$("pHora").textContent=`${h%12||12}:${String(mi).padStart(2,"0")} ${h>=12?"pm":"am"}`;}
   else $("pHora").textContent="--:--";
   const peso=v("peso").replace(/\D/g,"");
   $("pPeso").textContent=peso?Number(peso).toLocaleString("es-CO"):"----";
