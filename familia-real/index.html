@@ -150,7 +150,7 @@ input:focus,select:focus{outline:none;border-color:var(--marca)}
 /* --- PRUEBA (borrar cuando todo funcione) --- */
 .prueba{margin-top:22px;border:2px dashed #e0b75a;border-radius:12px;padding:12px;background:#fffaf0}
 .prueba .btn{background:#e0b75a;color:#4a3b40;margin-top:6px}
-.prueba pre{white-space:pre-wrap;font-size:.8rem;margin-top:10px;line-height:1.45}
+.prueba pre{white-space:pre-wrap;word-break:break-all;font-size:.8rem;margin-top:10px;line-height:1.45}
 /* ventanas emergentes */
 .modal{position:fixed;inset:0;background:rgba(40,25,30,.55);display:none;align-items:center;justify-content:center;z-index:100;padding:16px}
 .modal.on{display:flex}
@@ -307,8 +307,6 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
 <script>
 /* =========================================================
    CONFIGURACIÓN — edita solo esta sección.
-   Todas las imágenes se leen desde la carpeta img/ junto a este index.html.
-   Si un archivo no existe, la página muestra un provisional y no se rompe.
    ========================================================= */
 
 /* Sube este número cada vez que reemplaces una imagen en GitHub (7 → 8 → 9...) */
@@ -317,10 +315,9 @@ const VERSION_IMG = "7";
 const CONFIG = {
   whatsapp: "57XXXXXXXXXX",
 
-  /* Supabase: donde se guardan las fotos y los pedidos.
-     url y anonKey están en Supabase → Project Settings → API. */
+  /* Supabase. La url es SOLO la dirección del proyecto, sin nada después de ".co" */
   supabase: {
-    url:     "https://wxllaksoiuawzmpxppdw.supabase.co/rest/v1/",
+    url:     "https://wxllaksoiuawzmpxppdw.supabase.co",
     anonKey: "sb_publishable_zBpLL1H_4pECn2oUwcSJ0w_pGX8jXr1",
     bucket:  "pedidos-fotos",
     tabla:   "pedidos"
@@ -329,6 +326,9 @@ const CONFIG = {
   precios: { con3d:290000, sin3d:190000 },
   /* Un link de Mercado Pago por cada precio */
   mercadoPago: { con3d:"https://mpago.la/XXXX", sin3d:"https://mpago.la/XXXX" },
+
+  /* Ventana de salida en computador: segundos mínimos en la página antes de que pueda aparecer */
+  salidaSegundos: 20,
 
   marcos: [
     {id:"madera", nombre:"Madera natural", base:"#dcc09a", pared:"#ece6dc", img:"img/marcos/madera.png", geo:{aspecto:1.2336, l:5.21, t:6.07, r:5.21, b:5.93}},
@@ -377,7 +377,7 @@ const CONFIG = {
     {id:"manilla", nombre:"Manilla del bebé",            w:34, h:12, img:"img/recuerdos/manilla.png", ph:"#e3eefb"}
   ],
 
-  /* GUÍA para tomar las fotos del 3D. Sube tus ejemplos a img/guia/ con estos nombres. */
+  /* GUÍA para tomar las fotos del 3D (img/guia/) */
   guia: {
     mano: { titulo:"Cómo tomar la foto de la manito",
             bien:"img/guia/mano-bien.jpeg", mal:"img/guia/mano-mal.jpeg",
@@ -577,9 +577,14 @@ function actualizar(){
   $("btnPagar").textContent=`Pagar ${fmt(total())}`;
 }
 
-/* ===== SUBIDA DE FOTOS A SUPABASE ===== */
+/* ===== CONEXIÓN CON SUPABASE ===== */
 const SB=CONFIG.supabase;
+/* limpia la url por si se pegó con /rest/v1/ u otra cosa al final */
+SB.url=SB.url.trim().replace(/\/+$/,"").replace(/\/(rest|storage)\/v1.*$/,"");
 const sbListo=()=>SB.url && !SB.url.includes("XXXX") && !SB.anonKey.includes("XXXX");
+/* las llaves nuevas (sb_publishable_...) van solo en "apikey"; las antiguas (eyJ...) también en Authorization */
+const sbHeaders=extra=>Object.assign({apikey:SB.anonKey}, SB.anonKey.startsWith("eyJ")?{Authorization:"Bearer "+SB.anonKey}:{}, extra);
+
 const fotos={};   /* bebe | mano | pie  →  {estado:"subiendo|ok|error|local", ruta, promesa, error} */
 async function reducir(file){   /* las fotos del celular pesan mucho: se reducen a 2400 px sin perder detalle útil */
   try{
@@ -594,7 +599,7 @@ async function subir(clave,file){
   const ext=blob.type==="image/jpeg"?"jpg":((file.name.split(".").pop()||"jpg").toLowerCase());
   const ruta=`${CODIGO}/${clave}-${Date.now()}.${ext}`;
   const r=await fetch(`${SB.url}/storage/v1/object/${SB.bucket}/${ruta}`,{
-    method:"POST",headers:{apikey:SB.anonKey,"Content-Type":blob.type||"image/jpeg"},body:blob});
+    method:"POST",headers:sbHeaders({"Content-Type":blob.type||"image/jpeg"}),body:blob});
   if(!r.ok) throw new Error(`(${r.status}) ${await r.text()}`);
   return ruta;
 }
@@ -631,7 +636,7 @@ async function guardarPedido(estado){
   if(!sbListo()) return {ok:false,msg:"Supabase todavía no está configurado (falta url o anonKey en CONFIG)."};
   try{
     const r=await fetch(`${SB.url}/rest/v1/${SB.tabla}`,{method:"POST",
-      headers:{apikey:SB.anonKey,"Content-Type":"application/json",Prefer:"return=minimal"},
+      headers:sbHeaders({"Content-Type":"application/json",Prefer:"return=minimal"}),
       body:JSON.stringify(datosPedido(estado))});
     if(!r.ok) return {ok:false,msg:`(${r.status}) ${await r.text()}`};
     return {ok:true};
@@ -668,7 +673,7 @@ $("btnPrueba").onclick=async ()=>{
   if(!sbListo()){out.textContent="❌ Supabase no está configurado.\nPega la url y la anonKey en CONFIG.supabase.";return;}
   ocupado(b,"Subiendo…"); out.textContent="Esperando a que terminen las fotos…";
   await Promise.all(Object.values(fotos).filter(f=>f.estado==="subiendo").map(f=>f.promesa));
-  const lineas=["Código del pedido: "+CODIGO,""];
+  const lineas=["Conectando a: "+SB.url,"Código del pedido: "+CODIGO,""];
   ["bebe","mano","pie"].forEach(k=>{const f=fotos[k];
     lineas.push(`Foto ${k}: `+(!f?"— no elegida":f.estado==="ok"?"✅ subida → "+f.ruta:"❌ error "+(f.error||"")));});
   const g=await guardarPedido("prueba");
@@ -685,17 +690,39 @@ function mensajeWA(){
 • Personaje: ${st.animal.nombre} | Fondo: ${textoFondo()}
 • Manito y piecito 3D: ${st.con3d?"Sí":"No"}`;
 }
-let salidaMostrada=false;
+let salidaMostrada=false, interactuo=false;
+const inicio=Date.now();
 function mostrarSalida(){
   if(salidaMostrada||pagando) return false;
   salidaMostrada=true; $("modalSalida").classList.add("on"); return true;
 }
 const cerrarSalida=()=>$("modalSalida").classList.remove("on");
-/* computador: el mouse sale por arriba de la página (hacia cerrar pestaña o barra de direcciones) */
-document.addEventListener("mouseout",e=>{ if(!e.relatedTarget && e.clientY<=0) mostrarSalida(); });
-/* celular: botón "atrás" */
-history.pushState({fr:1},"");
-addEventListener("popstate",()=>{ if(mostrarSalida()) history.pushState({fr:1},""); else history.back(); });
+
+/* COMPUTADOR: solo si ya empezó a diseñar, lleva un rato en la página y el mouse
+   sale rápido por la parte de arriba (hacia las pestañas / la X). */
+let ultY=null, ultT=0;
+document.addEventListener("mousemove",e=>{ultY=e.clientY;ultT=Date.now();});
+document.addEventListener("mouseout",e=>{
+  if(e.relatedTarget||e.clientY>0) return;
+  if(!interactuo || Date.now()-inicio<CONFIG.salidaSegundos*1000) return;
+  const rapido = ultY!==null && ultY<120 && Date.now()-ultT<250;
+  if(rapido) mostrarSalida();
+});
+
+/* CELULAR: botón "atrás". Los navegadores ignoran esto si se activa antes de que la
+   persona toque la página, por eso se arma después de su primer toque o escritura. */
+let trampaLista=false;
+function armarAtras(){
+  interactuo=true;
+  if(trampaLista) return; trampaLista=true;
+  history.pushState({fr:1},"",location.href);
+}
+["pointerdown","keydown","input"].forEach(ev=>document.addEventListener(ev,armarAtras,{passive:true}));
+addEventListener("popstate",()=>{
+  if(mostrarSalida()) history.pushState({fr:1},"",location.href);  /* se queda en la página y muestra la ventana */
+  else history.back();                                             /* la segunda vez sí sale */
+});
+
 $("cerrarSalida").onclick=cerrarSalida; $("seguirSalida").onclick=cerrarSalida;
 $("modalSalida").onclick=e=>{if(e.target===$("modalSalida"))cerrarSalida();};
 $("btnWaSalida").onclick=e=>{e.preventDefault();guardarPedido("consulta whatsapp");window.open(urlWA(mensajeWA()),"_blank");cerrarSalida();};
