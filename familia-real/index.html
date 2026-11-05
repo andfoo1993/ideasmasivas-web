@@ -2,6 +2,8 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
+<!-- Hace que las imágenes carguen aunque abran la página sin "/" al final -->
+<base href="/familia-real/">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Familia Real · Diseña el cuadro de tu bebé</title>
 <link href="https://fonts.googleapis.com/css2?family=Lily+Script+One&family=Dancing+Script:wght@400;500;600;700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
@@ -41,7 +43,7 @@ header p{max-width:560px;margin:6px auto 0}
   background:linear-gradient(115deg,rgba(255,255,255,0) 0 16%,rgba(255,255,255,.10) 23%,rgba(255,255,255,.03) 30%,rgba(255,255,255,0) 37% 62%,rgba(255,255,255,.06) 66%,rgba(255,255,255,0) 72%)}
 
 /* ===== CONTENIDO DEL CUADRO ===== */
-.capa-fondo{position:absolute;inset:0;background-size:cover;background-position:center}
+.capa-fondo{position:absolute;inset:0;background-size:cover;background-position:center;transition:background-color .3s}
 .deco{position:absolute;color:var(--acento);opacity:.5;font-size:3cqw}
 .personaje{position:absolute;right:2%;top:2%;width:22%;aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:13cqw;z-index:3}
 .personaje img{width:100%;height:100%;object-fit:contain;filter:drop-shadow(0 1px 1px rgba(0,0,0,.12))}
@@ -90,6 +92,13 @@ header p{max-width:560px;margin:6px auto 0}
 .colores{display:flex;flex-wrap:wrap;gap:12px}
 .color{width:44px;height:44px;border-radius:50%;cursor:pointer;border:3px solid #fff;box-shadow:0 0 0 2px #ddd;transition:.2s}
 .color.sel{box-shadow:0 0 0 3px var(--marca-osc);transform:scale(1.08)}
+/* fondo de un solo color */
+.box-solido{display:none;margin-top:14px;padding:14px;border-radius:12px;background:#fdf9fa}
+.box-solido.on{display:block}
+.box-solido h3{font-size:.9rem;margin-bottom:10px}
+.otro-color{display:flex;align-items:center;gap:10px;margin-top:12px;font-size:.88rem;font-weight:600}
+.otro-color input[type=color]{width:52px;height:40px;padding:2px;border-radius:10px;cursor:pointer}
+.aviso-oscuro{font-size:.8rem;color:#b5651d;margin-top:8px;display:none}
 .opciones{display:flex;gap:10px;flex-wrap:wrap}
 .op{flex:1;min-width:110px;border:2px solid #eee;border-radius:12px;padding:12px;cursor:pointer;text-align:center}
 .op.sel{border-color:var(--marca);background:#fdf5f7}
@@ -167,7 +176,14 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
     <div class="paso"><h2><span class="num">1</span> Elige el personaje</h2><p>El amiguito que acompañará a tu bebé.</p>
       <div class="galeria" id="animales"></div>
       <div class="otro">¿Sueñas con otro personaje? <a href="#" id="linkOtro">Escríbenos por WhatsApp</a>.</div></div>
-    <div class="paso"><h2><span class="num">2</span> Elige el fondo</h2><p>&nbsp;</p><div class="galeria" id="fondos"></div></div>
+    <div class="paso"><h2><span class="num">2</span> Elige el fondo</h2><p>Con diseño o de un solo color.</p>
+      <div class="galeria" id="fondos"></div>
+      <div class="box-solido" id="boxSolido">
+        <h3>Elige el color del fondo</h3>
+        <div class="colores" id="coloresFondo"></div>
+        <label class="otro-color">Otro color: <input type="color" id="colorLibre" value="#f9e1e8"></label>
+        <div class="aviso-oscuro" id="avisoOscuro">Este color es oscuro: los textos pueden leerse con dificultad. Te recomendamos un tono claro.</div>
+      </div></div>
     <div class="paso"><h2><span class="num">3</span> Color de las letras</h2><p>Las letras e iconos van en relieve con este color.</p><div class="colores" id="colores"></div></div>
     <div class="paso"><h2><span class="num">4</span> Tamaño y marco</h2><p>&nbsp;</p>
       <div class="opciones" id="tamanos"></div><div style="height:12px"></div><div class="opciones" id="marcos"></div></div>
@@ -215,8 +231,8 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
    ========================================================= */
 
 /* Sube este número cada vez que reemplaces una imagen en GitHub
-   (1 → 2 → 3...), para que los navegadores no muestren la versión vieja. */
-const VERSION_IMG = "1";
+   (3 → 4 → 5...), para que los navegadores no muestren la versión vieja. */
+const VERSION_IMG = "3";
 
 const CONFIG = {
   whatsapp: "57XXXXXXXXXX",
@@ -244,12 +260,28 @@ const CONFIG = {
     {id:"conejito",        nombre:"Conejito",          img:"img/animales/conejito.png",        emoji:"🐰", color:"lila"},
     {id:"leoncito",        nombre:"Leoncito",          img:"img/animales/leoncito.png",        emoji:"🦁", color:"dorado"}
   ],
+
+  /* Fondos con imagen. css = color que se ve mientras carga la imagen.
+     El último ("solido") es el fondo de un solo color: no lleva imagen. */
   fondos: [
-    {id:"blanco-estrellas", nombre:"Estrellitas", img:"img/fondos/blanco-estrellas.jpg", css:"#fff", deco:"★"},
-    {id:"cielo-nubes",      nombre:"Cielo azul",  img:"img/fondos/cielo-nubes.jpg", css:"linear-gradient(180deg,#cfe3f7,#e9f2fb 55%,#fff)", deco:"☁"},
-    {id:"rosa-nubes",       nombre:"Nubes rosa",  img:"img/fondos/rosa-nubes.jpg",  css:"linear-gradient(180deg,#f9dbe4,#fcedf1 55%,#fff)", deco:"☁"},
-    {id:"menta",            nombre:"Menta",       img:"img/fondos/menta.jpg",       css:"linear-gradient(180deg,#dcefe6,#f1f8f4 60%,#fff)", deco:"❀"}
+    {id:"estrellas-azul", nombre:"Estrellas azul", img:"img/fondos/estrellas-azul.jpg", css:"#eef4fb", deco:"★"},
+    {id:"estrellas-rosa", nombre:"Estrellas rosa", img:"img/fondos/estrellas-rosa.jpg", css:"#fbeff3", deco:"★"},
+    {id:"nubes-azul",     nombre:"Nubes azul",     img:"img/fondos/nubes-azul.jpg",     css:"#e6f0fa", deco:"☁"},
+    {id:"nubes-rosa",     nombre:"Nubes rosa",     img:"img/fondos/nubes-rosa.jpg",     css:"#fae8ee", deco:"☁"},
+    {id:"solido",         nombre:"Un solo color",  solido:true}
   ],
+  /* Colores sugeridos para el fondo de un solo color (además del selector libre) */
+  coloresFondo: [
+    {nombre:"Blanco",         hex:"#ffffff"},
+    {nombre:"Rosa pastel",    hex:"#f9e1e8"},
+    {nombre:"Azul pastel",    hex:"#dfeaf7"},
+    {nombre:"Lila",           hex:"#ece4f6"},
+    {nombre:"Menta",          hex:"#dff1e8"},
+    {nombre:"Amarillo suave", hex:"#fbf3d9"},
+    {nombre:"Durazno",        hex:"#fbe5d6"},
+    {nombre:"Gris perla",     hex:"#eeeeee"}
+  ],
+
   colores: [
     {id:"rosa",hex:"#e8a6bb"},{id:"azul",hex:"#1f4fa3"},{id:"lila",hex:"#a48bd1"},
     {id:"menta",hex:"#6fbfa0"},{id:"dorado",hex:"#c9a24a"},{id:"negro",hex:"#3a3a3a"}
@@ -270,7 +302,7 @@ const $=id=>document.getElementById(id);
 const fmt=n=>"$"+n.toLocaleString("es-CO");
 const MESES=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 const DIAS=["Domingo","Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"];
-const st={animal:CONFIG.animales[0],fondo:CONFIG.fondos[0],color:null,tamano:CONFIG.tamanos[0],marco:CONFIG.marcos[0],pago:"total",rec:{}};
+const st={animal:CONFIG.animales[0],fondo:CONFIG.fondos[0],fondoColor:CONFIG.coloresFondo[1],color:null,tamano:CONFIG.tamanos[0],marco:CONFIG.marcos[0],pago:"total",rec:{}};
 const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const ver=src=>src?src+(src.includes("?")?"&":"?")+"v="+VERSION_IMG:src;
 function imgOr(src,fb){
@@ -316,13 +348,27 @@ function galeria(cont,items,key,mini){
   });
 }
 const miniAnimal=a=>`<div class="mini">${imgOr(a.img,a.emoji)}</div>`;
-const miniFondo=f=>`<div class="mini" style="background:${f.css}">${f.img?`<img src="${ver(f.img)}" style="object-fit:cover" onerror="this.remove()">`:""}</div>`;
+const miniFondo=f=>f.solido
+  ? `<div class="mini" style="background:conic-gradient(${CONFIG.coloresFondo.map(c=>c.hex).join(",")},${CONFIG.coloresFondo[0].hex});box-shadow:inset 0 0 0 1px #eee"></div>`
+  : `<div class="mini" style="background:${f.css}"><img src="${ver(f.img)}" style="object-fit:cover" onerror="this.remove()"></div>`;
 function pintarColores(){
   const c=$("colores");c.innerHTML="";
   CONFIG.colores.forEach(co=>{const d=document.createElement("div");
     d.className="color"+(st.color===co?" sel":"");d.style.background=co.hex;d.title=co.id;
     d.onclick=()=>{st.color=co;pintarColores();actualizar();};c.appendChild(d);});
 }
+function pintarColoresFondo(){
+  const c=$("coloresFondo");c.innerHTML="";
+  CONFIG.coloresFondo.forEach(co=>{const d=document.createElement("div");
+    d.className="color"+(st.fondoColor===co?" sel":"");d.style.background=co.hex;d.title=co.nombre;
+    d.onclick=()=>{st.fondoColor=co;pintarColoresFondo();actualizar();};c.appendChild(d);});
+  const n=parseInt(st.fondoColor.hex.slice(1),16), lum=(0.299*(n>>16)+0.587*(n>>8&255)+0.114*(n&255));
+  $("avisoOscuro").style.display=lum<150?"block":"none";
+}
+$("colorLibre").addEventListener("input",e=>{
+  st.fondoColor={nombre:"Personalizado "+e.target.value.toUpperCase(),hex:e.target.value};
+  pintarColoresFondo();actualizar();
+});
 function opciones(cont,items,key,render,after){
   cont.innerHTML="";
   items.forEach(it=>{const d=document.createElement("div");d.className="op"+(st[key]===it?" sel":"");
@@ -331,11 +377,14 @@ function opciones(cont,items,key,render,after){
 }
 function pintarFondo(){
   const f=st.fondo, capa=$("capaFondo");
+  $("boxSolido").classList.toggle("on",!!f.solido);
+  if(f.solido){ capa.style.background=st.fondoColor.hex; $("decos").innerHTML=""; return; }
   capa.style.background=f.css;
   const pos=[[30,12],[62,10],[45,36],[88,36],[28,80],[70,66],[52,94],[93,84],[15,94],[80,8]];
   $("decos").innerHTML=pos.map(([x,y])=>`<span class="deco" style="left:${x}%;top:${y}%">${f.deco}</span>`).join("");
-  if(f.img){const t=new Image();t.onload=()=>{if(st.fondo===f){capa.style.background=`url(${t.src}) center/cover`;$("decos").innerHTML="";}};t.src=ver(f.img);}
+  const t=new Image();t.onload=()=>{if(st.fondo===f){capa.style.background=`url(${t.src}) center/cover`;$("decos").innerHTML="";}};t.src=ver(f.img);
 }
+const textoFondo=()=>st.fondo.solido?`Un solo color (${st.fondoColor.nombre} ${st.fondoColor.hex.toUpperCase()})`:st.fondo.nombre;
 
 /* --- recuerdos arrastrables --- */
 function pintarListaRec(){
@@ -411,7 +460,7 @@ function actualizar(){
     :modo==="papitos"?`Mis papitos son <span class="relieve">${ma} y ${pa}</span>`
     :`Mi mamá es <span class="relieve">${ma}</span> y mi papá es <span class="relieve">${pa}</span>`;
   $("totalFlot").textContent=fmt(total());
-  $("resumen").innerHTML=`Personaje: <b>${st.animal.nombre}</b> · Fondo: <b>${st.fondo.nombre}</b> · Color: <b>${st.color.id}</b><br>
+  $("resumen").innerHTML=`Personaje: <b>${st.animal.nombre}</b> · Fondo: <b>${textoFondo()}</b> · Letras: <b>${st.color.id}</b><br>
     Cuadro <b>${st.tamano.nombre}</b> (${st.tamano.detalle}) · Marco <b>${st.marco.nombre}</b><br>
     Recuerdos: <b>${textoRec()}</b>${Object.keys(st.rec).length?" (incluye pegante y guía)":""}
     <div class="total">Total: ${fmt(total())}</div>
@@ -421,7 +470,7 @@ function actualizar(){
 function mensajeWA(){
   const v=id=>$(id).value.trim();
   return `¡Hola Familia Real! Quiero mi cuadro 💕
-• Personaje: ${st.animal.nombre} | Fondo: ${st.fondo.nombre} | Color: ${st.color.id}
+• Personaje: ${st.animal.nombre} | Fondo: ${textoFondo()} | Letras: ${st.color.id}
 • Tamaño: ${st.tamano.nombre} | Marco: ${st.marco.nombre}
 • Bebé: ${v("nombre")} ${v("apellido")}
 • Nació: ${$("pDia").textContent.replace("Nací el ","")} ${$("pFecha").textContent} a las ${$("pHora").textContent}
@@ -443,7 +492,7 @@ function validar(){
   $(inp).onchange=e=>{const f=e.target.files[0];if(!f)return;$(box).classList.add("ok");
     if(esFoto){const r=new FileReader();r.onload=ev=>{$("pFoto").style.backgroundImage=`url(${ev.target.result})`;$("pFoto").textContent="";};r.readAsDataURL(f);}};
 });
-document.querySelectorAll("input:not([type=file]):not([type=checkbox]),select").forEach(el=>el.addEventListener("input",actualizar));
+document.querySelectorAll("input:not([type=file]):not([type=checkbox]):not([type=color]),select").forEach(el=>el.addEventListener("input",actualizar));
 const wa=t=>window.open(`https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(t)}`,"_blank");
 $("btnWa").onclick=e=>{e.preventDefault();if(validar())wa(mensajeWA());};
 $("btnPagar").onclick=e=>{e.preventDefault();if(!validar())return;wa(mensajeWA());
@@ -456,7 +505,7 @@ $("pMano").innerHTML=imgOr(CONFIG.mano,'<div class="ph3d"></div>');
 $("pPie").innerHTML=imgOr(CONFIG.pie,'<div class="ph3d"></div>');
 galeria($("animales"),CONFIG.animales,"animal",miniAnimal);
 galeria($("fondos"),CONFIG.fondos,"fondo",miniFondo);
-pintarColores();
+pintarColores();pintarColoresFondo();
 opciones($("tamanos"),CONFIG.tamanos,"tamano",t=>`<b>${t.nombre}</b><small>${t.detalle}</small><br><b>${fmt(t.precio)}</b>`);
 opciones($("marcos"),CONFIG.marcos,"marco",m=>`<span class="muestra" style="background:${m.base}"></span><b>${m.nombre}</b>`,pintarMarco);
 const pagosOps=[{id:"total",n:"Pago total"},{id:"reserva",n:`Reservar con ${CONFIG.reservaPct*100}%`}];let pagoSel=pagosOps[0];
