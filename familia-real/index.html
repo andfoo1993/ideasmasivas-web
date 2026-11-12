@@ -199,6 +199,29 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
   box-sizing:border-box;
 }
 
+
+/* FOTO BEBE V2: zona fija; la tarjeta se dimensiona segun la proporcion y queda centrada */
+#pFoto{
+  left:4%; top:36%; width:22%; height:42%;
+  max-width:none; max-height:none;
+  border:0!important; box-shadow:none!important;
+  background:transparent!important;
+  overflow:visible;
+  display:flex; align-items:center; justify-content:center;
+}
+#pFotoImg{
+  display:none;
+  position:relative; inset:auto;
+  width:auto; height:auto;
+  max-width:100%; max-height:100%;
+  object-fit:contain; object-position:center;
+  background:#fff;
+  padding:4%;
+  border:2px solid #fff;
+  box-shadow:0 2px 6px rgba(0,0,0,.22);
+  box-sizing:border-box;
+}
+
 </style>
 </head>
 <body>
@@ -652,14 +675,6 @@ function prepararUpload(clave){
         img.onload=()=>{
           img.style.display="block";
           if(texto)texto.style.display="none";
-          const caja=$("pFoto");
-          if(caja){
-            caja.style.width="auto";
-            caja.style.height="auto";
-            caja.style.border="0";
-            caja.style.boxShadow="none";
-            caja.style.background="transparent";
-          }
         };
         img.onerror=()=>console.error("No se pudo mostrar la foto del bebé seleccionada.");
         img.src=url;
