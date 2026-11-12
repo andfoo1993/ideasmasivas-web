@@ -222,6 +222,12 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
   box-sizing:border-box;
 }
 
+
+/* HORIZONTAL: mas espacio para la foto; hora y peso se desplazan a la derecha */
+#marco.foto-horizontal #pFoto{left:1.5%;width:31%;height:42%}
+#marco.foto-horizontal .d-hora,#marco.foto-horizontal .d-peso{left:34%}
+#pFoto,#marco .d-hora,#marco .d-peso{transition:left .25s ease,width .25s ease}
+
 </style>
 </head>
 <body>
@@ -675,6 +681,11 @@ function prepararUpload(clave){
         img.onload=()=>{
           img.style.display="block";
           if(texto)texto.style.display="none";
+          const marco=$("marco");
+          if(marco){
+            const horizontal=img.naturalWidth>img.naturalHeight*1.08;
+            marco.classList.toggle("foto-horizontal",horizontal);
+          }
         };
         img.onerror=()=>console.error("No se pudo mostrar la foto del bebé seleccionada.");
         img.src=url;
