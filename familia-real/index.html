@@ -643,15 +643,70 @@ async function cargarFuentes(){
   return fuentesCSS;
 }
 async function subirDiseno(){
-  if(!sbListo()||!window.htmlToImage) return null;
+  if(!sbListo() || !window.htmlToImage) return null;
+
   try{
+    console.log("1. Iniciando captura del diseño");
+
     await document.fonts.ready;
+    console.log("2. Fuentes listas");
+
     const nodo=$("marco");
-    const blob=await htmlToImage.toBlob(nodo,{
-      pixelRatio:Math.max(2,1600/nodo.offsetWidth),
-      fontEmbedCSS:await cargarFuentes(),
-      skipFonts:false
-    });
+
+    console.log("3. Marco encontrado", nodo);
+    console.log("4. Tamaño marco", nodo.offsetWidth, nodo.offsetHeight);
+
+    const fontCSS = await cargarFuentes();
+    console.log("5. Fuentes preparadas", fontCSS.length);
+
+    console.log("6. Iniciando htmlToImage.toBlob");
+
+    const blob = await Promise.race([
+      htmlToImage.toBlob(nodo,{
+        pixelRatio:2,
+        fontEmbedCSS:fontCSS,
+        skipFonts:false,
+        cacheBust:true
+      }),
+
+      new Promise((_,reject)=>
+        setTimeout(
+          ()=>reject(new Error("La captura tardó más de 15 segundos")),
+          15000
+        )
+      )
+    ]);
+
+    console.log("7. Imagen creada", blob);
+
+    if(!blob) throw new Error("html-to-image devolvió un blob vacío");
+
+    console.log("8. Subiendo diseño a Supabase");
+
+    const ruta=await subirBlob(
+      blob,
+      `diseno-${Date.now()}.png`,
+      "image/png"
+    );
+
+    console.log("9. Diseño guardado:", ruta);
+
+    fotos.diseno={estado:"ok",ruta};
+
+    return ruta;
+
+  }catch(e){
+
+    console.error("ERROR CAPTURANDO EL DISEÑO:",e);
+
+    fotos.diseno={
+      estado:"error",
+      error:e.message || String(e)
+    };
+
+    return null;
+  }
+};
     if(!blob) return null;
     const ruta=await subirBlob(blob,`diseno-${Date.now()}.png`,"image/png");
     fotos.diseno={estado:"ok",ruta};
@@ -686,7 +741,7 @@ async function guardarPedido(estado){
 function error(msg){$("err").style.display=msg?"block":"none";$("err").textContent=msg||"";}
 async function listo(){
   const req=[["nombre","el nombre del bebé"],["fecha","la fecha de nacimiento"],["cliente","tu nombre completo"],
-             ["documento","tu número de documento"],["celular","tu celular"],["direccion","tu dirección"],["ciudad","la ciudad"]];
+             ["celular","tu celular"],["direccion","tu dirección"],["ciudad","la ciudad"]];
   const falta=req.filter(([id])=>!v(id)).map(r=>r[1]);
   const necesarias=st.con3d?[["bebe","la foto del bebé"],["mano","la foto de la manito"],["pie","la foto del piecito"]]:[["bebe","la foto del bebé"]];
   necesarias.forEach(([k,t])=>{if(!fotos[k]||fotos[k].estado==="error")falta.push(t);});
