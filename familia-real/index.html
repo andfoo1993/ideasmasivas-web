@@ -676,19 +676,24 @@ function prepararUpload(clave){
     if(clave==="bebe"){
       const img=$("pFotoImg"), texto=$("pFotoTexto");
       if(img){
-        if(img.dataset.objectUrl) URL.revokeObjectURL(img.dataset.objectUrl);
-        img.dataset.objectUrl=url;
-        img.onload=()=>{
-          img.style.display="block";
-          if(texto)texto.style.display="none";
-          const marco=$("marco");
-          if(marco){
-            const horizontal=img.naturalWidth>img.naturalHeight*1.08;
-            marco.classList.toggle("foto-horizontal",horizontal);
-          }
+        const fr=new FileReader();
+        fr.onload=()=>{
+          const dataUrl=fr.result;
+          img.onload=()=>{
+            img.style.display="block";
+            if(texto)texto.style.display="none";
+            const marco=$("marco");
+            if(marco){
+              const horizontal=img.naturalWidth>img.naturalHeight*1.08;
+              marco.classList.toggle("foto-horizontal",horizontal);
+            }
+          };
+          img.onerror=()=>console.error("No se pudo mostrar la foto del bebé seleccionada.");
+          img.src=dataUrl;
+          img.dataset.captureSrc=dataUrl;
         };
-        img.onerror=()=>console.error("No se pudo mostrar la foto del bebé seleccionada.");
-        img.src=url;
+        fr.onerror=()=>console.error("No se pudo preparar la foto del bebé para la vista previa.");
+        fr.readAsDataURL(f);
       }
     }
     if(!sbListo()){ fotos[clave]={estado:"local"}; box.className="upload ok"; est.textContent="✓ Lista (cambiar)"; inp.value=""; return; }
@@ -757,8 +762,14 @@ async function subirDiseno(){
     if(!nodo)throw new Error("No se encontró el cuadro para generar la imagen.");
     await esperarImagenes(nodo);
     const fotoBebe=$("pFotoImg");
+    if(fotoBebe&&fotoBebe.dataset.captureSrc&&fotoBebe.src!==fotoBebe.dataset.captureSrc){
+      fotoBebe.src=fotoBebe.dataset.captureSrc;
+      await esperarImagenes(nodo);
+    }
     if(fotoBebe&&fotoBebe.src&&(!fotoBebe.complete||fotoBebe.naturalWidth===0))
       throw new Error("La foto del bebé todavía no está lista para la captura.");
+    if(fotoBebe&&fotoBebe.src&&fotoBebe.src.startsWith("blob:"))
+      throw new Error("La foto del bebé quedó en una URL temporal y no puede capturarse.");
     const fontCSS=await cargarFuentes();
     const blob=await Promise.race([
       htmlToImage.toBlob(nodo,{pixelRatio:2,fontEmbedCSS:fontCSS,skipFonts:false,cacheBust:true,backgroundColor:"#ffffff"}),
@@ -769,8 +780,9 @@ async function subirDiseno(){
     fotos.diseno={estado:"ok",ruta};
     return ruta;
   }catch(e){
-    console.error("ERROR CAPTURANDO EL DISEÑO:",e);
-    fotos.diseno={estado:"error",error:e.message||String(e)};
+    const detalle=e?.message||e?.type||e?.target?.src||String(e);
+    console.error("ERROR CAPTURANDO EL DISEÑO:",detalle,e);
+    fotos.diseno={estado:"error",error:detalle};
     return null;
   }
 }
