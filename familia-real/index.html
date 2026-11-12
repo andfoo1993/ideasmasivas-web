@@ -162,8 +162,9 @@ figcaption{text-align:center;font-weight:800;margin-top:4px;font-size:.9rem}
 .tips{padding-left:20px;font-size:.9rem;line-height:1.55}
 footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
 
-#pFoto{overflow:hidden;position:relative;background-image:none!important}
-#pFotoImg{display:none;width:100%;height:100%;object-fit:cover;object-position:center;position:absolute;inset:0}
+/* Foto completa, centrada y sin recortes, con margen tipo paspartú */
+#pFoto{overflow:hidden;position:relative;background:#fff!important;background-image:none!important}
+#pFotoImg{display:none;width:100%;height:100%;object-fit:contain;object-position:center;position:absolute;inset:0;background:#fff;padding:3%;box-sizing:border-box}
 #pFotoTexto{position:relative;z-index:1}
 </style>
 </head>
@@ -656,11 +657,12 @@ async function cargarFuentes(){
   return fuentesCSS;
 }
 async function esperarImagenes(nodo){
-  const imgs=[...nodo.querySelectorAll("img")].filter(img=>img.src && getComputedStyle(img).display!=="none");
+  const imgs=[...nodo.querySelectorAll("img")].filter(img=>img.src&&getComputedStyle(img).display!=="none");
   await Promise.all(imgs.map(img=>{
-    if(img.complete && img.naturalWidth>0) return Promise.resolve();
+    if(img.complete&&img.naturalWidth>0)return Promise.resolve();
     return new Promise(resolve=>{
-      const fin=()=>resolve();
+      let terminado=false;
+      const fin=()=>{if(!terminado){terminado=true;resolve();}};
       img.addEventListener("load",fin,{once:true});
       img.addEventListener("error",fin,{once:true});
       setTimeout(fin,5000);
@@ -678,45 +680,22 @@ async function subirDiseno(){
     fotos.diseno={estado:"error",error:"No cargó la herramienta para crear la imagen."};
     return null;
   }
-
   try{
     console.log("1. Iniciando captura del diseño");
     await document.fonts.ready;
-    console.log("2. Fuentes listas");
-
     const nodo=$("marco");
-    if(!nodo) throw new Error("No se encontró el cuadro para generar la imagen.");
+    if(!nodo)throw new Error("No se encontró el cuadro para generar la imagen.");
     await esperarImagenes(nodo);
     const fotoBebe=$("pFotoImg");
-    if(fotoBebe && fotoBebe.src && (!fotoBebe.complete || fotoBebe.naturalWidth===0))
+    if(fotoBebe&&fotoBebe.src&&(!fotoBebe.complete||fotoBebe.naturalWidth===0))
       throw new Error("La foto del bebé todavía no está lista para la captura.");
-    console.log("3. Marco encontrado",nodo);
-    console.log("4. Tamaño marco",nodo.offsetWidth,nodo.offsetHeight);
-
     const fontCSS=await cargarFuentes();
-    console.log("5. Fuentes preparadas",fontCSS.length);
-
-    const capturar=()=>htmlToImage.toBlob(nodo,{
-      pixelRatio:2,
-      fontEmbedCSS:fontCSS,
-      skipFonts:false,
-      cacheBust:true,
-      backgroundColor:"#ffffff"
-    });
-
-    console.log("6. Iniciando htmlToImage.toBlob");
     const blob=await Promise.race([
-      capturar(),
+      htmlToImage.toBlob(nodo,{pixelRatio:2,fontEmbedCSS:fontCSS,skipFonts:false,cacheBust:true,backgroundColor:"#ffffff"}),
       new Promise((_,reject)=>setTimeout(()=>reject(new Error("La captura tardó más de 20 segundos")),20000))
     ]);
-
-    console.log("7. Imagen creada",blob);
-    if(!blob) throw new Error("La herramienta devolvió una imagen vacía.");
-
-    console.log("8. Subiendo diseño a Supabase");
+    if(!blob)throw new Error("La herramienta devolvió una imagen vacía.");
     const ruta=await subirBlob(blob,`diseno-${Date.now()}.png`,"image/png");
-    console.log("9. Diseño guardado:",ruta);
-
     fotos.diseno={estado:"ok",ruta};
     return ruta;
   }catch(e){
@@ -773,7 +752,7 @@ $("btnPagar").onclick=async e=>{
   const rutaDiseno=await subirDiseno();
   if(!rutaDiseno){
     ocupado(b);actualizar();
-    error("No pudimos crear la imagen final del cuadro. Inténtalo de nuevo. Si continúa, escríbenos por WhatsApp.");
+    error("No pudimos crear la imagen final del cuadro. Inténtalo nuevamente.");
     return;
   }
   ocupado(b,"Guardando tu pedido…");
