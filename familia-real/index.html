@@ -394,7 +394,7 @@ const st={animal:CONFIG.animales[0],fondo:CONFIG.fondos[0],fondoColor:CONFIG.col
 const CODIGO="FR-"+Date.now().toString(36).slice(-5).toUpperCase()+Math.random().toString(36).slice(2,4).toUpperCase();
 const esc=s=>s.replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
 const ver=src=>src?src+(src.includes("?")?"&":"?")+"v="+VERSION_IMG:src;
-const v=id=>$(id).value.trim();
+const v=id=>{const el=$(id);return el&&"value" in el?String(el.value).trim():"";};
 function imgOr(src,fb){
   if(!src) return fb;
   return `<img src="${ver(src)}" alt="" onerror="this.outerHTML=this.dataset.fb" data-fb='${fb.replace(/'/g,"&#39;")}'>`;
@@ -643,75 +643,56 @@ async function cargarFuentes(){
   return fuentesCSS;
 }
 async function subirDiseno(){
-  if(!sbListo() || !window.htmlToImage) return null;
+  if(!sbListo()){
+    fotos.diseno={estado:"error",error:"Supabase no está configurado."};
+    return null;
+  }
+  if(!window.htmlToImage){
+    fotos.diseno={estado:"error",error:"No cargó la herramienta para crear la imagen."};
+    return null;
+  }
 
   try{
     console.log("1. Iniciando captura del diseño");
-
     await document.fonts.ready;
     console.log("2. Fuentes listas");
 
     const nodo=$("marco");
+    if(!nodo) throw new Error("No se encontró el cuadro para generar la imagen.");
+    console.log("3. Marco encontrado",nodo);
+    console.log("4. Tamaño marco",nodo.offsetWidth,nodo.offsetHeight);
 
-    console.log("3. Marco encontrado", nodo);
-    console.log("4. Tamaño marco", nodo.offsetWidth, nodo.offsetHeight);
+    const fontCSS=await cargarFuentes();
+    console.log("5. Fuentes preparadas",fontCSS.length);
 
-    const fontCSS = await cargarFuentes();
-    console.log("5. Fuentes preparadas", fontCSS.length);
+    const capturar=()=>htmlToImage.toBlob(nodo,{
+      pixelRatio:2,
+      fontEmbedCSS:fontCSS,
+      skipFonts:false,
+      cacheBust:true,
+      backgroundColor:"#ffffff"
+    });
 
     console.log("6. Iniciando htmlToImage.toBlob");
-
-    const blob = await Promise.race([
-      htmlToImage.toBlob(nodo,{
-        pixelRatio:2,
-        fontEmbedCSS:fontCSS,
-        skipFonts:false,
-        cacheBust:true
-      }),
-
-      new Promise((_,reject)=>
-        setTimeout(
-          ()=>reject(new Error("La captura tardó más de 15 segundos")),
-          15000
-        )
-      )
+    const blob=await Promise.race([
+      capturar(),
+      new Promise((_,reject)=>setTimeout(()=>reject(new Error("La captura tardó más de 20 segundos")),20000))
     ]);
 
-    console.log("7. Imagen creada", blob);
-
-    if(!blob) throw new Error("html-to-image devolvió un blob vacío");
+    console.log("7. Imagen creada",blob);
+    if(!blob) throw new Error("La herramienta devolvió una imagen vacía.");
 
     console.log("8. Subiendo diseño a Supabase");
-
-    const ruta=await subirBlob(
-      blob,
-      `diseno-${Date.now()}.png`,
-      "image/png"
-    );
-
-    console.log("9. Diseño guardado:", ruta);
+    const ruta=await subirBlob(blob,`diseno-${Date.now()}.png`,"image/png");
+    console.log("9. Diseño guardado:",ruta);
 
     fotos.diseno={estado:"ok",ruta};
-
     return ruta;
-
   }catch(e){
-
     console.error("ERROR CAPTURANDO EL DISEÑO:",e);
-
-    fotos.diseno={
-      estado:"error",
-      error:e.message || String(e)
-    };
-
+    fotos.diseno={estado:"error",error:e.message||String(e)};
     return null;
   }
-};
-    if(!blob) return null;
-    const ruta=await subirBlob(blob,`diseno-${Date.now()}.png`,"image/png");
-    fotos.diseno={estado:"ok",ruta};
-    return ruta;
-  }catch(e){console.error("No se pudo tomar el pantallazo:",e);fotos.diseno={estado:"error",error:e.message||String(e)};return null;}
 }
 /* se preparan las fuentes en segundo plano apenas carga la página */
 setTimeout(cargarFuentes,1500);
@@ -719,7 +700,7 @@ setTimeout(cargarFuentes,1500);
 /* ===== GUARDAR EL PEDIDO (todo esto te llega a ti, no se muestra a la clienta) ===== */
 function datosPedido(estado){
   return {
-    codigo:CODIGO, estado, cliente:v("cliente"), documento:v("documento"), telefono:v("celular"),
+    codigo:CODIGO, estado, cliente:v("cliente"), telefono:v("celular"),
     direccion:v("direccion"), ciudad:v("ciudad"), con_3d:st.con3d, total:total(), pago:"Total",
     datos:{ nombre:v("nombre"), apellidos:v("apellido"), fecha:v("fecha"), dia:$("pDia").textContent,
             hora:v("hora"), lugar:v("lugar"), peso:v("peso"), talla:v("talla"), rh:v("rh"),
@@ -758,7 +739,12 @@ $("btnPagar").onclick=async e=>{
   ocupado(b,"Revisando tu pedido…");
   if(!(await listo())){ocupado(b);actualizar();return;}
   ocupado(b,"Preparando tu diseño…");
-  await subirDiseno();
+  const rutaDiseno=await subirDiseno();
+  if(!rutaDiseno){
+    ocupado(b);actualizar();
+    error("No pudimos crear la imagen final del cuadro. Inténtalo de nuevo. Si continúa, escríbenos por WhatsApp.");
+    return;
+  }
   ocupado(b,"Guardando tu pedido…");
   const g=await guardarPedido("pago iniciado");
   if(!g.ok && sbListo()){ocupado(b);actualizar();error("No pudimos guardar tu pedido. Revisa tu conexión e inténtalo de nuevo.");console.error(g.msg);return;}
