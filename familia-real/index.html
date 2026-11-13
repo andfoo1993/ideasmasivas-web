@@ -372,9 +372,9 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
 <script>
 /* ===== META PIXEL: Familia Real ===== */
 const META_SENT=new Set();
-function metaOnce(key,type,name,params){if(META_SENT.has(key)||typeof fbq!=="function")return;META_SENT.add(key);fbq(type,name,params||{});}
-function metaEvent(type,name,params){if(typeof fbq==="function")fbq(type,name,params||{});}
-metaOnce("configurator_started","trackCustom","ConfiguratorStarted",{content_name:"Familia Real Configurador"});
+function metaOnce(key,type,name,params){if(META_SENT.has(key)||typeof window.fbq!=="function")return;META_SENT.add(key);window.fbq(type,name,params||{});console.log("[META]",name,"enviado",params||{});}
+function metaEvent(type,name,params){if(typeof window.fbq==="function"){window.fbq(type,name,params||{});console.log("[META]",name,"enviado",params||{});}}
+(function metaStart(){if(typeof window.fbq!=="function")return setTimeout(metaStart,250);metaOnce("configurator_started","trackCustom","ConfiguratorStarted",{content_name:"Familia Real Configurador"});})();
 
 /* =========================================================
    CONFIGURACIÓN — edita solo esta sección.
@@ -933,15 +933,18 @@ document.querySelectorAll(".ver-guia").forEach(a=>a.onclick=e=>{e.preventDefault
 $("cerrarModal").onclick=cerrarGuia;$("okModal").onclick=cerrarGuia;
 $("modal").onclick=e=>{if(e.target===$("modal"))cerrarGuia();};
 
-/* Eventos del embudo */
-const pixelObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
-  if(!entry.isIntersecting||entry.intersectionRatio<.45)return;
-  if(entry.target.id==="op3d")metaOnce("price_viewed","trackCustom","PriceViewed",{content_name:"Familia Real 3D",value:CONFIG.precios.con3d,currency:"COP"});
-  if(entry.target.dataset.meta==="checkout")metaOnce("initiate_checkout","track","InitiateCheckout",{content_name:st.con3d?"Familia Real 3D":"Familia Real sin 3D",value:total(),currency:"COP",num_items:1});
-}),{threshold:[.45]});
-const priceBlock=$("op3d");if(priceBlock)pixelObserver.observe(priceBlock);
-const checkoutInput=$("cliente");if(checkoutInput){const checkoutBlock=checkoutInput.closest(".paso");checkoutBlock.dataset.meta="checkout";pixelObserver.observe(checkoutBlock);}
 
+
+/* Tracking robusto: acciones, no geometría */
+const nombreMeta=$("nombre"),fechaMeta=$("fecha");
+function babyMeta(){
+  if(nombreMeta&&nombreMeta.value.trim())metaOnce("baby_data_started","trackCustom","BabyDataStarted",{content_name:"Familia Real"});
+  if(nombreMeta&&fechaMeta&&nombreMeta.value.trim()&&fechaMeta.value)metaOnce("baby_data_completed","trackCustom","BabyDataCompleted",{content_name:"Familia Real"});
+}
+if(nombreMeta)nombreMeta.addEventListener("input",babyMeta);if(fechaMeta)fechaMeta.addEventListener("input",babyMeta);
+const op3dMeta=$("op3d");if(op3dMeta)op3dMeta.addEventListener("pointerdown",()=>metaOnce("price_viewed","trackCustom","PriceViewed",{content_name:"Familia Real 3D",value:CONFIG.precios.con3d,currency:"COP"}),{once:true});
+const checkoutIds=["cliente","email","celular","direccion","ciudad"];
+checkoutIds.forEach(id=>{const el=$(id);if(el)el.addEventListener("input",()=>metaOnce("initiate_checkout","track","InitiateCheckout",{content_name:st.con3d?"Familia Real 3D":"Familia Real sin 3D",value:total(),currency:"COP",num_items:1}),{once:true});});
 /* init */
 st.color=CONFIG.colores.find(c=>c.id===st.animal.color);
 $("pMano").innerHTML=imgOr(CONFIG.mano,'<div class="ph3d"></div>');
@@ -950,9 +953,6 @@ $("thMano").innerHTML=imgOr(CONFIG.guia.mano.bien,"✋");
 $("thPie").innerHTML=imgOr(CONFIG.guia.pie.bien,"🦶");
 ["bebe","mano","pie"].forEach(prepararUpload);
 document.querySelectorAll("input:not([type=file]):not([type=checkbox]):not([type=color]),select").forEach(el=>el.addEventListener("input",actualizar));
-const camposBebe=["nombre","apellido","fecha","hora","lugar","peso","talla","rh"];
-function revisarDatosBebe(){if(camposBebe.every(id=>v(id)))metaOnce("baby_data_completed","trackCustom","BabyDataCompleted",{content_name:"Datos del bebé completos"});}
-camposBebe.forEach(id=>{const el=$(id);if(el)el.addEventListener("input",revisarDatosBebe);});
 galeria($("animales"),CONFIG.animales,"animal",miniAnimal);
 galeria($("fondos"),CONFIG.fondos,"fondo",miniFondo);
 pintarColores();pintarColoresFondo();
