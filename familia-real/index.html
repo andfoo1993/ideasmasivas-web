@@ -8,6 +8,14 @@
 <title>Familia Real · Diseña el cuadro de tu bebé</title>
 <link href="https://fonts.googleapis.com/css2?family=Lily+Script+One&family=Dancing+Script:wght@400;500;600;700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js"></script>
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init','637812436918446');
+fbq('track','PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=637812436918446&ev=PageView&noscript=1" alt=""></noscript>
+<!-- End Meta Pixel Code -->
 <style>
 /* ===== FUENTES (Google Fonts, gratis y con uso comercial) =====
    Nombre, fecha y números: Lily Script One.  Demás textos: Dancing Script. */
@@ -362,6 +370,12 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
 </div>
 
 <script>
+/* ===== META PIXEL: Familia Real ===== */
+const META_SENT=new Set();
+function metaOnce(key,type,name,params){if(META_SENT.has(key)||typeof fbq!=="function")return;META_SENT.add(key);fbq(type,name,params||{});}
+function metaEvent(type,name,params){if(typeof fbq==="function")fbq(type,name,params||{});}
+metaOnce("configurator_started","trackCustom","ConfiguratorStarted",{content_name:"Familia Real Configurador"});
+
 /* =========================================================
    CONFIGURACIÓN — edita solo esta sección.
    ========================================================= */
@@ -675,6 +689,7 @@ function prepararUpload(clave){
   const box=$("up-"+clave), inp=box.querySelector("input"), est=box.querySelector(".estado"), th=box.querySelector(".thumb");
   inp.onchange=e=>{
     const f=e.target.files[0]; if(!f) return;
+    metaOnce("first_photo_uploaded","trackCustom","PhotoUploaded",{photo_type:clave,content_name:"Familia Real"});
     const url=URL.createObjectURL(f);
     th.innerHTML="";th.style.backgroundImage=`url(${url})`;
     if(clave==="bebe"){
@@ -839,6 +854,7 @@ $("btnPagar").onclick=async e=>{
   e.preventDefault(); const b=$("btnPagar"); if(b.hasAttribute("disabled")) return;
   ocupado(b,"Revisando tu pedido…");
   if(!(await listo())){ocupado(b);actualizar();return;}
+  metaOnce("payment_click","trackCustom","PaymentClick",{content_name:st.con3d?"Familia Real 3D":"Familia Real sin 3D",value:total(),currency:"COP"});
   ocupado(b,"Preparando tu diseño…");
   const rutaDiseno=await subirDiseno();
   if(!rutaDiseno){
@@ -897,11 +913,11 @@ addEventListener("popstate",e=>{
 $("salirSalida").onclick=e=>{e.preventDefault();saliendo=true;history.go(-2);};
 $("cerrarSalida").onclick=cerrarSalida;$("seguirSalida").onclick=cerrarSalida;
 $("modalSalida").onclick=e=>{if(e.target===$("modalSalida"))cerrarSalida();};
-$("btnWaSalida").onclick=async e=>{e.preventDefault();const w=window.open("about:blank","_blank");
+$("btnWaSalida").onclick=async e=>{e.preventDefault();metaEvent("track","Contact",{contact_method:"whatsapp_exit",content_name:"Familia Real"});const w=window.open("about:blank","_blank");
   await subirDiseno(); guardarPedido("consulta whatsapp");
   if(w) w.location.href=urlWA(mensajeWA()); else location.href=urlWA(mensajeWA()); cerrarSalida();};
-$("linkOtro").onclick=e=>{e.preventDefault();window.open(urlWA("¡Hola! Quiero un cuadro con un personaje especial 💕"),"_blank");};
-$("waFloat").onclick=e=>{e.preventDefault();const nombre=v("nombre")||"mi bebé";const texto=`¡Hola Familia Real! Estoy diseñando el cuadro de ${nombre} y tengo una duda 💕\n• Código: ${CODIGO}\n• Personaje: ${st.animal.nombre}\n• Fondo: ${textoFondo()}\n• Manito y piecito 3D: ${st.con3d?"Sí":"No"}`;window.open(urlWA(texto),"_blank");};
+$("linkOtro").onclick=e=>{e.preventDefault();metaEvent("track","Contact",{contact_method:"whatsapp_special_character",content_name:"Familia Real"});window.open(urlWA("¡Hola! Quiero un cuadro con un personaje especial 💕"),"_blank");};
+$("waFloat").onclick=e=>{e.preventDefault();metaEvent("track","Contact",{contact_method:"whatsapp_floating",content_name:"Familia Real"});const nombre=v("nombre")||"mi bebé";const texto=`¡Hola Familia Real! Estoy diseñando el cuadro de ${nombre} y tengo una duda 💕\n• Código: ${CODIGO}\n• Personaje: ${st.animal.nombre}\n• Fondo: ${textoFondo()}\n• Manito y piecito 3D: ${st.con3d?"Sí":"No"}`;window.open(urlWA(texto),"_blank");};
 
 /* --- guía de fotos --- */
 function abrirGuia(k){
@@ -917,6 +933,15 @@ document.querySelectorAll(".ver-guia").forEach(a=>a.onclick=e=>{e.preventDefault
 $("cerrarModal").onclick=cerrarGuia;$("okModal").onclick=cerrarGuia;
 $("modal").onclick=e=>{if(e.target===$("modal"))cerrarGuia();};
 
+/* Eventos del embudo */
+const pixelObserver=new IntersectionObserver(entries=>entries.forEach(entry=>{
+  if(!entry.isIntersecting||entry.intersectionRatio<.45)return;
+  if(entry.target.id==="op3d")metaOnce("price_viewed","trackCustom","PriceViewed",{content_name:"Familia Real 3D",value:CONFIG.precios.con3d,currency:"COP"});
+  if(entry.target.dataset.meta==="checkout")metaOnce("initiate_checkout","track","InitiateCheckout",{content_name:st.con3d?"Familia Real 3D":"Familia Real sin 3D",value:total(),currency:"COP",num_items:1});
+}),{threshold:[.45]});
+const priceBlock=$("op3d");if(priceBlock)pixelObserver.observe(priceBlock);
+const checkoutInput=$("cliente");if(checkoutInput){const checkoutBlock=checkoutInput.closest(".paso");checkoutBlock.dataset.meta="checkout";pixelObserver.observe(checkoutBlock);}
+
 /* init */
 st.color=CONFIG.colores.find(c=>c.id===st.animal.color);
 $("pMano").innerHTML=imgOr(CONFIG.mano,'<div class="ph3d"></div>');
@@ -925,6 +950,9 @@ $("thMano").innerHTML=imgOr(CONFIG.guia.mano.bien,"✋");
 $("thPie").innerHTML=imgOr(CONFIG.guia.pie.bien,"🦶");
 ["bebe","mano","pie"].forEach(prepararUpload);
 document.querySelectorAll("input:not([type=file]):not([type=checkbox]):not([type=color]),select").forEach(el=>el.addEventListener("input",actualizar));
+const camposBebe=["nombre","apellido","fecha","hora","lugar","peso","talla","rh"];
+function revisarDatosBebe(){if(camposBebe.every(id=>v(id)))metaOnce("baby_data_completed","trackCustom","BabyDataCompleted",{content_name:"Datos del bebé completos"});}
+camposBebe.forEach(id=>{const el=$(id);if(el)el.addEventListener("input",revisarDatosBebe);});
 galeria($("animales"),CONFIG.animales,"animal",miniAnimal);
 galeria($("fondos"),CONFIG.fondos,"fondo",miniFondo);
 pintarColores();pintarColoresFondo();
