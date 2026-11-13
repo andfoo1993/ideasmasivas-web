@@ -24,22 +24,26 @@ const autoVideos=document.querySelectorAll('.autoplay-video');const vio=new Inte
 </script><script>
 (function(){
   const sent=new Set();
-  function metaOnce(key,type,name,params){
-    if(sent.has(key)||typeof fbq!=="function")return;
-    sent.add(key);fbq(type,name,params||{});
+  function sendOnce(key,type,name,params){
+    if(sent.has(key)||typeof window.fbq!=="function") return;
+    sent.add(key); window.fbq(type,name,params||{}); console.log("[META]",name,"enviado",params||{});
   }
-  metaOnce("view_content","track","ViewContent",{content_name:"Familia Real Landing",content_category:"Cuadros personalizados para bebés"});
-  function scrollDepth(){
-    const doc=document.documentElement;
-    const max=Math.max(1,doc.scrollHeight-innerHeight);
-    const pct=(scrollY/max)*100;
-    if(pct>=50)metaOnce("landing_50","trackCustom","Landing50",{page:"landing"});
-    if(pct>=90)metaOnce("landing_90","trackCustom","Landing90",{page:"landing"});
+  function ready(){
+    if(typeof window.fbq!=="function") return setTimeout(ready,250);
+    sendOnce("view_content","track","ViewContent",{content_name:"Familia Real Landing",content_category:"Cuadros personalizados para bebés"});
   }
-  addEventListener("scroll",scrollDepth,{passive:true});scrollDepth();
-  document.querySelectorAll('a[href="index.html"]').forEach(a=>a.addEventListener("click",()=>{
-    metaOnce("customize_product","track","CustomizeProduct",{content_name:"Familia Real 3D",content_category:"Cuadro personalizado"});
-  }));
+  ready();
+  function depth(){
+    const max=Math.max(1,document.documentElement.scrollHeight-window.innerHeight);
+    const pct=(window.scrollY/max)*100;
+    if(pct>=50) sendOnce("landing_50","trackCustom","Landing50",{page:"landing",depth:50});
+    if(pct>=85) sendOnce("landing_90","trackCustom","Landing90",{page:"landing",depth:90});
+  }
+  window.addEventListener("scroll",depth,{passive:true}); setTimeout(depth,500);
+  document.addEventListener("click",e=>{
+    const a=e.target.closest('a[href="index.html"]');
+    if(a) sendOnce("customize_product","track","CustomizeProduct",{content_name:"Familia Real 3D",content_category:"Cuadro personalizado"});
+  });
 })();
 </script>
 </body></html>
