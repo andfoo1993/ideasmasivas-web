@@ -29,7 +29,7 @@ header p{max-width:560px;margin:8px auto 0}
 .escena{padding:18px 14px 26px;background:radial-gradient(ellipse at 50% 40%,#fff 0%,#e8f6f8 75%);border-radius:14px}
 
 /* ===== MARCO (foto real) ===== */
-.marco{position:relative;width:100%;aspect-ratio:1.23;filter:drop-shadow(0 16px 14px rgba(0,0,0,.26)) drop-shadow(0 2px 2px rgba(0,0,0,.2))}
+.marco{position:relative;width:100%;aspect-ratio:1.23;filter:drop-shadow(0 16px 14px rgba(0,0,0,.26)) drop-shadow(0 2px 2px rgba(0,0,0,.2))}.medida{position:absolute;z-index:38;pointer-events:none;color:#6d0b80;font-family:'Nunito',sans-serif;font-weight:800;letter-spacing:.01em}.medida-ancho{left:7%;right:7%;top:-25px;height:20px;border-top:2px solid currentColor;text-align:center}.medida-ancho::before,.medida-ancho::after{content:"";position:absolute;top:-6px;width:2px;height:12px;background:currentColor}.medida-ancho::before{left:0}.medida-ancho::after{right:0}.medida-ancho span{position:relative;top:-13px;background:var(--crema);padding:0 8px;font-size:.82rem}.medida-alto{top:8%;bottom:8%;left:-28px;width:20px;border-left:2px solid currentColor;display:flex;align-items:center;justify-content:center}.medida-alto::before,.medida-alto::after{content:"";position:absolute;left:-6px;width:12px;height:2px;background:currentColor}.medida-alto::before{top:0}.medida-alto::after{bottom:0}.medida-alto span{background:var(--crema);padding:6px 0;font-size:.82rem;writing-mode:vertical-rl;transform:rotate(180deg)}@media(max-width:520px){.medida-ancho{top:-21px}.medida-ancho span,.medida-alto span{font-size:.68rem}.medida-alto{left:-21px}}
 .marco-foto{position:absolute;inset:0;width:100%;height:100%;z-index:30;pointer-events:none}
 .marco.sin-foto{background:var(--m-base);border-radius:2px}
 .abertura{position:absolute;overflow:hidden;background:var(--pared)}
@@ -240,6 +240,8 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
   <div class="preview-col">
     <div class="escena">
     <div class="marco" id="marco">
+      <div class="medida medida-ancho"><span>25 cm</span></div>
+      <div class="medida medida-alto"><span>20 cm</span></div>
       <img class="marco-foto" id="marcoFoto" alt="">
       <div class="abertura" id="abertura">
         <div class="pared w-top"></div><div class="pared w-bot"></div>
@@ -760,6 +762,9 @@ async function subirDiseno(){
     console.log("1. Iniciando captura del diseño");
     await document.fonts.ready;
     const nodo=$("marco");
+    const medidas=[...nodo.querySelectorAll(".medida")];
+    medidas.forEach(m=>m.dataset.prevDisplay=m.style.display||"");
+    medidas.forEach(m=>m.style.display="none");
     if(!nodo)throw new Error("No se encontró el cuadro para generar la imagen.");
     await esperarImagenes(nodo);
     const fotoBebe=$("pFotoImg");
@@ -778,6 +783,7 @@ async function subirDiseno(){
     ]);
     if(!blob)throw new Error("La herramienta devolvió una imagen vacía.");
     const ruta=await subirBlob(blob,`diseno-${Date.now()}.png`,"image/png");
+    medidas.forEach(m=>m.style.display=m.dataset.prevDisplay||"");
     fotos.diseno={estado:"ok",ruta};
     return ruta;
   }catch(e){
