@@ -322,6 +322,7 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
       <div class="grid">
         <div class="full"><label>Nombre completo</label><input id="cliente" autocomplete="name"></div>
         <div><label>Celular</label><input id="celular" type="tel" inputmode="tel" autocomplete="tel" placeholder="Ej: 300 123 4567"></div>
+        <div><label>Correo electrónico</label><input id="email" type="email" inputmode="email" autocomplete="email" placeholder="Ej: nombre@correo.com"></div>
         <div class="full"><label>Dirección</label><input id="direccion" autocomplete="street-address" placeholder="Ej: Calle 10 # 20-30, apto 501"></div>
         <div class="full"><label>Ciudad</label><input id="ciudad" placeholder="Ej: Medellín"></div>
       </div>
@@ -799,7 +800,7 @@ setTimeout(cargarFuentes,1500);
 /* ===== GUARDAR EL PEDIDO (todo esto te llega a ti, no se muestra a la clienta) ===== */
 function datosPedido(estado){
   return {
-    codigo:CODIGO, estado, cliente:v("cliente"), telefono:v("celular"),
+    codigo:CODIGO, estado, cliente:v("cliente"), telefono:v("celular"), email:v("email"),
     direccion:v("direccion"), ciudad:v("ciudad"), con_3d:st.con3d, total:total(), pago:"Total",
     datos:{ nombre:v("nombre"), apellidos:v("apellido"), fecha:v("fecha"), dia:$("pDia").textContent,
             hora:v("hora"), lugar:v("lugar"), peso:v("peso"), talla:v("talla"), rh:v("rh"),
@@ -821,8 +822,9 @@ async function guardarPedido(estado){
 function error(msg){$("err").style.display=msg?"block":"none";$("err").textContent=msg||"";}
 async function listo(){
   const req=[["nombre","el nombre del bebé"],["fecha","la fecha de nacimiento"],["cliente","tu nombre completo"],
-             ["celular","tu celular"],["direccion","tu dirección"],["ciudad","la ciudad"]];
+             ["celular","tu celular"],["email","tu correo electrónico"],["direccion","tu dirección"],["ciudad","la ciudad"]];
   const falta=req.filter(([id])=>!v(id)).map(r=>r[1]);
+  if(v("email") && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v("email"))) falta.push("un correo electrónico válido");
   const necesarias=st.con3d?[["bebe","la foto del bebé"],["mano","la foto de la manito"],["pie","la foto del piecito"]]:[["bebe","la foto del bebé"]];
   necesarias.forEach(([k,t])=>{if(!fotos[k]||fotos[k].estado==="error")falta.push(t);});
   if(falta.length){error("Falta: "+falta.join(", "));return false;}
