@@ -746,7 +746,6 @@ function prepararUpload(clave){
         metaOnce("first_photo_uploaded","trackCustom","PhotoUploaded",{photo_type:clave,content_name:"Familia Real"});
       }).catch(err=>{throw err;});
       fotos[clave]={estado:"subiendo",promesa:p,dataUrl};
-      console.log(`[FOTO] ${clave} preparada`,{tipo:f.type,tamano:f.size,dataUrl:dataUrl.slice(0,32)});
       await p;
     }catch(err){
       console.error("Error preparando la foto:",err);
@@ -808,50 +807,59 @@ async function subirDiseno(){
   }
   const nodo=$("marco"), medidas=nodo?[...nodo.querySelectorAll(".medida")]:[];
   const fotoBebe=$("pFotoImg"), fotoTexto=$("pFotoTexto"), fotoCaja=$("pFoto");
-  let displayFoto="", displayTexto="";
+  let displayFoto="", displayTexto="", fotoData=null;
   try{
     await document.fonts.ready;
     if(!nodo)throw new Error("No se encontró el cuadro para generar la imagen.");
     medidas.forEach(m=>{m.dataset.prevDisplay=m.style.display||"";m.style.display="none";});
-    await esperarImagenes(nodo);
 
-    /* La foto del bebé se compone DESPUÉS de capturar el HTML. Esto evita que
-       html-to-image pierda imágenes HEIC convertidas/Data URL en algunos móviles. */
-    let fotoData=fotos.bebe?.dataUrl||fotoBebe?.dataset.captureSrc||null, fotoNatural=null;
-    if(fotoData){
-      fotoNatural={w:fotoBebe?.naturalWidth||1,h:fotoBebe?.naturalHeight||1};
-      if(fotoBebe){displayFoto=fotoBebe.style.display||"";fotoBebe.style.display="none";}
+    /* Fuente única: la foto del bebé guardada por su propia clave. */
+    fotoData=fotos.bebe?.dataUrl||fotoBebe?.dataset.captureSrc||null;
+    if(fotos.bebe&&!fotoData)throw new Error("La foto del bebé no está disponible para crear el diseño.");
+
+    /* Para evitar bloqueos móviles, html-to-image NO procesa la foto local del bebé.
+       Se oculta antes de capturar y se compone después sobre canvas. */
+    if(fotoData&&fotoBebe){
+      displayFoto=fotoBebe.style.display||"";fotoBebe.style.display="none";
       if(fotoTexto){displayTexto=fotoTexto.style.display||"";fotoTexto.style.display="none";}
     }
 
-    const fontCSS=await cargarFuentes();
+    /* Esperamos solo assets visuales del cuadro que NO sean la foto local del bebé.
+       Timeout global corto para que nunca quede pegado en Preparando diseño. */
+    await Promise.race([
+      esperarImagenes(nodo),
+      new Promise(resolve=>setTimeout(resolve,4500))
+    ]);
+
+    const fontCSS=await Promise.race([
+      cargarFuentes(),
+      new Promise(resolve=>setTimeout(()=>resolve(""),4500))
+    ]);
+
+    /* Menor pixelRatio en móvil = mucha menos memoria. 1.7 sigue siendo suficiente
+       para control visual y correo, mientras 2 puede bloquear equipos móviles. */
+    const ratio=innerWidth<700?1.7:2;
     const canvas=await Promise.race([
-      htmlToImage.toCanvas(nodo,{pixelRatio:2,fontEmbedCSS:fontCSS,skipFonts:false,cacheBust:true,backgroundColor:"#ffffff"}),
-      new Promise((_,reject)=>setTimeout(()=>reject(new Error("La captura tardó más de 20 segundos")),20000))
+      htmlToImage.toCanvas(nodo,{pixelRatio:ratio,fontEmbedCSS:fontCSS||"",skipFonts:false,cacheBust:false,backgroundColor:"#ffffff"}),
+      new Promise((_,reject)=>setTimeout(()=>reject(new Error("La generación del diseño tardó demasiado.")),12000))
     ]);
     if(!canvas)throw new Error("La herramienta devolvió una imagen vacía.");
 
-    /* Dibujamos la foto sobre la captura usando la posición REAL de #pFoto. */
-    if(fotos.bebe&&!fotoData)throw new Error("La foto del bebé está guardada, pero no está disponible para crear el diseño. Vuelve a seleccionarla.");
+    /* Foto del bebé añadida de forma independiente al final. */
     if(fotoData&&fotoCaja){
       const img=await new Promise((resolve,reject)=>{
         const i=new Image();i.onload=()=>resolve(i);i.onerror=()=>reject(new Error("No se pudo incorporar la foto del bebé al diseño final."));i.src=fotoData;
       });
-      const rMarco=nodo.getBoundingClientRect(), rFoto=fotoCaja.getBoundingClientRect();
-      const sx=canvas.width/rMarco.width, sy=canvas.height/rMarco.height;
-      const x=(rFoto.left-rMarco.left)*sx, y=(rFoto.top-rMarco.top)*sy;
-      const w=rFoto.width*sx, h=rFoto.height*sy;
-      const ctx=canvas.getContext("2d");
-      ctx.save();ctx.fillStyle="#ffffff";ctx.fillRect(x,y,w,h);
-      /* object-fit:contain, igual que la vista previa */
-      const iw=img.naturalWidth||fotoNatural.w, ih=img.naturalHeight||fotoNatural.h;
-      const k=Math.min(w/iw,h/ih), dw=iw*k, dh=ih*k;
-      ctx.drawImage(img,x+(w-dw)/2,y+(h-dh)/2,dw,dh);
-      ctx.restore();
+      const rMarco=nodo.getBoundingClientRect(),rFoto=fotoCaja.getBoundingClientRect();
+      const sx=canvas.width/rMarco.width,sy=canvas.height/rMarco.height;
+      const x=(rFoto.left-rMarco.left)*sx,y=(rFoto.top-rMarco.top)*sy,w=rFoto.width*sx,h=rFoto.height*sy;
+      const ctx=canvas.getContext("2d");ctx.save();ctx.fillStyle="#fff";ctx.fillRect(x,y,w,h);
+      const iw=img.naturalWidth||1,ih=img.naturalHeight||1,k=Math.min(w/iw,h/ih),dw=iw*k,dh=ih*k;
+      ctx.drawImage(img,x+(w-dw)/2,y+(h-dh)/2,dw,dh);ctx.restore();
     }
 
-    const blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error("No se pudo convertir la captura final.")),"image/png",.95));
-    const ruta=await subirBlob(blob,`diseno-${Date.now()}.png`,"image/png");
+    const blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error("No se pudo convertir la captura final.")),"image/jpeg",.92));
+    const ruta=await subirBlob(blob,`diseno-${Date.now()}.jpg`,"image/jpeg");
     fotos.diseno={estado:"ok",ruta};return ruta;
   }catch(e){
     const detalle=e?.message||String(e);console.error("ERROR CAPTURANDO EL DISEÑO:",detalle,e);
