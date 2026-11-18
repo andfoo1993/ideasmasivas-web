@@ -705,9 +705,9 @@ async function enviarBrevoAhora(estado="diseno_preparado",forzar=false){
       body:firma
     });
     const texto=await r.text();
-    if(!r.ok){brevoUltimaFirma="";funnelEvento("brevo_error",{status:r.status,respuesta:texto.slice(0,180)});console.warn("BREVO ERROR",r.status,texto);return {ok:false,status:r.status,texto};}
-    brevoUltimaFirma=firma;funnelEvento("brevo_ok",{estado});console.log("[BREVO] OK",payload.email,estado);return {ok:true};
-  }catch(e){brevoUltimaFirma="";funnelEvento("brevo_error",{error:String(e).slice(0,180)});console.warn("BREVO FETCH ERROR",e);return {ok:false,error:String(e)};}
+    if(!r.ok){brevoUltimaFirma="";console.warn("BREVO ERROR",r.status,texto);return {ok:false,status:r.status,texto};}
+    brevoUltimaFirma=firma;console.log("[BREVO] OK",payload.email,estado);return {ok:true};
+  }catch(e){brevoUltimaFirma="";console.warn("BREVO FETCH ERROR",e);return {ok:false,error:String(e)};}
 }
 function sincronizarBrevo(estado="diseno_preparado",forzar=false){
   clearTimeout(brevoTimer);brevoTimer=setTimeout(()=>enviarBrevoAhora(estado,forzar),350);
