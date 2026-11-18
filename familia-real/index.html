@@ -145,7 +145,7 @@ input:focus,select:focus{outline:none;border-color:var(--turquesa)}
 .upload.error{border-color:#d9534f;background:#fdf1f1}
 .upload.error .estado{color:#c0392b}
 .foto3d{margin-top:12px}
-.ver-guia{display:inline-block;font-size:.85rem;color:var(--marca-osc);font-weight:700;margin:6px 0 0 4px}
+.ver-guia{display:inline-block;font-size:.85rem;color:var(--marca-osc);font-weight:700;margin:6px 0 0 4px}.upload-guia-hint{font-size:.76rem;color:var(--marca-osc);font-weight:700;margin-top:3px;display:block}
 .info{background:#eaf8fa;border-radius:12px;padding:12px 14px;font-size:.88rem;margin-top:12px;line-height:1.45}
 .total-pedido{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #eee;margin-top:14px;padding-top:14px;font-size:1.05rem;font-weight:700}
 .total-pedido b{font-size:1.45rem;color:var(--marca-osc)}.pago-reserva{margin-top:16px;border:2px solid rgba(142,20,166,.18);background:linear-gradient(145deg,#fdf7fe,#eefbfd);border-radius:16px;padding:16px}.pago-reserva h3{color:var(--marca-osc);font-size:1.05rem;margin-bottom:8px}.pago-reserva p{font-size:.88rem;line-height:1.5;color:#5f5264}.pago-linea{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #e7dde9;font-size:.92rem}.pago-linea:last-child{border-bottom:0}.pago-linea strong{color:var(--marca-osc)}.garantia-cierre{margin-top:14px;border-radius:14px;background:#f7fbfc;padding:14px;border:1px solid #d9edf0}.garantia-cierre h3{font-size:.95rem;color:var(--marca-osc);margin-bottom:8px}.garantia-cierre ul{padding-left:19px;font-size:.83rem;line-height:1.55;color:#5c5260}.garantia-cierre .destacado{margin-top:9px;font-size:.86rem;font-weight:800;color:#4d3654}.btn-pago.reserva{background:linear-gradient(135deg,#8e14a6,#6d0b80)}
@@ -318,11 +318,11 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
       <label class="upload" id="up-bebe"><div class="thumb">📷</div><div class="txt"><b>Foto de tu bebé</b><span class="estado">Toca para subir la foto</span></div><input type="file" accept="image/*"></label>
       <div id="fotos3d">
         <div class="foto3d">
-          <label class="upload" id="up-mano"><div class="thumb" id="thMano">✋</div><div class="txt"><b>Palma de la manito</b><span class="estado">Toca para subir la foto</span></div><input type="file" accept="image/*"></label>
+          <label class="upload" id="up-mano"><div class="thumb" id="thMano">✋</div><div class="txt"><b>Palma de la manito</b><span class="estado">Toca para subir la foto</span><span class="upload-guia-hint">Primero te mostramos cómo tomarla ✓</span></div><input type="file" accept="image/*"></label>
           <a href="#" class="ver-guia" data-guia="mano">📸 Ver cómo tomar esta foto</a>
         </div>
         <div class="foto3d">
-          <label class="upload" id="up-pie"><div class="thumb" id="thPie">🦶</div><div class="txt"><b>Planta del piecito</b><span class="estado">Toca para subir la foto</span></div><input type="file" accept="image/*"></label>
+          <label class="upload" id="up-pie"><div class="thumb" id="thPie">🦶</div><div class="txt"><b>Planta del piecito</b><span class="estado">Toca para subir la foto</span><span class="upload-guia-hint">Primero te mostramos cómo tomarla ✓</span></div><input type="file" accept="image/*"></label>
           <a href="#" class="ver-guia" data-guia="pie">📸 Ver cómo tomar esta foto</a>
         </div>
         <div class="info">También sirven fotos antiguas, si se ven nítidas.</div>
@@ -371,7 +371,7 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
       <figure><div class="ej-img" id="mMal"></div><figcaption class="no">✗ Así no</figcaption></figure>
     </div>
     <ul class="tips" id="mTips"></ul>
-    <button class="btn btn-ok" id="okModal">Entendido</button>
+    <button class="btn btn-ok" id="okModal">Entendido</button><button class="btn btn-link" id="cancelarFoto" style="display:none">Ahora no</button>
   </div>
 </div>
 
@@ -970,36 +970,41 @@ $("linkOtro").onclick=e=>{e.preventDefault();metaEvent("track","Contact",{contac
 $("waFloat").onclick=e=>{e.preventDefault();metaEvent("track","Contact",{contact_method:"whatsapp_floating",content_name:"Familia Real"});const nombre=v("nombre")||"mi bebé";const texto=`¡Hola Familia Real! Estoy diseñando el cuadro de ${nombre} y tengo una duda 💕\n• Código: ${CODIGO}\n• Personaje: ${st.animal.nombre}\n• Fondo: ${textoFondo()}\n• Manito y piecito 3D: ${st.con3d?"Sí":"No"}`;window.open(urlWA(texto),"_blank");};
 
 /* --- guía de fotos --- */
-function abrirGuia(k){
+let inputPendienteGuia=null;
+function abrirGuia(k,paraSubir=false,input=null){
   const g=CONFIG.guia[k];
+  inputPendienteGuia=paraSubir?input:null;
   $("mTitulo").textContent=g.titulo;
   $("mBien").innerHTML=imgOr(g.bien,"Foto de ejemplo<br>(bien)");
   $("mMal").innerHTML=imgOr(g.mal,"Foto de ejemplo<br>(mal)");
   $("mTips").innerHTML=g.tips.map(t=>`<li>${t}</li>`).join("");
+  $("okModal").textContent=paraSubir?`Entendido, elegir foto de ${k==="mano"?"la manito":"el piecito"}`:"Entendido";
+  $("cancelarFoto").style.display=paraSubir?"block":"none";
   $("modal").classList.add("on");
 }
-const cerrarGuia=()=>$("modal").classList.remove("on");
-document.querySelectorAll(".ver-guia").forEach(a=>a.onclick=e=>{e.preventDefault();abrirGuia(a.dataset.guia);});
-$("cerrarModal").onclick=cerrarGuia;$("okModal").onclick=cerrarGuia;
+const cerrarGuia=()=>{inputPendienteGuia=null;$("modal").classList.remove("on");$("cancelarFoto").style.display="none";$("okModal").textContent="Entendido";};
+document.querySelectorAll(".ver-guia").forEach(a=>a.onclick=e=>{e.preventDefault();abrirGuia(a.dataset.guia,false,null);});
+$("cerrarModal").onclick=cerrarGuia;$("cancelarFoto").onclick=cerrarGuia;
+$("okModal").onclick=()=>{
+  const inp=inputPendienteGuia;
+  $("modal").classList.remove("on");$("cancelarFoto").style.display="none";$("okModal").textContent="Entendido";inputPendienteGuia=null;
+  if(inp)setTimeout(()=>inp.click(),80);
+};
 $("modal").onclick=e=>{if(e.target===$("modal"))cerrarGuia();};
 
-
-
-/* Tracking robusto: acciones, no geometría */
-const nombreMeta=$("nombre"),fechaMeta=$("fecha");
-function babyMeta(){
-  if(nombreMeta&&nombreMeta.value.trim())metaOnce("baby_data_started","trackCustom","BabyDataStarted",{content_name:"Familia Real"});
-  if(nombreMeta&&fechaMeta&&nombreMeta.value.trim()&&fechaMeta.value)metaOnce("baby_data_completed","trackCustom","BabyDataCompleted",{content_name:"Familia Real"});
-}
-if(nombreMeta)nombreMeta.addEventListener("input",babyMeta);if(fechaMeta)fechaMeta.addEventListener("input",babyMeta);
-const op3dMeta=$("op3d");if(op3dMeta)op3dMeta.addEventListener("pointerdown",()=>metaOnce("price_viewed","trackCustom","PriceViewed",{content_name:"Familia Real 3D",value:CONFIG.precios.con3d,currency:"COP"}),{once:true});
-const checkoutIds=["cliente","email","celular","direccion","ciudad"];
-checkoutIds.forEach(id=>{const el=$(id);if(el)el.addEventListener("input",()=>metaOnce("initiate_checkout","track","InitiateCheckout",{content_name:st.con3d?"Familia Real 3D":"Familia Real sin 3D",value:total(),currency:"COP",num_items:1}),{once:true});});
-/* Tracking interno: solo escucha; no cambia el comportamiento */
-setTimeout(()=>funnelEvento("configurador_iniciado",{origen:document.referrer||"directo"}),700);
-["nombre","fecha"].forEach(id=>{const el=$(id);if(el)el.addEventListener("change",()=>{if(v("nombre")&&v("fecha"))funnelEvento("identidad_bebe_completa");});});
-const opTrack=$("op3d");if(opTrack)opTrack.addEventListener("click",()=>funnelEvento("precio_visto",{opcion:st.con3d?"con_3d":"sin_3d",precio:total()}),true);
-let checkoutTrack=false;["cliente","email","celular","direccion","ciudad"].forEach(id=>{const el=$(id);if(el)el.addEventListener("input",()=>{if(!checkoutTrack){checkoutTrack=true;funnelEvento("datos_envio_iniciados");}});});
+/* Para mano y pie: al tocar Adjuntar NO abrimos todavía el selector del sistema.
+   Primero mostramos la guía y solo después de "Entendido" abrimos Fotos/Cámara. */
+[["mano","up-mano"],["pie","up-pie"]].forEach(([clave,boxId])=>{
+  const box=$(boxId),inp=box?.querySelector('input[type="file"]');
+  if(!box||!inp)return;
+  box.addEventListener("click",e=>{
+    /* El click programático después de la guía debe llegar al input sin volver a abrir la guía. */
+    if(e.target===inp&&inp.dataset.guiaOk==="1"){delete inp.dataset.guiaOk;return;}
+    e.preventDefault();e.stopPropagation();
+    inp.dataset.guiaOk="1";
+    abrirGuia(clave,true,inp);
+  },true);
+});
 
 /* init */
 st.color=CONFIG.colores.find(c=>c.id===st.animal.color);
