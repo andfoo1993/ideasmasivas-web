@@ -684,6 +684,46 @@ SB.url=SB.url.trim().replace(/\/+$/,"").replace(/\/(rest|storage)\/v1.*$/,"");
 const sbListo=()=>SB.url && !SB.url.includes("XXXX") && !SB.anonKey.includes("XXXX");
 const sbHeaders=extra=>Object.assign({apikey:SB.anonKey}, SB.anonKey.startsWith("eyJ")?{Authorization:"Bearer "+SB.anonKey}:{}, extra);
 
+/* ===== SUPABASE: ANALITICA INTERNA DEL FUNNEL =====
+   Fire-and-forget: un fallo de analitica NUNCA puede marcar una foto como fallida. */
+const FUNNEL_SENT=new Set();
+function funnelEvento(evento,detalle={}){
+  try{
+    if(!sbListo())return Promise.resolve(false);
+    const unica=!String(evento).startsWith("brevo_");
+    if(unica&&FUNNEL_SENT.has(evento))return Promise.resolve(true);
+    if(unica)FUNNEL_SENT.add(evento);
+    const payload={
+      codigo:CODIGO,
+      evento,
+      con_3d:!!st.con3d,
+      valor:typeof total==="function"?total():null,
+      bebe:v("nombre")||null,
+      email:v("email")||null,
+      telefono:v("celular")||null,
+      detalle
+    };
+    return fetch(`${SB.url}/rest/v1/funnel_eventos`,{
+      method:"POST",
+      headers:sbHeaders({"Content-Type":"application/json",Prefer:"return=minimal"}),
+      body:JSON.stringify(payload),
+      keepalive:true
+    }).then(r=>{
+      if(!r.ok){if(unica)FUNNEL_SENT.delete(evento);console.warn("Funnel no guardado",evento,r.status);return false;}
+      return true;
+    }).catch(e=>{if(unica)FUNNEL_SENT.delete(evento);console.warn("Funnel sin conexión",evento,e);return false;});
+  }catch(e){console.warn("Funnel omitido",evento,e);return Promise.resolve(false);}
+}
+function revisarFotosFunnel(){
+  try{
+    if(fotos.bebe?.estado==="ok"||fotos.bebe?.estado==="local")funnelEvento("foto_bebe");
+    if(fotos.mano?.estado==="ok"||fotos.mano?.estado==="local")funnelEvento("foto_mano");
+    if(fotos.pie?.estado==="ok"||fotos.pie?.estado==="local")funnelEvento("foto_pie");
+    if(st.con3d&&(fotos.mano?.estado==="ok"||fotos.mano?.estado==="local")&&(fotos.pie?.estado==="ok"||fotos.pie?.estado==="local"))funnelEvento("fotos_3d_completas");
+  }catch(e){console.warn("No se pudo registrar progreso de fotos",e);}
+}
+setTimeout(()=>funnelEvento("configurador_iniciado",{origen:document.referrer||"directo"}),700);
+
 /* ===== BREVO: RECUPERACION DE DISEÑO =====
    No bloquea el diseñador. A diferencia de la versión anterior, NO exige que
    fotos.bebe exista para crear el contacto: email + nombre mamá + nombre bebé bastan. */
@@ -705,9 +745,9 @@ async function enviarBrevoAhora(estado="diseno_preparado",forzar=false){
       body:firma
     });
     const texto=await r.text();
-    if(!r.ok){brevoUltimaFirma="";console.warn("BREVO ERROR",r.status,texto);return {ok:false,status:r.status,texto};}
-    brevoUltimaFirma=firma;console.log("[BREVO] OK",payload.email,estado);return {ok:true};
-  }catch(e){brevoUltimaFirma="";console.warn("BREVO FETCH ERROR",e);return {ok:false,error:String(e)};}
+    if(!r.ok){brevoUltimaFirma="";funnelEvento("brevo_error",{status:r.status,respuesta:texto.slice(0,180)});console.warn("BREVO ERROR",r.status,texto);return {ok:false,status:r.status,texto};}
+    brevoUltimaFirma=firma;funnelEvento("brevo_ok",{estado});console.log("[BREVO] OK",payload.email,estado);return {ok:true};
+  }catch(e){brevoUltimaFirma="";funnelEvento("brevo_error",{error:String(e).slice(0,180)});console.warn("BREVO FETCH ERROR",e);return {ok:false,error:String(e)};}
 }
 function sincronizarBrevo(estado="diseno_preparado",forzar=false){
   clearTimeout(brevoTimer);brevoTimer=setTimeout(()=>enviarBrevoAhora(estado,forzar),350);
