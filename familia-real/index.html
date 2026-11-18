@@ -684,6 +684,21 @@ SB.url=SB.url.trim().replace(/\/+$/,"").replace(/\/(rest|storage)\/v1.*$/,"");
 const sbListo=()=>SB.url && !SB.url.includes("XXXX") && !SB.anonKey.includes("XXXX");
 const sbHeaders=extra=>Object.assign({apikey:SB.anonKey}, SB.anonKey.startsWith("eyJ")?{Authorization:"Bearer "+SB.anonKey}:{}, extra);
 
+/* ===== ANALITICA INTERNA DEL FUNNEL - NO BLOQUEA LA PAGINA ===== */
+const FUNNEL_SENT=new Set();
+function funnelEvento(evento,detalle={}){
+  if(!sbListo()||FUNNEL_SENT.has(evento))return;
+  FUNNEL_SENT.add(evento);
+  fetch(`${SB.url}/rest/v1/funnel_eventos`,{method:"POST",headers:sbHeaders({"Content-Type":"application/json",Prefer:"return=minimal"}),body:JSON.stringify({codigo:CODIGO,evento,con_3d:!!st.con3d,valor:typeof total==="function"?total():null,bebe:v("nombre")||null,email:v("email")||null,telefono:v("celular")||null,detalle}),keepalive:true}).catch(()=>{});
+}
+function revisarFotosFunnel(){
+ if(fotos.bebe?.estado==="ok")funnelEvento("foto_bebe");
+ if(fotos.mano?.estado==="ok")funnelEvento("foto_mano");
+ if(fotos.pie?.estado==="ok")funnelEvento("foto_pie");
+ if(st.con3d&&fotos.mano?.estado==="ok"&&fotos.pie?.estado==="ok")funnelEvento("fotos_3d_completas");
+}
+
+
 const fotos={};   /* bebe | mano | pie | diseno  →  {estado, ruta, promesa, error} */
 async function normalizarImagen(file){
   const nombre=(file.name||"").toLowerCase();
@@ -742,7 +757,7 @@ function prepararUpload(clave){
       }
       est.textContent="Subiendo…";
       const p=subir(clave,f).then(ruta=>{
-        fotos[clave]={estado:"ok",ruta,dataUrl};box.className="upload ok";est.textContent="✓ Guardada (toca para cambiarla)";
+        fotos[clave]={estado:"ok",ruta,dataUrl};box.className="upload ok";est.textContent="✓ Guardada (toca para cambiarla)";revisarFotosFunnel();
         metaOnce("first_photo_uploaded","trackCustom","PhotoUploaded",{photo_type:clave,content_name:"Familia Real"});
       }).catch(err=>{throw err;});
       fotos[clave]={estado:"subiendo",promesa:p,dataUrl};
@@ -887,6 +902,7 @@ $("btnPagar").onclick=async e=>{
   e.preventDefault(); const b=$("btnPagar"); if(b.hasAttribute("disabled")) return;
   ocupado(b,"Revisando tu pedido…");
   if(!(await listo())){ocupado(b);actualizar();return;}
+  funnelEvento("reserva_intentada",{reserva:50000,saldo:total()-50000});
   metaOnce("payment_click","trackCustom","PaymentClick",{content_name:st.con3d?"Familia Real 3D":"Familia Real sin 3D",value:50000,currency:"COP"});
   ocupado(b,"Preparando tu diseño…");
   const rutaDiseno=await subirDiseno();
@@ -898,6 +914,7 @@ $("btnPagar").onclick=async e=>{
   ocupado(b,"Guardando tu pedido…");
   const g=await guardarPedido("reserva iniciada");
   if(!g.ok && sbListo()){ocupado(b);actualizar();error("No pudimos guardar tu reserva. Revisa tu conexión e inténtalo de nuevo.");console.error(g.msg);return;}
+  funnelEvento("reserva_enviada_mercadopago",{reserva:50000,saldo:total()-50000});
   pagando=true;
   location.href=CONFIG.mercadoPago.reserva;
 };
@@ -978,6 +995,12 @@ if(nombreMeta)nombreMeta.addEventListener("input",babyMeta);if(fechaMeta)fechaMe
 const op3dMeta=$("op3d");if(op3dMeta)op3dMeta.addEventListener("pointerdown",()=>metaOnce("price_viewed","trackCustom","PriceViewed",{content_name:"Familia Real 3D",value:CONFIG.precios.con3d,currency:"COP"}),{once:true});
 const checkoutIds=["cliente","email","celular","direccion","ciudad"];
 checkoutIds.forEach(id=>{const el=$(id);if(el)el.addEventListener("input",()=>metaOnce("initiate_checkout","track","InitiateCheckout",{content_name:st.con3d?"Familia Real 3D":"Familia Real sin 3D",value:total(),currency:"COP",num_items:1}),{once:true});});
+/* Tracking interno: solo escucha; no cambia el comportamiento */
+setTimeout(()=>funnelEvento("configurador_iniciado",{origen:document.referrer||"directo"}),700);
+["nombre","fecha"].forEach(id=>{const el=$(id);if(el)el.addEventListener("change",()=>{if(v("nombre")&&v("fecha"))funnelEvento("identidad_bebe_completa");});});
+const opTrack=$("op3d");if(opTrack)opTrack.addEventListener("click",()=>funnelEvento("precio_visto",{opcion:st.con3d?"con_3d":"sin_3d",precio:total()}),true);
+let checkoutTrack=false;["cliente","email","celular","direccion","ciudad"].forEach(id=>{const el=$(id);if(el)el.addEventListener("input",()=>{if(!checkoutTrack){checkoutTrack=true;funnelEvento("datos_envio_iniciados");}});});
+
 /* init */
 st.color=CONFIG.colores.find(c=>c.id===st.animal.color);
 $("pMano").innerHTML=imgOr(CONFIG.mano,'<div class="ph3d"></div>');
