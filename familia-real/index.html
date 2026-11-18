@@ -746,6 +746,7 @@ function prepararUpload(clave){
         metaOnce("first_photo_uploaded","trackCustom","PhotoUploaded",{photo_type:clave,content_name:"Familia Real"});
       }).catch(err=>{throw err;});
       fotos[clave]={estado:"subiendo",promesa:p,dataUrl};
+      console.log(`[FOTO] ${clave} preparada`,{tipo:f.type,tamano:f.size,dataUrl:dataUrl.slice(0,32)});
       await p;
     }catch(err){
       console.error("Error preparando la foto:",err);
@@ -816,11 +817,10 @@ async function subirDiseno(){
 
     /* La foto del bebé se compone DESPUÉS de capturar el HTML. Esto evita que
        html-to-image pierda imágenes HEIC convertidas/Data URL en algunos móviles. */
-    let fotoData=null, fotoNatural=null;
-    if(fotoBebe&&fotoBebe.dataset.captureSrc){
-      fotoData=fotoBebe.dataset.captureSrc;
-      fotoNatural={w:fotoBebe.naturalWidth||1,h:fotoBebe.naturalHeight||1};
-      displayFoto=fotoBebe.style.display||"";fotoBebe.style.display="none";
+    let fotoData=fotos.bebe?.dataUrl||fotoBebe?.dataset.captureSrc||null, fotoNatural=null;
+    if(fotoData){
+      fotoNatural={w:fotoBebe?.naturalWidth||1,h:fotoBebe?.naturalHeight||1};
+      if(fotoBebe){displayFoto=fotoBebe.style.display||"";fotoBebe.style.display="none";}
       if(fotoTexto){displayTexto=fotoTexto.style.display||"";fotoTexto.style.display="none";}
     }
 
@@ -832,6 +832,7 @@ async function subirDiseno(){
     if(!canvas)throw new Error("La herramienta devolvió una imagen vacía.");
 
     /* Dibujamos la foto sobre la captura usando la posición REAL de #pFoto. */
+    if(fotos.bebe&&!fotoData)throw new Error("La foto del bebé está guardada, pero no está disponible para crear el diseño. Vuelve a seleccionarla.");
     if(fotoData&&fotoCaja){
       const img=await new Promise((resolve,reject)=>{
         const i=new Image();i.onload=()=>resolve(i);i.onerror=()=>reject(new Error("No se pudo incorporar la foto del bebé al diseño final."));i.src=fotoData;
@@ -857,8 +858,8 @@ async function subirDiseno(){
     fotos.diseno={estado:"error",error:detalle};return null;
   }finally{
     medidas.forEach(m=>m.style.display=m.dataset.prevDisplay||"");
-    if(fotoBebe&&fotoBebe.dataset.captureSrc)fotoBebe.style.display=displayFoto||"block";
-    if(fotoTexto&&fotoBebe&&fotoBebe.dataset.captureSrc)fotoTexto.style.display=displayTexto||"none";
+    if(fotoBebe&&fotoData)fotoBebe.style.display=displayFoto||"block";
+    if(fotoTexto&&fotoData)fotoTexto.style.display=displayTexto||"none";
   }
 }
 /* se preparan las fuentes en segundo plano apenas carga la página */
