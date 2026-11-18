@@ -800,46 +800,65 @@ async function esperarImagenes(nodo){
 
 async function subirDiseno(){
   if(!sbListo()){
-    fotos.diseno={estado:"error",error:"Supabase no está configurado."};
-    return null;
+    fotos.diseno={estado:"error",error:"Supabase no está configurado."};return null;
   }
   if(!window.htmlToImage){
-    fotos.diseno={estado:"error",error:"No cargó la herramienta para crear la imagen."};
-    return null;
+    fotos.diseno={estado:"error",error:"No cargó la herramienta para crear la imagen."};return null;
   }
+  const nodo=$("marco"), medidas=nodo?[...nodo.querySelectorAll(".medida")]:[];
+  const fotoBebe=$("pFotoImg"), fotoTexto=$("pFotoTexto"), fotoCaja=$("pFoto");
+  let displayFoto="", displayTexto="";
   try{
-    console.log("1. Iniciando captura del diseño");
     await document.fonts.ready;
-    const nodo=$("marco");
-    const medidas=[...nodo.querySelectorAll(".medida")];
-    medidas.forEach(m=>m.dataset.prevDisplay=m.style.display||"");
-    medidas.forEach(m=>m.style.display="none");
     if(!nodo)throw new Error("No se encontró el cuadro para generar la imagen.");
+    medidas.forEach(m=>{m.dataset.prevDisplay=m.style.display||"";m.style.display="none";});
     await esperarImagenes(nodo);
-    const fotoBebe=$("pFotoImg");
-    if(fotoBebe&&fotoBebe.dataset.captureSrc&&fotoBebe.src!==fotoBebe.dataset.captureSrc){
-      fotoBebe.src=fotoBebe.dataset.captureSrc;
-      await esperarImagenes(nodo);
+
+    /* La foto del bebé se compone DESPUÉS de capturar el HTML. Esto evita que
+       html-to-image pierda imágenes HEIC convertidas/Data URL en algunos móviles. */
+    let fotoData=null, fotoNatural=null;
+    if(fotoBebe&&fotoBebe.dataset.captureSrc){
+      fotoData=fotoBebe.dataset.captureSrc;
+      fotoNatural={w:fotoBebe.naturalWidth||1,h:fotoBebe.naturalHeight||1};
+      displayFoto=fotoBebe.style.display||"";fotoBebe.style.display="none";
+      if(fotoTexto){displayTexto=fotoTexto.style.display||"";fotoTexto.style.display="none";}
     }
-    if(fotoBebe&&fotoBebe.src&&(!fotoBebe.complete||fotoBebe.naturalWidth===0))
-      throw new Error("La foto del bebé todavía no está lista para la captura.");
-    if(fotoBebe&&fotoBebe.src&&fotoBebe.src.startsWith("blob:"))
-      throw new Error("La foto del bebé quedó en una URL temporal y no puede capturarse.");
+
     const fontCSS=await cargarFuentes();
-    const blob=await Promise.race([
-      htmlToImage.toBlob(nodo,{pixelRatio:2,fontEmbedCSS:fontCSS,skipFonts:false,cacheBust:true,backgroundColor:"#ffffff"}),
+    const canvas=await Promise.race([
+      htmlToImage.toCanvas(nodo,{pixelRatio:2,fontEmbedCSS:fontCSS,skipFonts:false,cacheBust:true,backgroundColor:"#ffffff"}),
       new Promise((_,reject)=>setTimeout(()=>reject(new Error("La captura tardó más de 20 segundos")),20000))
     ]);
-    if(!blob)throw new Error("La herramienta devolvió una imagen vacía.");
+    if(!canvas)throw new Error("La herramienta devolvió una imagen vacía.");
+
+    /* Dibujamos la foto sobre la captura usando la posición REAL de #pFoto. */
+    if(fotoData&&fotoCaja){
+      const img=await new Promise((resolve,reject)=>{
+        const i=new Image();i.onload=()=>resolve(i);i.onerror=()=>reject(new Error("No se pudo incorporar la foto del bebé al diseño final."));i.src=fotoData;
+      });
+      const rMarco=nodo.getBoundingClientRect(), rFoto=fotoCaja.getBoundingClientRect();
+      const sx=canvas.width/rMarco.width, sy=canvas.height/rMarco.height;
+      const x=(rFoto.left-rMarco.left)*sx, y=(rFoto.top-rMarco.top)*sy;
+      const w=rFoto.width*sx, h=rFoto.height*sy;
+      const ctx=canvas.getContext("2d");
+      ctx.save();ctx.fillStyle="#ffffff";ctx.fillRect(x,y,w,h);
+      /* object-fit:contain, igual que la vista previa */
+      const iw=img.naturalWidth||fotoNatural.w, ih=img.naturalHeight||fotoNatural.h;
+      const k=Math.min(w/iw,h/ih), dw=iw*k, dh=ih*k;
+      ctx.drawImage(img,x+(w-dw)/2,y+(h-dh)/2,dw,dh);
+      ctx.restore();
+    }
+
+    const blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error("No se pudo convertir la captura final.")),"image/png",.95));
     const ruta=await subirBlob(blob,`diseno-${Date.now()}.png`,"image/png");
-    medidas.forEach(m=>m.style.display=m.dataset.prevDisplay||"");
-    fotos.diseno={estado:"ok",ruta};
-    return ruta;
+    fotos.diseno={estado:"ok",ruta};return ruta;
   }catch(e){
-    const detalle=e?.message||e?.type||e?.target?.src||String(e);
-    console.error("ERROR CAPTURANDO EL DISEÑO:",detalle,e);
-    fotos.diseno={estado:"error",error:detalle};
-    return null;
+    const detalle=e?.message||String(e);console.error("ERROR CAPTURANDO EL DISEÑO:",detalle,e);
+    fotos.diseno={estado:"error",error:detalle};return null;
+  }finally{
+    medidas.forEach(m=>m.style.display=m.dataset.prevDisplay||"");
+    if(fotoBebe&&fotoBebe.dataset.captureSrc)fotoBebe.style.display=displayFoto||"block";
+    if(fotoTexto&&fotoBebe&&fotoBebe.dataset.captureSrc)fotoTexto.style.display=displayTexto||"none";
   }
 }
 /* se preparan las fuentes en segundo plano apenas carga la página */
