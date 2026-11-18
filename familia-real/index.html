@@ -685,60 +685,33 @@ const sbListo=()=>SB.url && !SB.url.includes("XXXX") && !SB.anonKey.includes("XX
 const sbHeaders=extra=>Object.assign({apikey:SB.anonKey}, SB.anonKey.startsWith("eyJ")?{Authorization:"Bearer "+SB.anonKey}:{}, extra);
 
 /* ===== BREVO: RECUPERACION DE DISEÑO =====
-   Envía el contacto a la Edge Function, nunca expone la API key de Brevo
-   y nunca bloquea fotos, diseño, Supabase ni Mercado Pago. */
+   No bloquea el diseñador. A diferencia de la versión anterior, NO exige que
+   fotos.bebe exista para crear el contacto: email + nombre mamá + nombre bebé bastan. */
 let brevoTimer=null;
 let brevoUltimaFirma="";
 const primerNombre=nombreCompleto=>(nombreCompleto||"").trim().split(/\s+/)[0]||"";
+function payloadBrevo(estado="diseno_preparado"){
+  const email=v("email").toLowerCase(),nombreCompleto=v("cliente"),bebe=v("nombre");
+  if(!email||!/^\S+@\S+\.\S+$/.test(email)||!nombreCompleto||!bebe)return null;
+  return {email,nombre:nombreCompleto,firstname:primerNombre(nombreCompleto),bebe,codigo:CODIGO,con_3d:!!st.con3d,precio:total(),saldo:total()-50000,estado};
+}
+async function enviarBrevoAhora(estado="diseno_preparado",forzar=false){
+  const payload=payloadBrevo(estado);if(!payload)return {ok:false,motivo:"faltan_datos"};
+  const firma=JSON.stringify(payload);if(!forzar&&firma===brevoUltimaFirma)return {ok:true,motivo:"sin_cambios"};
+  try{
+    const r=await fetch(`${SB.url}/functions/v1/brevo-familia-real`,{
+      method:"POST",
+      headers:{apikey:SB.anonKey,"Content-Type":"application/json"},
+      body:firma
+    });
+    const texto=await r.text();
+    if(!r.ok){brevoUltimaFirma="";funnelEvento("brevo_error",{status:r.status,respuesta:texto.slice(0,180)});console.warn("BREVO ERROR",r.status,texto);return {ok:false,status:r.status,texto};}
+    brevoUltimaFirma=firma;funnelEvento("brevo_ok",{estado});console.log("[BREVO] OK",payload.email,estado);return {ok:true};
+  }catch(e){brevoUltimaFirma="";funnelEvento("brevo_error",{error:String(e).slice(0,180)});console.warn("BREVO FETCH ERROR",e);return {ok:false,error:String(e)};}
+}
 function sincronizarBrevo(estado="diseno_preparado",forzar=false){
-  clearTimeout(brevoTimer);
-  brevoTimer=setTimeout(async()=>{
-    const email=v("email").toLowerCase(),nombreCompleto=v("cliente"),bebe=v("nombre");
-    if(!email||!/^\S+@\S+\.\S+$/.test(email)||!nombreCompleto||!bebe)return;
-    /* La secuencia empieza cuando la mamá ya dejó la foto principal y llegó al email. */
-    if(!fotos.bebe||!(fotos.bebe.estado==="ok"||fotos.bebe.estado==="local"))return;
-    const payload={
-      email,
-      nombre:nombreCompleto,
-      firstname:primerNombre(nombreCompleto),
-      bebe,
-      codigo:CODIGO,
-      con_3d:!!st.con3d,
-      precio:total(),
-      saldo:total()-50000,
-      estado
-    };
-    const firma=JSON.stringify(payload);
-    if(!forzar&&firma===brevoUltimaFirma)return;
-    brevoUltimaFirma=firma;
-    try{
-      const r=await fetch(`${SB.url}/functions/v1/brevo-familia-real`,{
-        method:"POST",
-        headers:sbHeaders({"Content-Type":"application/json"}),
-        body:firma,
-        keepalive:true
-      });
-      if(!r.ok){brevoUltimaFirma="";console.warn("Brevo no sincronizado",r.status,await r.text());}
-      else console.log("[BREVO] contacto sincronizado",email,estado);
-    }catch(e){brevoUltimaFirma="";console.warn("Brevo sin conexión",e);}
-  },700);
+  clearTimeout(brevoTimer);brevoTimer=setTimeout(()=>enviarBrevoAhora(estado,forzar),350);
 }
-
-
-/* ===== ANALITICA INTERNA DEL FUNNEL - NO BLOQUEA LA PAGINA ===== */
-const FUNNEL_SENT=new Set();
-function funnelEvento(evento,detalle={}){
-  if(!sbListo()||FUNNEL_SENT.has(evento))return;
-  FUNNEL_SENT.add(evento);
-  fetch(`${SB.url}/rest/v1/funnel_eventos`,{method:"POST",headers:sbHeaders({"Content-Type":"application/json",Prefer:"return=minimal"}),body:JSON.stringify({codigo:CODIGO,evento,con_3d:!!st.con3d,valor:typeof total==="function"?total():null,bebe:v("nombre")||null,email:v("email")||null,telefono:v("celular")||null,detalle}),keepalive:true}).catch(()=>{});
-}
-function revisarFotosFunnel(){
- if(fotos.bebe?.estado==="ok")funnelEvento("foto_bebe");
- if(fotos.mano?.estado==="ok")funnelEvento("foto_mano");
- if(fotos.pie?.estado==="ok")funnelEvento("foto_pie");
- if(st.con3d&&fotos.mano?.estado==="ok"&&fotos.pie?.estado==="ok")funnelEvento("fotos_3d_completas");
-}
-
 
 const fotos={};   /* bebe | mano | pie | diseno  →  {estado, ruta, promesa, error} */
 async function normalizarImagen(file){
@@ -956,7 +929,7 @@ $("btnPagar").onclick=async e=>{
   const g=await guardarPedido("reserva iniciada");
   if(!g.ok && sbListo()){ocupado(b);actualizar();error("No pudimos guardar tu reserva. Revisa tu conexión e inténtalo de nuevo.");console.error(g.msg);return;}
   funnelEvento("reserva_enviada_mercadopago",{reserva:50000,saldo:total()-50000});
-  sincronizarBrevo("reserva_iniciada",true);
+  await Promise.race([enviarBrevoAhora("reserva_iniciada",true),new Promise(r=>setTimeout(r,1800))]);
   pagando=true;
   location.href=CONFIG.mercadoPago.reserva;
 };
