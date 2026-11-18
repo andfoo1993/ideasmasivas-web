@@ -8,6 +8,7 @@
 <title>Familia Real · Diseña el cuadro de tu bebé</title>
 <link href="https://fonts.googleapis.com/css2?family=Lily+Script+One&family=Dancing+Script:wght@400;500;600;700&family=Nunito:wght@400;600;800&display=swap" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/html-to-image@1.11.11/dist/html-to-image.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/heic2any@0.0.4/dist/heic2any.min.js"></script>
 <!-- Meta Pixel Code -->
 <script>
 !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
@@ -147,7 +148,7 @@ input:focus,select:focus{outline:none;border-color:var(--turquesa)}
 .ver-guia{display:inline-block;font-size:.85rem;color:var(--marca-osc);font-weight:700;margin:6px 0 0 4px}
 .info{background:#eaf8fa;border-radius:12px;padding:12px 14px;font-size:.88rem;margin-top:12px;line-height:1.45}
 .total-pedido{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #eee;margin-top:14px;padding-top:14px;font-size:1.05rem;font-weight:700}
-.total-pedido b{font-size:1.45rem;color:var(--marca-osc)}
+.total-pedido b{font-size:1.45rem;color:var(--marca-osc)}.pago-reserva{margin-top:16px;border:2px solid rgba(142,20,166,.18);background:linear-gradient(145deg,#fdf7fe,#eefbfd);border-radius:16px;padding:16px}.pago-reserva h3{color:var(--marca-osc);font-size:1.05rem;margin-bottom:8px}.pago-reserva p{font-size:.88rem;line-height:1.5;color:#5f5264}.pago-linea{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #e7dde9;font-size:.92rem}.pago-linea:last-child{border-bottom:0}.pago-linea strong{color:var(--marca-osc)}.garantia-cierre{margin-top:14px;border-radius:14px;background:#f7fbfc;padding:14px;border:1px solid #d9edf0}.garantia-cierre h3{font-size:.95rem;color:var(--marca-osc);margin-bottom:8px}.garantia-cierre ul{padding-left:19px;font-size:.83rem;line-height:1.55;color:#5c5260}.garantia-cierre .destacado{margin-top:9px;font-size:.86rem;font-weight:800;color:#4d3654}.btn-pago.reserva{background:linear-gradient(135deg,#8e14a6,#6d0b80)}
 .btn{display:block;width:100%;padding:15px;border:none;border-radius:12px;font-size:1.05rem;font-weight:800;cursor:pointer;margin-top:12px;font-family:inherit;text-decoration:none;text-align:center}
 .btn[disabled]{opacity:.6;cursor:wait}
 .btn-pago{background:#009ee3;color:#fff;line-height:1.25}
@@ -334,8 +335,25 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
         <div class="full"><label>Dirección</label><input id="direccion" autocomplete="street-address" placeholder="Ej: Calle 10 # 20-30, apto 501"></div>
         <div class="full"><label>Ciudad</label><input id="ciudad" placeholder="Ej: Medellín"></div>
       </div>
-      <div class="total-pedido">Total <b id="totalPedido">$0</b></div>
-      <a class="btn btn-pago" id="btnPagar">Pagar<small>Paga hasta en 3 cuotas, sin intereses</small></a>
+      <div class="pago-reserva">
+        <h3>Condición especial de lanzamiento</h3>
+        <p>Comenzamos la creación de tu cuadro con una reserva de solo <strong>$50.000</strong>.</p>
+        <div class="pago-linea"><span>Precio total</span><strong id="totalPedido">$0</strong></div>
+        <div class="pago-linea"><span>Reserva hoy</span><strong>$50.000</strong></div>
+        <div class="pago-linea"><span>Saldo cuando veas el video del cuadro terminado</span><strong id="saldoPedido">$0</strong></div>
+      </div>
+      <div class="garantia-cierre">
+        <h3>Compra con tranquilidad 💜</h3>
+        <ul>
+          <li>Revisamos las fotografías antes de iniciar producción.</li>
+          <li>Comparamos las réplicas con las fotos originales y verificamos escala, diseño y acabados.</li>
+          <li>Te enviamos un <strong>video real del cuadro terminado</strong> antes de pedirte el saldo.</li>
+          <li>El envío está incluido a toda Colombia.</li>
+          <li>Si llega con daños de transporte, lo reemplazamos sin costo.</li>
+        </ul>
+        <p class="destacado">Solo después de ver el resultado pagas el saldo y despachamos tu cuadro.</p>
+      </div>
+      <a class="btn btn-pago reserva" id="btnPagar">Reservar por $50.000<small>El saldo se paga después de ver tu cuadro terminado</small></a>
       <div class="err" id="err"></div>
     </div>
   </div>
@@ -399,7 +417,7 @@ const CONFIG = {
 
   precios: { con3d:290000, sin3d:190000 },
   /* Un link de Mercado Pago por cada precio */
-  mercadoPago: { con3d:"https://mpago.li/179R8yb", sin3d:"https://mpago.li/1aGWZEW" },
+  mercadoPago: { reserva:"https://mpago.li/1H9zVzU", con3d:"https://mpago.li/179R8yb", sin3d:"https://mpago.li/1aGWZEW" },
 
   /* Ventana de salida en computador: segundos mínimos en la página antes de que pueda aparecer */
   salidaSegundos: 20,
@@ -656,7 +674,8 @@ function actualizar(){
     :`Mi mamá es <span class="relieve">${ma}</span> &nbsp; Mi papá es <span class="relieve">${pa}</span>`;
   ajustar($("pPapas"),3.9,38,2.8);
   $("totalPedido").textContent=fmt(total());
-  $("btnPagar").innerHTML=`Pagar ${fmt(total())}<small>Paga hasta en 3 cuotas, sin intereses</small>`;
+  $("saldoPedido").textContent=fmt(total()-50000);
+  $("btnPagar").innerHTML=`Reservar por $50.000<small>Saldo de ${fmt(total()-50000)} después de ver tu cuadro terminado</small>`;
 }
 
 /* ===== CONEXIÓN CON SUPABASE ===== */
@@ -666,13 +685,28 @@ const sbListo=()=>SB.url && !SB.url.includes("XXXX") && !SB.anonKey.includes("XX
 const sbHeaders=extra=>Object.assign({apikey:SB.anonKey}, SB.anonKey.startsWith("eyJ")?{Authorization:"Bearer "+SB.anonKey}:{}, extra);
 
 const fotos={};   /* bebe | mano | pie | diseno  →  {estado, ruta, promesa, error} */
+async function normalizarImagen(file){
+  const nombre=(file.name||"").toLowerCase();
+  const tipo=(file.type||"").toLowerCase();
+  const esHeic=/\.(heic|heif)$/.test(nombre)||tipo.includes("heic")||tipo.includes("heif");
+  if(!esHeic)return file;
+  if(typeof heic2any!=="function")throw new Error("No se pudo preparar esta foto HEIC. Intenta nuevamente o elige otra imagen.");
+  const convertido=await heic2any({blob:file,toType:"image/jpeg",quality:.92});
+  const blob=Array.isArray(convertido)?convertido[0]:convertido;
+  return new File([blob],(file.name||"foto").replace(/\.(heic|heif)$/i,".jpg"),{type:"image/jpeg",lastModified:Date.now()});
+}
 async function reducir(file){
+  const normal=await normalizarImagen(file);
   try{
-    const bmp=await createImageBitmap(file), max=2400, k=Math.min(1,max/Math.max(bmp.width,bmp.height));
+    const bmp=await createImageBitmap(normal), max=2400, k=Math.min(1,max/Math.max(bmp.width,bmp.height));
     const c=document.createElement("canvas");c.width=Math.round(bmp.width*k);c.height=Math.round(bmp.height*k);
     c.getContext("2d").drawImage(bmp,0,0,c.width,c.height);
-    return await new Promise(r=>c.toBlob(b=>r(b||file),"image/jpeg",.92));
-  }catch(e){return file;}
+    const blob=await new Promise((resolve,reject)=>c.toBlob(b=>b?resolve(b):reject(new Error("No se pudo convertir la imagen.")),"image/jpeg",.92));
+    return new File([blob],(normal.name||"foto").replace(/\.[^.]+$/,".jpg"),{type:"image/jpeg",lastModified:Date.now()});
+  }catch(e){
+    if((normal.type||"").startsWith("image/")&&!/heic|heif/i.test(normal.type))return normal;
+    throw e;
+  }
 }
 async function subirBlob(blob,nombre,tipo){
   const ruta=`${CODIGO}/${nombre}`;
@@ -687,41 +721,40 @@ async function subir(clave,file){
 }
 function prepararUpload(clave){
   const box=$("up-"+clave), inp=box.querySelector("input"), est=box.querySelector(".estado"), th=box.querySelector(".thumb");
-  inp.onchange=e=>{
-    const f=e.target.files[0]; if(!f) return;
-    metaOnce("first_photo_uploaded","trackCustom","PhotoUploaded",{photo_type:clave,content_name:"Familia Real"});
-    const url=URL.createObjectURL(f);
-    th.innerHTML="";th.style.backgroundImage=`url(${url})`;
-    if(clave==="bebe"){
-      const img=$("pFotoImg"), texto=$("pFotoTexto");
-      if(img){
-        const fr=new FileReader();
-        fr.onload=()=>{
-          const dataUrl=fr.result;
-          img.onload=()=>{
-            img.style.display="block";
-            if(texto)texto.style.display="none";
-            const marco=$("marco");
-            if(marco){
-              const horizontal=img.naturalWidth>img.naturalHeight*1.08;
-              marco.classList.toggle("foto-horizontal",horizontal);
-            }
-          };
-          img.onerror=()=>console.error("No se pudo mostrar la foto del bebé seleccionada.");
-          img.src=dataUrl;
-          img.dataset.captureSrc=dataUrl;
-        };
-        fr.onerror=()=>console.error("No se pudo preparar la foto del bebé para la vista previa.");
-        fr.readAsDataURL(f);
+  inp.onchange=async e=>{
+    const original=e.target.files[0]; if(!original)return;
+    inp.value="";
+    /* Cada intento empieza limpio: un archivo fallido nunca bloquea el siguiente. */
+    delete fotos[clave];
+    box.className="upload subiendo";est.textContent=/\.(heic|heif)$/i.test(original.name||"")?"Preparando foto del iPhone…":"Preparando foto…";
+    try{
+      const f=await reducir(original);
+      const dataUrl=await new Promise((resolve,reject)=>{const fr=new FileReader();fr.onload=()=>resolve(fr.result);fr.onerror=()=>reject(new Error("No se pudo leer la foto."));fr.readAsDataURL(f);});
+      th.innerHTML="";th.style.backgroundImage=`url("${dataUrl}")`;
+      if(clave==="bebe"){
+        const img=$("pFotoImg"),texto=$("pFotoTexto");
+        await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=()=>reject(new Error("No se pudo mostrar la foto del bebé."));img.src=dataUrl;});
+        img.dataset.captureSrc=dataUrl;img.style.display="block";if(texto)texto.style.display="none";
+        const marco=$("marco");if(marco)marco.classList.toggle("foto-horizontal",img.naturalWidth>img.naturalHeight*1.08);
+      }
+      if(!sbListo()){
+        fotos[clave]={estado:"local",dataUrl};box.className="upload ok";est.textContent="✓ Lista (toca para cambiarla)";return;
+      }
+      est.textContent="Subiendo…";
+      const p=subir(clave,f).then(ruta=>{
+        fotos[clave]={estado:"ok",ruta,dataUrl};box.className="upload ok";est.textContent="✓ Guardada (toca para cambiarla)";
+        metaOnce("first_photo_uploaded","trackCustom","PhotoUploaded",{photo_type:clave,content_name:"Familia Real"});
+      }).catch(err=>{throw err;});
+      fotos[clave]={estado:"subiendo",promesa:p,dataUrl};
+      await p;
+    }catch(err){
+      console.error("Error preparando la foto:",err);
+      delete fotos[clave];box.className="upload error";
+      est.textContent="No pudimos leer esta foto. Toca para elegirla nuevamente.";
+      if(clave==="bebe"){
+        const img=$("pFotoImg"),texto=$("pFotoTexto");img.removeAttribute("src");img.style.display="none";delete img.dataset.captureSrc;if(texto)texto.style.display="";
       }
     }
-    if(!sbListo()){ fotos[clave]={estado:"local"}; box.className="upload ok"; est.textContent="✓ Lista (cambiar)"; inp.value=""; return; }
-    box.className="upload subiendo"; est.textContent="Subiendo…";
-    const p=subir(clave,f)
-      .then(ruta=>{fotos[clave]={estado:"ok",ruta};box.className="upload ok";est.textContent="✓ Guardada (toca para cambiarla)";})
-      .catch(err=>{console.error(err);fotos[clave]={estado:"error",error:err.message};box.className="upload error";est.textContent="No se pudo subir. Toca para intentar de nuevo";});
-    fotos[clave]={estado:"subiendo",promesa:p};
-    inp.value="";
   };
 }
 
@@ -816,11 +849,11 @@ setTimeout(cargarFuentes,1500);
 function datosPedido(estado){
   return {
     codigo:CODIGO, estado, cliente:v("cliente"), telefono:v("celular"), email:v("email"),
-    direccion:v("direccion"), ciudad:v("ciudad"), con_3d:st.con3d, total:total(), pago:"Total",
+    direccion:v("direccion"), ciudad:v("ciudad"), con_3d:st.con3d, total:total(), pago:"Reserva $50.000",
     datos:{ nombre:v("nombre"), apellidos:v("apellido"), fecha:v("fecha"), dia:$("pDia").textContent,
             hora:v("hora"), lugar:v("lugar"), peso:v("peso"), talla:v("talla"), rh:v("rh"),
             papas:$("pPapas").textContent, personaje:st.animal.nombre, fondo:textoFondo(),
-            color_letras:st.color.id, marco:st.marco.nombre, recuerdos:textoRec() },
+            color_letras:st.color.id, marco:st.marco.nombre, recuerdos:textoRec(), reserva:50000, saldo:total()-50000, modalidad:"Reserva y saldo antes del despacho" },
     fotos:Object.fromEntries(Object.entries(fotos).filter(([k,f])=>f.ruta&&(k==="bebe"||k==="diseno"||st.con3d)).map(([k,f])=>[k,f.ruta]))
   };
 }
@@ -854,7 +887,7 @@ $("btnPagar").onclick=async e=>{
   e.preventDefault(); const b=$("btnPagar"); if(b.hasAttribute("disabled")) return;
   ocupado(b,"Revisando tu pedido…");
   if(!(await listo())){ocupado(b);actualizar();return;}
-  metaOnce("payment_click","trackCustom","PaymentClick",{content_name:st.con3d?"Familia Real 3D":"Familia Real sin 3D",value:total(),currency:"COP"});
+  metaOnce("payment_click","trackCustom","PaymentClick",{content_name:st.con3d?"Familia Real 3D":"Familia Real sin 3D",value:50000,currency:"COP"});
   ocupado(b,"Preparando tu diseño…");
   const rutaDiseno=await subirDiseno();
   if(!rutaDiseno){
@@ -863,10 +896,10 @@ $("btnPagar").onclick=async e=>{
     return;
   }
   ocupado(b,"Guardando tu pedido…");
-  const g=await guardarPedido("pago iniciado");
-  if(!g.ok && sbListo()){ocupado(b);actualizar();error("No pudimos guardar tu pedido. Revisa tu conexión e inténtalo de nuevo.");console.error(g.msg);return;}
+  const g=await guardarPedido("reserva iniciada");
+  if(!g.ok && sbListo()){ocupado(b);actualizar();error("No pudimos guardar tu reserva. Revisa tu conexión e inténtalo de nuevo.");console.error(g.msg);return;}
   pagando=true;
-  location.href=CONFIG.mercadoPago[st.con3d?"con3d":"sin3d"];
+  location.href=CONFIG.mercadoPago.reserva;
 };
 
 
