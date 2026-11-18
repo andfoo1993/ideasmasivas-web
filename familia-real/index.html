@@ -798,68 +798,76 @@ async function esperarImagenes(nodo){
   await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
 }
 
-async function cargarDataImage(src,label){
-  if(!src)return null;
-  return await new Promise((resolve,reject)=>{const i=new Image();i.onload=()=>resolve(i);i.onerror=()=>reject(new Error(`No se pudo incorporar ${label} al diseño final.`));i.src=src;});
-}
-function dibujarContain(ctx,img,x,y,w,h,pad=0){
-  const px=w*pad,py=h*pad,aw=w-2*px,ah=h-2*py;
-  const iw=img.naturalWidth||1,ih=img.naturalHeight||1,k=Math.min(aw/iw,ah/ih),dw=iw*k,dh=ih*k;
-  ctx.drawImage(img,x+px+(aw-dw)/2,y+py+(ah-dh)/2,dw,dh);
-}
 async function subirDiseno(){
-  if(!sbListo()){fotos.diseno={estado:"error",error:"Supabase no está configurado."};return null;}
-  if(!window.htmlToImage){fotos.diseno={estado:"error",error:"No cargó la herramienta para crear la imagen."};return null;}
-  const nodo=$("marco"),medidas=nodo?[...nodo.querySelectorAll(".medida")]:[];
-  const ocultos=[];
+  if(!sbListo()){
+    fotos.diseno={estado:"error",error:"Supabase no está configurado."};return null;
+  }
+  if(!window.htmlToImage){
+    fotos.diseno={estado:"error",error:"No cargó la herramienta para crear la imagen."};return null;
+  }
+  const nodo=$("marco"), medidas=nodo?[...nodo.querySelectorAll(".medida")]:[];
+  const fotoBebe=$("pFotoImg"), fotoTexto=$("pFotoTexto"), fotoCaja=$("pFoto");
+  let displayFoto="", displayTexto="", fotoData=null;
   try{
     await document.fonts.ready;
     if(!nodo)throw new Error("No se encontró el cuadro para generar la imagen.");
     medidas.forEach(m=>{m.dataset.prevDisplay=m.style.display||"";m.style.display="none";});
 
-    /* Las imágenes dinámicas del cliente se dibujan al final sobre canvas.
-       Así ninguna de ellas depende de html-to-image en móviles. */
-    const composiciones=[];
-    const registrar=(el,src,label,pad=0)=>{
-      if(!el||!src)return;
-      composiciones.push({el,src,label,pad});
-      ocultos.push({el,display:el.style.display||""});el.style.display="none";
-    };
-    registrar($("pFotoImg"),fotos.bebe?.dataUrl||$("pFotoImg")?.dataset.captureSrc,"la foto del bebé",.03);
-    if(st.con3d){
-      /* Para mano/pie usamos la foto cargada por la clienta en vez del placeholder del molde. */
-      registrar($("pMano"),fotos.mano?.dataUrl,"la foto de la manito",.02);
-      registrar($("pPie"),fotos.pie?.dataUrl,"la foto del piecito",.02);
-    }
-    /* Cada recuerdo seleccionado ya se renderiza como img dentro de .rec; lo sacamos y componemos aparte. */
-    [...nodo.querySelectorAll(".rec img")].forEach((img,i)=>registrar(img,img.currentSrc||img.src,`el recuerdo ${i+1}`,0));
-    const fotoTexto=$("pFotoTexto");if(composiciones.some(c=>c.label==="la foto del bebé")&&fotoTexto){ocultos.push({el:fotoTexto,display:fotoTexto.style.display||""});fotoTexto.style.display="none";}
+    /* Fuente única: la foto del bebé guardada por su propia clave. */
+    fotoData=fotos.bebe?.dataUrl||fotoBebe?.dataset.captureSrc||null;
+    if(fotos.bebe&&!fotoData)throw new Error("La foto del bebé no está disponible para crear el diseño.");
 
-    await Promise.race([esperarImagenes(nodo),new Promise(resolve=>setTimeout(resolve,3500))]);
-    const fontCSS=await Promise.race([cargarFuentes(),new Promise(resolve=>setTimeout(()=>resolve(""),3500))]);
-    const ratio=innerWidth<700?1.6:2;
+    /* Para evitar bloqueos móviles, html-to-image NO procesa la foto local del bebé.
+       Se oculta antes de capturar y se compone después sobre canvas. */
+    if(fotoData&&fotoBebe){
+      displayFoto=fotoBebe.style.display||"";fotoBebe.style.display="none";
+      if(fotoTexto){displayTexto=fotoTexto.style.display||"";fotoTexto.style.display="none";}
+    }
+
+    /* Esperamos solo assets visuales del cuadro que NO sean la foto local del bebé.
+       Timeout global corto para que nunca quede pegado en Preparando diseño. */
+    await Promise.race([
+      esperarImagenes(nodo),
+      new Promise(resolve=>setTimeout(resolve,4500))
+    ]);
+
+    const fontCSS=await Promise.race([
+      cargarFuentes(),
+      new Promise(resolve=>setTimeout(()=>resolve(""),4500))
+    ]);
+
+    /* Menor pixelRatio en móvil = mucha menos memoria. 1.7 sigue siendo suficiente
+       para control visual y correo, mientras 2 puede bloquear equipos móviles. */
+    const ratio=innerWidth<700?1.7:2;
     const canvas=await Promise.race([
       htmlToImage.toCanvas(nodo,{pixelRatio:ratio,fontEmbedCSS:fontCSS||"",skipFonts:false,cacheBust:false,backgroundColor:"#ffffff"}),
-      new Promise((_,reject)=>setTimeout(()=>reject(new Error("La generación del diseño tardó demasiado.")),10000))
+      new Promise((_,reject)=>setTimeout(()=>reject(new Error("La generación del diseño tardó demasiado.")),12000))
     ]);
     if(!canvas)throw new Error("La herramienta devolvió una imagen vacía.");
 
-    const rMarco=nodo.getBoundingClientRect(),ctx=canvas.getContext("2d"),sx=canvas.width/rMarco.width,sy=canvas.height/rMarco.height;
-    for(const c of composiciones){
-      const img=await cargarDataImage(c.src,c.label),r=c.el.getBoundingClientRect();
-      const x=(r.left-rMarco.left)*sx,y=(r.top-rMarco.top)*sy,w=r.width*sx,h=r.height*sy;
-      if(c.label==="la foto del bebé"){ctx.fillStyle="#fff";ctx.fillRect(x,y,w,h);}
-      dibujarContain(ctx,img,x,y,w,h,c.pad);
+    /* Foto del bebé añadida de forma independiente al final. */
+    if(fotoData&&fotoCaja){
+      const img=await new Promise((resolve,reject)=>{
+        const i=new Image();i.onload=()=>resolve(i);i.onerror=()=>reject(new Error("No se pudo incorporar la foto del bebé al diseño final."));i.src=fotoData;
+      });
+      const rMarco=nodo.getBoundingClientRect(),rFoto=fotoCaja.getBoundingClientRect();
+      const sx=canvas.width/rMarco.width,sy=canvas.height/rMarco.height;
+      const x=(rFoto.left-rMarco.left)*sx,y=(rFoto.top-rMarco.top)*sy,w=rFoto.width*sx,h=rFoto.height*sy;
+      const ctx=canvas.getContext("2d");ctx.save();ctx.fillStyle="#fff";ctx.fillRect(x,y,w,h);
+      const iw=img.naturalWidth||1,ih=img.naturalHeight||1,k=Math.min(w/iw,h/ih),dw=iw*k,dh=ih*k;
+      ctx.drawImage(img,x+(w-dw)/2,y+(h-dh)/2,dw,dh);ctx.restore();
     }
 
     const blob=await new Promise((resolve,reject)=>canvas.toBlob(b=>b?resolve(b):reject(new Error("No se pudo convertir la captura final.")),"image/jpeg",.92));
     const ruta=await subirBlob(blob,`diseno-${Date.now()}.jpg`,"image/jpeg");
     fotos.diseno={estado:"ok",ruta};return ruta;
   }catch(e){
-    const detalle=e?.message||String(e);console.error("ERROR CAPTURANDO EL DISEÑO:",detalle,e);fotos.diseno={estado:"error",error:detalle};return null;
+    const detalle=e?.message||String(e);console.error("ERROR CAPTURANDO EL DISEÑO:",detalle,e);
+    fotos.diseno={estado:"error",error:detalle};return null;
   }finally{
     medidas.forEach(m=>m.style.display=m.dataset.prevDisplay||"");
-    ocultos.forEach(o=>o.el.style.display=o.display||"");
+    if(fotoBebe&&fotoData)fotoBebe.style.display=displayFoto||"block";
+    if(fotoTexto&&fotoData)fotoTexto.style.display=displayTexto||"none";
   }
 }
 /* se preparan las fuentes en segundo plano apenas carga la página */
@@ -873,7 +881,7 @@ function datosPedido(estado){
     datos:{ nombre:v("nombre"), apellidos:v("apellido"), fecha:v("fecha"), dia:$("pDia").textContent,
             hora:v("hora"), lugar:v("lugar"), peso:v("peso"), talla:v("talla"), rh:v("rh"),
             papas:$("pPapas").textContent, personaje:st.animal.nombre, fondo:textoFondo(),
-            color_letras:st.color.id, marco:st.marco.nombre, recuerdos:textoRec(), reserva:50000, saldo:total()-50000, modalidad:"Reserva y saldo antes del despacho" },
+            color_letras:st.color.id, marco:st.marco.nombre, recuerdos:textoRec(), reserva:50000, saldo:total()-50000, modalidad:"Reserva y saldo antes del despacho", captura_cliente:false, captura_nota:"Diseño reconstruible con configuración y fotos guardadas" },
     fotos:Object.fromEntries(Object.entries(fotos).filter(([k,f])=>f.ruta&&(k==="bebe"||k==="diseno"||st.con3d)).map(([k,f])=>[k,f.ruta]))
   };
 }
@@ -908,14 +916,10 @@ $("btnPagar").onclick=async e=>{
   ocupado(b,"Revisando tu pedido…");
   if(!(await listo())){ocupado(b);actualizar();return;}
   metaOnce("payment_click","trackCustom","PaymentClick",{content_name:st.con3d?"Familia Real 3D":"Familia Real sin 3D",value:50000,currency:"COP"});
-  ocupado(b,"Preparando tu diseño…");
-  const rutaDiseno=await subirDiseno();
-  if(!rutaDiseno){
-    ocupado(b);actualizar();
-    error("No pudimos crear la imagen final del cuadro. Inténtalo nuevamente.");
-    return;
-  }
-  ocupado(b,"Guardando tu pedido…");
+  /* La reserva no depende de generar un pantallazo en el celular.
+     Guardamos las fotos originales y toda la configuración; el diseño puede
+     reconstruirse de forma fiable desde esos datos. */
+  ocupado(b,"Guardando tu reserva…");
   const g=await guardarPedido("reserva iniciada");
   if(!g.ok && sbListo()){ocupado(b);actualizar();error("No pudimos guardar tu reserva. Revisa tu conexión e inténtalo de nuevo.");console.error(g.msg);return;}
   pagando=true;
@@ -967,7 +971,7 @@ $("salirSalida").onclick=e=>{e.preventDefault();saliendo=true;history.go(-2);};
 $("cerrarSalida").onclick=cerrarSalida;$("seguirSalida").onclick=cerrarSalida;
 $("modalSalida").onclick=e=>{if(e.target===$("modalSalida"))cerrarSalida();};
 $("btnWaSalida").onclick=async e=>{e.preventDefault();metaEvent("track","Contact",{contact_method:"whatsapp_exit",content_name:"Familia Real"});const w=window.open("about:blank","_blank");
-  await subirDiseno(); guardarPedido("consulta whatsapp");
+  guardarPedido("consulta whatsapp");
   if(w) w.location.href=urlWA(mensajeWA()); else location.href=urlWA(mensajeWA()); cerrarSalida();};
 $("linkOtro").onclick=e=>{e.preventDefault();metaEvent("track","Contact",{contact_method:"whatsapp_special_character",content_name:"Familia Real"});window.open(urlWA("¡Hola! Quiero un cuadro con un personaje especial 💕"),"_blank");};
 $("waFloat").onclick=e=>{e.preventDefault();metaEvent("track","Contact",{contact_method:"whatsapp_floating",content_name:"Familia Real"});const nombre=v("nombre")||"mi bebé";const texto=`¡Hola Familia Real! Estoy diseñando el cuadro de ${nombre} y tengo una duda 💕\n• Código: ${CODIGO}\n• Personaje: ${st.animal.nombre}\n• Fondo: ${textoFondo()}\n• Manito y piecito 3D: ${st.con3d?"Sí":"No"}`;window.open(urlWA(texto),"_blank");};
