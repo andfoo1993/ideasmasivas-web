@@ -148,7 +148,7 @@ input:focus,select:focus{outline:none;border-color:var(--turquesa)}
 .ver-guia{display:inline-block;font-size:.85rem;color:var(--marca-osc);font-weight:700;margin:6px 0 0 4px}.upload-guia-hint{font-size:.76rem;color:var(--marca-osc);font-weight:700;margin-top:3px;display:block}
 .info{background:#eaf8fa;border-radius:12px;padding:12px 14px;font-size:.88rem;margin-top:12px;line-height:1.45}
 .total-pedido{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #eee;margin-top:14px;padding-top:14px;font-size:1.05rem;font-weight:700}
-.total-pedido b{font-size:1.45rem;color:var(--marca-osc)}.pago-reserva{margin-top:16px;border:2px solid rgba(142,20,166,.18);background:linear-gradient(145deg,#fdf7fe,#eefbfd);border-radius:16px;padding:16px}.pago-reserva h3{color:var(--marca-osc);font-size:1.05rem;margin-bottom:8px}.pago-reserva p{font-size:.88rem;line-height:1.5;color:#5f5264}.pago-linea{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #e7dde9;font-size:.92rem}.pago-linea:last-child{border-bottom:0}.pago-linea strong{color:var(--marca-osc)}.garantia-cierre{margin-top:14px;border-radius:14px;background:#f7fbfc;padding:14px;border:1px solid #d9edf0}.garantia-cierre h3{font-size:.95rem;color:var(--marca-osc);margin-bottom:8px}.garantia-cierre ul{padding-left:19px;font-size:.83rem;line-height:1.55;color:#5c5260}.garantia-cierre .destacado{margin-top:9px;font-size:.86rem;font-weight:800;color:#4d3654}.btn-pago.reserva{background:linear-gradient(135deg,#8e14a6,#6d0b80)}.propuesta-aviso{margin:14px 0;background:#fff8e8;border:1px solid #f1d88b;border-radius:14px;padding:14px;line-height:1.5;font-size:.86rem;color:#5c4d2c}.propuesta-aviso strong{color:#6d0b80}.ajuste-box{margin-top:14px;padding:14px;border:1px solid #e7ddea;border-radius:14px;background:#fdfafd}.ajuste-box label{font-size:.9rem;color:#4e4053;margin-bottom:7px}.ajuste-box textarea{width:100%;min-height:90px;resize:vertical;padding:11px 12px;border:1.5px solid #d9e3e6;border-radius:10px;font:inherit;color:var(--texto)}.ajuste-box textarea:focus{outline:none;border-color:var(--turquesa)}.opcional{font-size:.75rem;color:#7a7084;font-weight:600}
+.total-pedido b{font-size:1.45rem;color:var(--marca-osc)}.pago-reserva{margin-top:16px;border:2px solid rgba(142,20,166,.18);background:linear-gradient(145deg,#fdf7fe,#eefbfd);border-radius:16px;padding:16px}.pago-reserva h3{color:var(--marca-osc);font-size:1.05rem;margin-bottom:8px}.pago-reserva p{font-size:.88rem;line-height:1.5;color:#5f5264}.pago-linea{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #e7dde9;font-size:.92rem}.pago-linea:last-child{border-bottom:0}.pago-linea strong{color:var(--marca-osc)}.garantia-cierre{margin-top:14px;border-radius:14px;background:#f7fbfc;padding:14px;border:1px solid #d9edf0}.garantia-cierre h3{font-size:.95rem;color:var(--marca-osc);margin-bottom:8px}.garantia-cierre ul{padding-left:19px;font-size:.83rem;line-height:1.55;color:#5c5260}.garantia-cierre .destacado{margin-top:9px;font-size:.86rem;font-weight:800;color:#4d3654}.btn-pago.reserva{background:linear-gradient(135deg,#8e14a6,#6d0b80)}.propuesta-aviso{margin:14px 0;background:#fff8e8;border:1px solid #f1d88b;border-radius:14px;padding:14px;line-height:1.5;font-size:.86rem;color:#5c4d2c}.propuesta-aviso strong{color:#6d0b80}.ajuste-box{margin-top:14px;padding:14px;border:1px solid #e7ddea;border-radius:14px;background:#fdfafd}.ajuste-box label{font-size:.9rem;color:#4e4053;margin-bottom:7px}.ajuste-box textarea{width:100%;min-height:90px;resize:vertical;padding:11px 12px;border:1.5px solid #d9e3e6;border-radius:10px;font:inherit;color:var(--texto)}.ajuste-box textarea:focus{outline:none;border-color:var(--turquesa)}.opcional{font-size:.75rem;color:#7a7084;font-weight:600}.ajuste-intermedio{border:1.5px solid #eadfec;background:linear-gradient(145deg,#fff,#fdf9fe)}.ajuste-intermedio h2{color:var(--marca-osc);align-items:baseline}.ajuste-intermedio>.ajuste-box{margin-top:10px;padding:0;border:0;background:transparent}
 .btn{display:block;width:100%;padding:15px;border:none;border-radius:12px;font-size:1.05rem;font-weight:800;cursor:pointer;margin-top:12px;font-family:inherit;text-decoration:none;text-align:center}
 .btn[disabled]{opacity:.6;cursor:wait}
 .btn-pago{background:#009ee3;color:#fff;line-height:1.25}
@@ -314,7 +314,13 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
       <div id="listaRec"></div></div>
     <div class="paso"><h2><span class="num">7</span> Manito y piecito en 3D</h2><p>Reproducimos en relieve la manito y el piecito de tu bebé a partir de una foto.</p>
       <div class="opciones" id="op3d"></div></div>
-    <div class="paso"><h2><span class="num">8</span> Fotos</h2><p>Se guardan de forma segura y solo las usamos para preparar tu cuadrito.</p>
+    <div class="paso ajuste-intermedio">
+        <h2>¿Hay algo que quisieras que revisemos o cambiemos? <span class="opcional">Opcional</span></h2>
+        <p>Recuerda que esta es una primera propuesta. Si quieres otro personaje, fondo, texto, color o algún cambio en la composición, cuéntanos aquí.</p>
+        <div class="ajuste-box"><textarea id="ajustes" maxlength="500" placeholder="Ej: quisiera otro personaje, un fondo diferente, cambiar un texto o mover algún recuerdo..."></textarea></div>
+        <div class="propuesta-aviso"><strong>💜 No tiene que quedar perfecto ahora.</strong><br>Después de reservar revisaremos estos detalles contigo y <strong>no produciremos tu cuadrito hasta que hayas revisado y aprobado el diseño definitivo.</strong></div>
+      </div>
+      <div class="paso"><h2><span class="num">8</span> Fotos</h2><p>Se guardan de forma segura y solo las usamos para preparar tu cuadrito.</p>
       <label class="upload" id="up-bebe"><div class="thumb">📷</div><div class="txt"><b>Foto de tu bebé</b><span class="estado">Toca para subir la foto</span></div><input type="file" accept="image/*"></label>
       <div id="fotos3d">
         <div class="foto3d">
@@ -327,7 +333,7 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
         </div>
         <div class="info">También sirven fotos antiguas, si se ven nítidas.</div>
       </div></div>
-    <div class="paso"><h2><span class="num">9</span> Datos de envío</h2><p>Esta es una primera propuesta. Después de reservar revisaremos contigo los detalles antes de producir.</p>
+    <div class="paso"><h2><span class="num">9</span> Datos de envío</h2><p>Completa estos datos para registrar la reserva y preparar el envío de tu cuadrito.</p>
       <div class="grid">
         <div class="full"><label>Nombre completo</label><input id="cliente" autocomplete="name"></div>
         <div><label>Celular</label><input id="celular" type="tel" inputmode="tel" autocomplete="tel" placeholder="Ej: 300 123 4567"></div>
@@ -335,7 +341,7 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
         <div class="full"><label>Dirección</label><input id="direccion" autocomplete="street-address" placeholder="Ej: Calle 10 # 20-30, apto 501"></div>
         <div class="full"><label>Ciudad</label><input id="ciudad" placeholder="Ej: Medellín"></div>
       </div>
-      <div class="propuesta-aviso"><strong>💜 Tu propuesta no tiene que quedar perfecta.</strong><br>Después de reservar podrás indicarnos si quieres cambiar el personaje, el fondo, algún texto o la ubicación de los recuerdos. Prepararemos el diseño definitivo y <strong>no produciremos tu cuadrito hasta que lo apruebes.</strong></div><div class="ajuste-box"><label for="ajustes">¿Hay algo que quisieras que revisemos o cambiemos? <span class="opcional">Opcional</span></label><textarea id="ajustes" maxlength="500" placeholder="Ej: quisiera otro personaje, un fondo diferente, cambiar un texto o mover algún recuerdo..."></textarea></div><div class="pago-reserva">
+      <div class="pago-reserva">
         <h3>Condición especial de lanzamiento</h3>
         <p>Comenzamos la revisión de tu pedido con una reserva de solo <strong>$50.000</strong>.</p>
         <div class="pago-linea"><span>Precio total</span><strong id="totalPedido">$0</strong></div>
