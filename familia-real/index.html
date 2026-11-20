@@ -148,7 +148,7 @@ input:focus,select:focus{outline:none;border-color:var(--turquesa)}
 .ver-guia{display:inline-block;font-size:.85rem;color:var(--marca-osc);font-weight:700;margin:6px 0 0 4px}.upload-guia-hint{font-size:.76rem;color:var(--marca-osc);font-weight:700;margin-top:3px;display:block}
 .info{background:#eaf8fa;border-radius:12px;padding:12px 14px;font-size:.88rem;margin-top:12px;line-height:1.45}
 .total-pedido{display:flex;justify-content:space-between;align-items:center;border-top:1px solid #eee;margin-top:14px;padding-top:14px;font-size:1.05rem;font-weight:700}
-.total-pedido b{font-size:1.45rem;color:var(--marca-osc)}.pago-reserva{margin-top:16px;border:2px solid rgba(142,20,166,.18);background:linear-gradient(145deg,#fdf7fe,#eefbfd);border-radius:16px;padding:16px}.pago-reserva h3{color:var(--marca-osc);font-size:1.05rem;margin-bottom:8px}.pago-reserva p{font-size:.88rem;line-height:1.5;color:#5f5264}.pago-linea{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #e7dde9;font-size:.92rem}.pago-linea:last-child{border-bottom:0}.pago-linea strong{color:var(--marca-osc)}.garantia-cierre{margin-top:14px;border-radius:14px;background:#f7fbfc;padding:14px;border:1px solid #d9edf0}.garantia-cierre h3{font-size:.95rem;color:var(--marca-osc);margin-bottom:8px}.garantia-cierre ul{padding-left:19px;font-size:.83rem;line-height:1.55;color:#5c5260}.garantia-cierre .destacado{margin-top:9px;font-size:.86rem;font-weight:800;color:#4d3654}.btn-pago.reserva{background:linear-gradient(135deg,#8e14a6,#6d0b80)}
+.total-pedido b{font-size:1.45rem;color:var(--marca-osc)}.pago-reserva{margin-top:16px;border:2px solid rgba(142,20,166,.18);background:linear-gradient(145deg,#fdf7fe,#eefbfd);border-radius:16px;padding:16px}.pago-reserva h3{color:var(--marca-osc);font-size:1.05rem;margin-bottom:8px}.pago-reserva p{font-size:.88rem;line-height:1.5;color:#5f5264}.pago-linea{display:flex;justify-content:space-between;gap:12px;padding:9px 0;border-bottom:1px solid #e7dde9;font-size:.92rem}.pago-linea:last-child{border-bottom:0}.pago-linea strong{color:var(--marca-osc)}.garantia-cierre{margin-top:14px;border-radius:14px;background:#f7fbfc;padding:14px;border:1px solid #d9edf0}.garantia-cierre h3{font-size:.95rem;color:var(--marca-osc);margin-bottom:8px}.garantia-cierre ul{padding-left:19px;font-size:.83rem;line-height:1.55;color:#5c5260}.garantia-cierre .destacado{margin-top:9px;font-size:.86rem;font-weight:800;color:#4d3654}.btn-pago.reserva{background:linear-gradient(135deg,#8e14a6,#6d0b80)}.propuesta-aviso{margin:14px 0;background:#fff8e8;border:1px solid #f1d88b;border-radius:14px;padding:14px;line-height:1.5;font-size:.86rem;color:#5c4d2c}.propuesta-aviso strong{color:#6d0b80}.ajuste-box{margin-top:14px;padding:14px;border:1px solid #e7ddea;border-radius:14px;background:#fdfafd}.ajuste-box label{font-size:.9rem;color:#4e4053;margin-bottom:7px}.ajuste-box textarea{width:100%;min-height:90px;resize:vertical;padding:11px 12px;border:1.5px solid #d9e3e6;border-radius:10px;font:inherit;color:var(--texto)}.ajuste-box textarea:focus{outline:none;border-color:var(--turquesa)}.opcional{font-size:.75rem;color:#7a7084;font-weight:600}
 .btn{display:block;width:100%;padding:15px;border:none;border-radius:12px;font-size:1.05rem;font-weight:800;cursor:pointer;margin-top:12px;font-family:inherit;text-decoration:none;text-align:center}
 .btn[disabled]{opacity:.6;cursor:wait}
 .btn-pago{background:#009ee3;color:#fff;line-height:1.25}
@@ -242,7 +242,7 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
 <body>
 <header>
   <div id="logoBox"><h1>Familia Real</h1></div>
-  <p>Diseña el recuerdo más hermoso de la etapa más preciosa de tu bebé y recíbelo en tu casa en 8 días hábiles.</p>
+  <p>Crea una primera propuesta del cuadrito de tu bebé y descubre cómo guardar sus primeros recuerdos para siempre.</p>
 </header>
 
 <div class="wrap">
@@ -282,7 +282,7 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
   </div>
 
   <div>
-    <div class="paso"><h2><span class="num">1</span> Los datos de tu bebé</h2><p>Escribe y mira cómo aparece en el cuadro.</p>
+    <div class="paso"><h2><span class="num">1</span> Los datos de tu bebé</h2><p>Escribe y mira cómo empiezan a tomar forma en tu primera propuesta.</p>
       <div class="grid">
         <div><label>Nombre</label><input id="nombre" placeholder="Ej: Guadalupe" maxlength="22"></div>
         <div><label>Apellidos</label><input id="apellido" placeholder="Ej: García Guzmán" maxlength="30"></div>
@@ -310,11 +310,11 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
     <div class="paso"><h2><span class="num">4</span> Color de las letras</h2><p>Las letras e iconos van en relieve con este color.</p><div class="colores" id="colores"></div></div>
     <div class="paso"><h2><span class="num">5</span> Elige el marco</h2><p>&nbsp;</p><div class="opciones" id="marcos"></div></div>
     <div class="paso"><h2><span class="num">6</span> Tus recuerdos</h2>
-      <p>Elige los recuerdos que quieres poner. Te entregaremos el cuadro con el espacio para que puedas pegarlos en tu casa: incluimos el pegante y una guía sencilla. Las imágenes son ilustrativas.</p>
+      <p>Elige los recuerdos que quieres poner. Te entregaremos el cuadrito con el espacio para que puedas pegarlos en tu casa: incluimos el pegante y una guía sencilla. Las imágenes son ilustrativas.</p>
       <div id="listaRec"></div></div>
     <div class="paso"><h2><span class="num">7</span> Manito y piecito en 3D</h2><p>Reproducimos en relieve la manito y el piecito de tu bebé a partir de una foto.</p>
       <div class="opciones" id="op3d"></div></div>
-    <div class="paso"><h2><span class="num">8</span> Fotos</h2><p>Se guardan de forma segura y solo las usamos para hacer tu cuadro.</p>
+    <div class="paso"><h2><span class="num">8</span> Fotos</h2><p>Se guardan de forma segura y solo las usamos para preparar tu cuadrito.</p>
       <label class="upload" id="up-bebe"><div class="thumb">📷</div><div class="txt"><b>Foto de tu bebé</b><span class="estado">Toca para subir la foto</span></div><input type="file" accept="image/*"></label>
       <div id="fotos3d">
         <div class="foto3d">
@@ -327,7 +327,7 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
         </div>
         <div class="info">También sirven fotos antiguas, si se ven nítidas.</div>
       </div></div>
-    <div class="paso"><h2><span class="num">9</span> Datos de envío</h2><p>Para entregarte tu cuadro y enviarte la factura.</p>
+    <div class="paso"><h2><span class="num">9</span> Datos de envío</h2><p>Esta es una primera propuesta. Después de reservar revisaremos contigo los detalles antes de producir.</p>
       <div class="grid">
         <div class="full"><label>Nombre completo</label><input id="cliente" autocomplete="name"></div>
         <div><label>Celular</label><input id="celular" type="tel" inputmode="tel" autocomplete="tel" placeholder="Ej: 300 123 4567"></div>
@@ -335,25 +335,25 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
         <div class="full"><label>Dirección</label><input id="direccion" autocomplete="street-address" placeholder="Ej: Calle 10 # 20-30, apto 501"></div>
         <div class="full"><label>Ciudad</label><input id="ciudad" placeholder="Ej: Medellín"></div>
       </div>
-      <div class="pago-reserva">
+      <div class="propuesta-aviso"><strong>💜 Tu propuesta no tiene que quedar perfecta.</strong><br>Después de reservar podrás indicarnos si quieres cambiar el personaje, el fondo, algún texto o la ubicación de los recuerdos. Prepararemos el diseño definitivo y <strong>no produciremos tu cuadrito hasta que lo apruebes.</strong></div><div class="ajuste-box"><label for="ajustes">¿Hay algo que quisieras que revisemos o cambiemos? <span class="opcional">Opcional</span></label><textarea id="ajustes" maxlength="500" placeholder="Ej: quisiera otro personaje, un fondo diferente, cambiar un texto o mover algún recuerdo..."></textarea></div><div class="pago-reserva">
         <h3>Condición especial de lanzamiento</h3>
-        <p>Comenzamos la creación de tu cuadro con una reserva de solo <strong>$50.000</strong>.</p>
+        <p>Comenzamos la revisión de tu pedido con una reserva de solo <strong>$50.000</strong>.</p>
         <div class="pago-linea"><span>Precio total</span><strong id="totalPedido">$0</strong></div>
         <div class="pago-linea"><span>Reserva hoy</span><strong>$50.000</strong></div>
-        <div class="pago-linea"><span>Saldo cuando veas el video del cuadro terminado</span><strong id="saldoPedido">$0</strong></div>
+        <div class="pago-linea"><span>Saldo cuando veas el video del cuadrito terminado</span><strong id="saldoPedido">$0</strong></div>
       </div>
       <div class="garantia-cierre">
         <h3>Compra con tranquilidad 💜</h3>
         <ul>
           <li>Revisamos las fotografías antes de iniciar producción.</li>
-          <li>Comparamos las réplicas con las fotos originales y verificamos escala, diseño y acabados.</li>
-          <li>Te enviamos un <strong>video real del cuadro terminado</strong> antes de pedirte el saldo.</li>
+          <li>Preparamos el diseño definitivo y <strong>no iniciamos producción hasta que lo apruebes.</strong></li><li>Si elegiste 3D, comparamos las réplicas con las fotos originales y verificamos escala y acabados.</li>
+          <li>Te enviamos un <strong>video real del cuadrito terminado</strong> antes de pedirte el saldo.</li>
           <li>El envío está incluido a toda Colombia.</li>
           <li>Si llega con daños de transporte, lo reemplazamos sin costo.</li>
         </ul>
-        <p class="destacado">Solo después de ver el resultado pagas el saldo y despachamos tu cuadro.</p>
+        <p class="destacado">Primero apruebas el diseño definitivo. Después producimos. Y solo después de ver el cuadrito terminado pagas el saldo para enviarlo.</p>
       </div>
-      <a class="btn btn-pago reserva" id="btnPagar">Reservar por $50.000<small>El saldo se paga después de ver tu cuadro terminado</small></a>
+      <a class="btn btn-pago reserva" id="btnPagar">Reservar por $50.000<small>El saldo se paga después de ver tu cuadrito terminado</small></a>
       <div class="err" id="err"></div>
     </div>
   </div>
@@ -380,7 +380,7 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
   <div class="modal-box" style="text-align:center">
     <button class="cerrar" id="cerrarSalida" aria-label="Cerrar">×</button>
     <h3 style="padding:0 20px">¿Te quedó alguna duda? 💕</h3>
-    <p>Escríbenos y te ayudamos a terminar el cuadro de tu bebé. Tu diseño nos llega en el mensaje, así no tienes que empezar de nuevo.</p>
+    <p>Escríbenos y te ayudamos a terminar la propuesta de tu bebé. Tu código y tus elecciones nos llegan en el mensaje, así no tienes que empezar de nuevo.</p>
     <a class="btn btn-wa" id="btnWaSalida">Escribir por WhatsApp</a>
     <button class="btn btn-link" id="seguirSalida">Seguir diseñando</button>
     <a href="#" id="salirSalida" style="display:none;font-size:.8rem;color:#b0a3a8">Salir de la página</a>
@@ -922,7 +922,7 @@ function datosPedido(estado){
     datos:{ nombre:v("nombre"), apellidos:v("apellido"), fecha:v("fecha"), dia:$("pDia").textContent,
             hora:v("hora"), lugar:v("lugar"), peso:v("peso"), talla:v("talla"), rh:v("rh"),
             papas:$("pPapas").textContent, personaje:st.animal.nombre, fondo:textoFondo(),
-            color_letras:st.color.id, marco:st.marco.nombre, recuerdos:textoRec(), reserva:50000, saldo:total()-50000, modalidad:"Reserva y saldo antes del despacho" },
+            color_letras:st.color.id, marco:st.marco.nombre, recuerdos:textoRec(), ajustes_solicitados:v("ajustes"), reserva:50000, saldo:total()-50000, modalidad:"Reserva, aprobación del diseño definitivo y saldo antes del despacho" },
     fotos:Object.fromEntries(Object.entries(fotos).filter(([k,f])=>f.ruta&&(k==="bebe"||k==="diseno"||st.con3d)).map(([k,f])=>[k,f.ruta]))
   };
 }
