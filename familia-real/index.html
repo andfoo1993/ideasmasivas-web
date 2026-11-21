@@ -602,7 +602,9 @@ function pintar3D(){
   [{v:true, t:"Con manito y piecito en 3D", s:"El recuerdo completo ", medida:"41 x 31 cm", badge:"Recomendado", p:CONFIG.precios.con3d},
    {v:false,t:"Sin 3D",                     s:"Solo el diseño del cuadro ", medida:"27 x 22 cm", p:CONFIG.precios.sin3d}]
   .forEach(o=>{const d=document.createElement("div");d.className="op"+(st.con3d===o.v?" sel":"");
-    d.innerHTML=`${o.badge?`<span class="badge">${o.badge}</span>`:""}<b>${o.t}</b><small>${o.s}</small><small><strong>Medida: ${o.medida}</strong></small><div class="precio">${fmt(o.p)}</div>`;
+    d.innerHTML=`${o.badge?`<span class="badge">${o.badge}</span>`:""}<b>${o.t}</b>
+<small>${o.s}</small>
+<small style="display:block;margin-top:4px;"><strong>Medida: ${o.medida}</strong></small><div class="precio">${fmt(o.p)}</div>`;
     d.onclick=()=>{st.con3d=o.v;pintar3D();actualizar();};c.appendChild(d);});
   $("medidaAncho").textContent=st.con3d?"41 cm":"27 cm";
   $("medidaAlto").textContent=st.con3d?"31 cm":"22 cm";
