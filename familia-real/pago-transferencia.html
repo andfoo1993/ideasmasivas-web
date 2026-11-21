@@ -1,1 +1,68 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<base href="/familia-real/">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Reserva por transferencia | Familia Real</title>
+<meta name="description" content="Reserva tu cuadrito Familia Real con $50.000 por transferencia Bre-B y confirma tu pedido por WhatsApp.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Nunito+Sans:wght@700;800&display=swap" rel="stylesheet">
+<style>
+:root{--purple:#8e14a6;--purple2:#651176;--cyan:#09bfd5;--green:#25d366;--ink:#382f3c;--muted:#716775;--line:#e9e0eb;--soft:#fbf8fc;--yellow:#f8cc36}*{box-sizing:border-box}body{margin:0;background:linear-gradient(180deg,#fff,#fcf8fd);font-family:'DM Sans',sans-serif;color:var(--ink)}.wrap{width:min(760px,calc(100% - 28px));margin:auto}.top{text-align:center;padding:27px 0 10px}.logo{width:min(210px,55vw);max-height:90px;object-fit:contain}.hero{text-align:center;padding:26px 0 22px}.eyebrow{font-size:.76rem;letter-spacing:.09em;text-transform:uppercase;color:var(--purple);font-weight:800}.hero h1{font-family:'Nunito Sans',sans-serif;font-size:clamp(2rem,7vw,3.4rem);line-height:1.08;letter-spacing:-.03em;color:var(--purple2);margin:8px auto 13px}.lead{max-width:650px;margin:auto;color:#594f5d;line-height:1.65;font-size:1.05rem}.amount{display:inline-flex;align-items:baseline;gap:7px;margin-top:20px;background:#f6ebf8;color:var(--purple2);padding:12px 20px;border-radius:999px;font-weight:700}.amount b{font-size:1.45rem}.card{background:#fff;border:1px solid var(--line);border-radius:24px;padding:27px;margin:10px 0 24px;box-shadow:0 14px 40px rgba(70,35,76,.07)}.card h2{font-family:'Nunito Sans',sans-serif;color:var(--purple2);font-size:1.45rem;margin:0 0 18px}.bank-row{display:flex;justify-content:space-between;gap:18px;padding:16px 0;border-bottom:1px solid var(--line);align-items:center}.bank-row:last-of-type{border-bottom:0}.label{color:var(--muted);font-size:.88rem}.value{font-weight:800;color:#47394b;text-align:right;font-size:1.03rem}.key{font-size:1.35rem;color:var(--purple)}.copy-btn{border:0;background:#ede6ef;color:var(--purple2);font-family:inherit;font-weight:800;border-radius:10px;padding:9px 11px;cursor:pointer;margin-left:8px}.copy-msg{font-size:.79rem;color:#15964d;text-align:right;height:16px;margin-top:3px}.steps{margin:27px 0}.steps h2{text-align:center;font-family:'Nunito Sans',sans-serif;color:var(--purple2)}.step{display:grid;grid-template-columns:38px 1fr;gap:13px;padding:16px 0;border-bottom:1px solid var(--line)}.num{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;background:var(--cyan);color:#fff;font-weight:800}.step h3{font-size:1rem;margin:1px 0 5px}.step p{margin:0;color:var(--muted);line-height:1.55;font-size:.91rem}.wa-box{margin:28px 0 34px;padding:25px 20px;text-align:center;border:2px solid #bcebc9;background:linear-gradient(145deg,#f5fff8,#edfff3);border-radius:24px}.wa-box .kicker{color:#13984b;font-size:.75rem;font-weight:800;letter-spacing:.09em}.wa-box h2{font-family:'Nunito Sans',sans-serif;font-size:clamp(1.55rem,5vw,2.15rem);color:var(--purple2);margin:8px 0}.wa-box p{max-width:590px;margin:8px auto;color:#5c665f;line-height:1.6}.wa{display:inline-flex;align-items:center;gap:9px;margin-top:17px;background:var(--green);color:#fff;text-decoration:none;padding:16px 23px;border-radius:999px;font-weight:800;box-shadow:0 12px 30px rgba(37,211,102,.27)}.wa svg{width:23px;height:23px;fill:currentColor}.safe{margin:0 0 34px;background:#f9f5fa;border-radius:18px;padding:20px}.safe h3{color:var(--purple2);margin:0 0 10px}.safe ul{margin:0;padding-left:20px;color:#655a68;line-height:1.6;font-size:.9rem}.mp{margin:0 0 42px;text-align:center;color:var(--muted);font-size:.9rem}.mp a{color:var(--purple);font-weight:800}footer{text-align:center;padding:23px;color:#978e98;font-size:.8rem;border-top:1px solid #eee6ef}@media(max-width:520px){.card{padding:21px 17px}.bank-row{display:block}.value{text-align:left;margin-top:5px}.copy-msg{text-align:left}.key{font-size:1.25rem}.wa{width:100%;justify-content:center}.hero{padding-top:18px}}
+</style>
+</head>
+<body>
+<header class="top"><div class="wrap"><img class="logo" src="img/logo/logo.png" alt="Familia Real"></div></header>
+<main class="wrap">
+<section class="hero">
+<div class="eyebrow">Tu cuadrito está a un paso de comenzar</div>
+<h1>Reserva por transferencia con $50.000 💜</h1>
+<p class="lead">Realiza la transferencia usando nuestra llave Bre-B. Después, envíanos el comprobante por WhatsApp para confirmar tu pedido y revisar contigo los detalles antes de producir.</p>
+<div class="amount">Reserva <b>$50.000</b></div>
+</section>
+
+<section class="card">
+<h2>Datos para la transferencia</h2>
+<div class="bank-row"><div><div class="label">Método</div><div class="value">Llave Bre-B</div></div></div>
+<div class="bank-row"><div><div class="label">Llave</div><div class="value key" id="llave">1032411472 <button class="copy-btn" id="copiar" type="button">Copiar</button></div><div class="copy-msg" id="copyMsg"></div></div></div>
+<div class="bank-row"><div><div class="label">Titular</div><div class="value">Marcela Calderón</div></div></div>
+<div class="bank-row"><div><div class="label">Valor a transferir</div><div class="value">$50.000 COP</div></div></div>
+</section>
+
+<section class="steps">
+<h2>¿Qué haces después?</h2>
+<div class="step"><div class="num">1</div><div><h3>Transfiere $50.000</h3><p>Usa la llave Bre-B <strong>1032411472</strong> a nombre de <strong>Marcela Calderón</strong>.</p></div></div>
+<div class="step"><div class="num">2</div><div><h3>Guarda el comprobante</h3><p>Una captura o comprobante de la transferencia es suficiente.</p></div></div>
+<div class="step"><div class="num">3</div><div><h3>Confirma por WhatsApp</h3><p>Toca el botón de abajo, envía el mensaje preparado y adjunta el comprobante. Así podremos identificar tu reserva y revisar cualquier cambio del cuadrito contigo.</p></div></div>
+</section>
+
+<section class="wa-box">
+<div class="kicker">DESPUÉS DE TRANSFERIR</div>
+<h2>Envíanos el comprobante por WhatsApp</h2>
+<p><strong>Este paso es importante.</strong> La conversación la inicias tú y así podemos confirmar tu reserva, identificar tu pedido y revisar contigo los detalles antes de producir.</p>
+<a class="wa" href="https://wa.me/573208620674?text=Hola%20Familia%20Real%20%F0%9F%92%9C%20Acabo%20de%20transferir%20%2450.000%20para%20reservar%20mi%20cuadrito.%20Adjunto%20el%20comprobante%20para%20confirmar%20mi%20pedido%20y%20revisar%20los%20detalles%20antes%20de%20producci%C3%B3n." target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 32 32" aria-hidden="true"><path d="M19.11 17.45c-.27-.14-1.6-.79-1.85-.88-.25-.09-.43-.14-.61.14-.18.27-.7.88-.86 1.06-.16.18-.32.2-.59.07-.27-.14-1.15-.42-2.19-1.35-.81-.72-1.36-1.61-1.52-1.88-.16-.27-.02-.42.12-.55.12-.12.27-.32.41-.48.14-.16.18-.27.27-.45.09-.18.05-.34-.02-.48-.07-.14-.61-1.47-.84-2.01-.22-.53-.44-.46-.61-.47h-.52c-.18 0-.48.07-.73.34-.25.27-.95.93-.95 2.26s.98 2.62 1.11 2.81c.14.18 1.92 2.93 4.65 4.11.65.28 1.16.45 1.55.58.65.21 1.24.18 1.71.11.52-.08 1.6-.65 1.83-1.29.23-.63.23-1.18.16-1.29-.07-.11-.25-.18-.52-.32zM16.03 3.2C9.04 3.2 3.36 8.78 3.36 15.65c0 2.42.72 4.68 1.95 6.59L3.2 28.8l6.79-2.07a12.8 12.8 0 0 0 6.04 1.51c6.99 0 12.67-5.58 12.67-12.45S23.02 3.2 16.03 3.2zm0 22.88c-1.89 0-3.73-.5-5.34-1.45l-.38-.22-4.03 1.23 1.26-3.88-.25-.4a10.28 10.28 0 0 1-1.6-5.52c0-5.7 4.65-10.34 10.37-10.34 5.72 0 10.37 4.64 10.37 10.34 0 5.7-4.68 10.24-10.4 10.24z"/></svg>Ya transferí · Enviar comprobante</a>
+</section>
+
+<section class="safe">
+<h3>Compra con tranquilidad</h3>
+<ul>
+<li>La transferencia de $50.000 corresponde únicamente a la reserva.</li>
+<li>Revisaremos contigo el diseño definitivo antes de producir tu cuadrito.</li>
+<li>No iniciamos producción hasta que apruebes el diseño.</li>
+<li>Cuando el cuadrito esté terminado, te enviaremos un video real antes de solicitar el saldo.</li>
+<li>El envío está incluido a toda Colombia.</li>
+</ul>
+</section>
+
+<p class="mp">¿Prefieres pagar la reserva con tarjeta? Puedes volver al diseñador y elegir la opción de <strong>Mercado Pago</strong>.</p>
+</main>
+<footer>Familia Real · Bogotá, Colombia · La ternura de tu bebé, guardada para la eternidad.</footer>
+<script>
+const b=document.getElementById('copiar'),m=document.getElementById('copyMsg');
+b.addEventListener('click',async()=>{try{await navigator.clipboard.writeText('1032411472');m.textContent='✓ Llave copiada';setTimeout(()=>m.textContent='',2500)}catch(e){m.textContent='Llave: 1032411472'}});
+</script>
+</body>
+</html>
 
