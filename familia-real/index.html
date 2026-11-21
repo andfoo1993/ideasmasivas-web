@@ -249,8 +249,8 @@ footer{text-align:center;padding:30px 10px;font-size:.8rem;color:#a0939a}
   <div class="preview-col">
     <div class="escena">
     <div class="marco" id="marco">
-      <div class="medida medida-ancho"><span>27 cm</span></div>
-      <div class="medida medida-alto"><span>22 cm</span></div>
+      <div class="medida medida-ancho"><span id="medidaAncho">31 cm</span></div>
+      <div class="medida medida-alto"><span id="medidaAlto">41 cm</span></div>
       <img class="marco-foto" id="marcoFoto" alt="">
       <div class="abertura" id="abertura">
         <div class="pared w-top"></div><div class="pared w-bot"></div>
@@ -599,11 +599,13 @@ const textoFondo=()=>st.fondo.solido?`Un solo color (${st.fondoColor.nombre} ${s
 /* --- 3D opcional --- */
 function pintar3D(){
   const c=$("op3d");c.innerHTML="";
-  [{v:true, t:"Con manito y piecito en 3D", s:"El recuerdo completo", badge:"Recomendado", p:CONFIG.precios.con3d},
-   {v:false,t:"Sin 3D",                     s:"Solo el diseño del cuadro",                 p:CONFIG.precios.sin3d}]
+  [{v:true, t:"Con manito y piecito en 3D", s:"El recuerdo completo", medida:"31 x 41 cm", badge:"Recomendado", p:CONFIG.precios.con3d},
+   {v:false,t:"Sin 3D",                     s:"Solo el diseño del cuadro", medida:"27 x 22 cm", p:CONFIG.precios.sin3d}]
   .forEach(o=>{const d=document.createElement("div");d.className="op"+(st.con3d===o.v?" sel":"");
-    d.innerHTML=`${o.badge?`<span class="badge">${o.badge}</span>`:""}<b>${o.t}</b><small>${o.s}</small><div class="precio">${fmt(o.p)}</div>`;
+    d.innerHTML=`${o.badge?`<span class="badge">${o.badge}</span>`:""}<b>${o.t}</b><small>${o.s}</small><small><strong>Medida: ${o.medida}</strong></small><div class="precio">${fmt(o.p)}</div>`;
     d.onclick=()=>{st.con3d=o.v;pintar3D();actualizar();};c.appendChild(d);});
+  $("medidaAncho").textContent=st.con3d?"31 cm":"27 cm";
+  $("medidaAlto").textContent=st.con3d?"41 cm":"22 cm";
   $("fotos3d").style.display=st.con3d?"":"none";
   $("lienzo").classList.toggle("sin3d",!st.con3d);
 }
